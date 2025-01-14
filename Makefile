@@ -4,7 +4,6 @@ LINK = -lreadline
 
 SRCDIR = srcs
 OBJDIR = .objs
-BONUS_OBJDIR = bonus_objs
 INCDIR = includes/
 LIBFT_DIR = lib/libft
 
@@ -33,16 +32,38 @@ $(NAME): $(LIBFT) $(OBJS)
 	@$(CC) $(WFLAGS) $(OBJS) $(LIBFT) -o $(NAME) $(LINK)
 	@echo "$(CYAN)Build completed: $(NAME)$(RESET)"
 
+
+
+# test part
+
+TEST_SRCDIR = tests
+TEST_OBJDIR = .TEST_objs
+TEST_SRCS = $(shell find $(TEST_SRCDIR) -name "*.c")
+TEST_OBJS = $(patsubst $(TEST_SRCDIR)/%.c, $(TEST_OBJDIR)/%.o, $(TEST_SRCS))
+TEST_DEPS = $(TEST_OBJS:.o=.d)
+
+$(TEST_OBJDIR)/%.o: $(TEST_SRCDIR)/%.c
+	@mkdir -p $(dir $@)
+	@$(CC) $(WFLAGS) -MMD -MP -I$(INCDIR) -c $< -g3 -ggdb -o $@ $(LINK)
+
+test: $(LIBFT) $(TEST_OBJS)
+	@$(CC) $(WFLAGS) $(TEST_OBJS) $(LIBFT) -o test $(LINK)
+	@echo "$(CYAN)Test build completed: test$(RESET)"
+
+# test part end
+
+
+
 clean:
-	@rm -rf $(OBJDIR)
+	@rm -rf $(OBJDIR) $(TEST_OBJDIR)
 	@make -C $(LIBFT_DIR) clean
 	@echo "$(CYAN)Project cleaned$(RESET)"
 
 fclean: clean
 	@make -C $(LIBFT_DIR) fclean
-	@rm $(NAME)
+	@rm $(NAME) test
 	@echo "$(CYAN)Executable removed$(RESET)"
 
 re: fclean all
 
--include $(DEPS)
+-include $(DEPS) $(TEST_DEPS)

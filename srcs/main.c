@@ -17,7 +17,7 @@ char	*powerline(void)
 		tilt = " ";
 	printf("%s----------------------------------------------\
 ----------------------------------%s", POW5, RESET);
-	printf("\n%s  MMOAT %s%s%s%s%s %s%s%s ",
+	printf("\n%s   MMOAT %s%s%s%s%s %s%s%s ",
 		POW1, POW2, POW3, POW4, tilt, pwd, RESET, POW5, RESET);
 	return (readline(""));
 }
