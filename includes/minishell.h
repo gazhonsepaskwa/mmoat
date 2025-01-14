@@ -7,6 +7,7 @@
 # include <stdlib.h> 
 
 # include "lib/libft/libft.h"
+# include "builtins.h"
 
 # define POW1 "\033[1;38;2;21;22;26;48;2;92;106;178m"
 # define POW2 "\033[1;38;2;92;106;178;48;2;54;54;54m"

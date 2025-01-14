@@ -5,7 +5,7 @@ LINK = -lreadline
 SRCDIR = srcs
 OBJDIR = .objs
 BONUS_OBJDIR = bonus_objs
-INCDIR = .
+INCDIR = includes/
 LIBFT_DIR = lib/libft
 
 NAME = minishell
