@@ -1,4 +1,4 @@
-#include "../minishell.h" 
+#include "../includes/minishell.h" 
 
 char	*powerline(void)
 {
@@ -33,7 +33,9 @@ int	main(int ac, char **av, char **envp)
 	{
 		input = powerline();
 		if (ft_strncmp(input, "exit", 4) == 0)
-			break ;
+			builtin_exit(&input[5], true);
+		if (ft_strncmp(input, "pwd", 3) == 0)
+			builtin_pwd(input);
 		free(input);
 	}
 	return (0);
