@@ -1,33 +1,45 @@
-#include "../includes/minishell.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parse.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: nalebrun <nalebrun@student.s19.be>        +#+  +:+       +#+         */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/01/15 08:23:41  by nalebrun         #+#    #+#             */
+/*   Updated: 2025/01/15 08:23:41  by nalebrun        ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-void truncate_after_exit_word(char **lst)
-{
-	int	i;
-	int	depth;
-	int truncate_mode;
+#include "tokenizer/tokenizer.h"
 
-	i = 0;
-	depth = 0;
-	truncate_mode = FALSE;
-	while (lst[i])
-	{
-		if (truncate_mode)
-		{
-			free(lst[i]);
-			lst[i] = NULL;
-		}
-		else
-		{
-			if (lst[i][0] == '(')
-				depth += 1;
-			if (lst[i][ft_strlen(lst[i]) - 1] == ')')
-				depth -= 1;
-			if (!ft_strncmp(lst[i], "exit", 4) && depth == 0)
-				truncate_mode = TRUE;
-		}
-		i++;
-	}
-}
+/*void truncate_after_exit_word(char **lst)*/
+/*{*/
+/*	int	i;*/
+/*	int	depth;*/
+/*	int truncate_mode;*/
+/**/
+/*	i = 0;*/
+/*	depth = 0;*/
+/*	truncate_mode = FALSE;*/
+/*	while (lst[i])*/
+/*	{*/
+/*		if (truncate_mode)*/
+/*		{*/
+/*			free(lst[i]);*/
+/*			lst[i] = NULL;*/
+/*		}*/
+/*		else*/
+/*		{*/
+/*			if (lst[i][0] == '(')*/
+/*				depth += 1;*/
+/*			if (lst[i][ft_strlen(lst[i]) - 1] == ')')*/
+/*				depth -= 1;*/
+/*			if (!ft_strncmp(lst[i], "exit", 4) && depth == 0)*/
+/*				truncate_mode = TRUE;*/
+/*		}*/
+/*		i++;*/
+/*	}*/
+/*}*/
 
 /*void print_tab(char **lst)*/
 /*{*/
@@ -39,19 +51,26 @@ void truncate_after_exit_word(char **lst)
 /*	}*/
 /*}*/
 
+void print_linked_list(t_node *head) {
+    t_node *current = head;
+    while (current != NULL) {
+        printf("Node - Priority: %d, Depth: %d, TOKEN: |%s|\n", current->priority, current->depth, current->token);
+        current = current->next; // Move to the next node
+    }
+}
+
 int main (int ac, char **av)
 {
 	(void)ac;
 
-	char *str = av[1];
-	char **lst;
+	char *str = ft_strtrim(av[1], " ");
+	t_node *lst;
 
 	if (str)
 	{
-		// replace by a custom split that also the token alone and under the form of a linked list
-		lst = ft_split(str, ' ');
-		truncate_after_exit_word(lst);
-		print_tab(lst);
-		free_tab(lst);
+		/*truncate_after_exit_word(lst);*/
+		/*free_tab(lst);*/
+		lst = tokenize(str);
+		print_linked_list(lst);
 	}
 }
