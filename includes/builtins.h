@@ -10,6 +10,7 @@
 # include <errno.h>
 
 // void 	echo(char *msg, int flag);
+void	builtin_echo(char *arg);
 void	builtin_exit(char *arg, bool depth);
 void	builtin_pwd(char *arg);
 
