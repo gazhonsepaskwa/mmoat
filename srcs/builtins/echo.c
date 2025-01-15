@@ -24,6 +24,23 @@ int	is_silent(char *str)
 	return (0);
 }
 
+char	*ft_getenv(char *str, char **envp)
+{
+	char	*tmp;
+	int		j;
+	size_t	len;
+
+	j = 0;
+	tmp = ft_strjoin(str, "=");
+	len = ft_strlen(tmp);
+	while (envp[j] && ft_strnstr(envp[j], tmp, len) == NULL)
+		j++;
+	if (!envp[j])
+		return (free(tmp), NULL);
+	free(tmp);
+	return (&envp[j][len]);
+}
+
 static int	extractenv(char *str, char **envp)
 {
 	int		i;
@@ -31,12 +48,11 @@ static int	extractenv(char *str, char **envp)
 	char	*tmp;
 
 	i = 0;
-	(void)envp;
 	while (str[i] && str[i] != ' ')
 		i++;
 	if (i >= 1)
 		tmp = ft_substr(str, 1, i - 1);
-	var = getenv(tmp);
+	var = ft_getenv(tmp, envp);
 	free(tmp);
 	if (var)
 		ft_printf("%s", var);
