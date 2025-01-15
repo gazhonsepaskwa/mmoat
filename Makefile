@@ -26,7 +26,7 @@ $(LIBFT):
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.c
 	@mkdir -p $(dir $@)
-	@$(CC) $(WFLAGS) -MMD -MP -I$(INCDIR) -c $< -g3 -ggdb -o $@ $(LINK)
+	@$(CC) $(WFLAGS) -MMD -MP -I$(INCDIR) -c $< -o $@ $(LINK)
 
 $(NAME): $(LIBFT) $(OBJS)
 	@$(CC) $(WFLAGS) $(OBJS) $(LIBFT) -o $(NAME) $(LINK)

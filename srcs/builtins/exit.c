@@ -5,6 +5,8 @@ int	ft_isnumeric(char *str)
 	int	i;
 
 	i = 0;
+	if (!str)
+		return (1);
 	while (str[i])
 	{
 		if (ft_isdigit(str[i]))
@@ -30,8 +32,23 @@ void	bash_exit_error(char *arg)
 	exit(2);
 }
 
-void	builtin_exit(char *arg, bool depth)
+static	char	*get_arg(char *str)
 {
+	int		i;
+
+	i = 4;
+	if (!str[i])
+		return (NULL);
+	while (str[i] && str[i] == ' ')
+		i++;
+	return (&str[i]);
+}
+
+void	builtin_exit(char *str, bool depth)
+{
+	char 	*arg;
+
+	arg = get_arg(str);
 	if (depth == true)
 	{
 		if (!ft_isnumeric(arg))

@@ -52,7 +52,7 @@ int	ft_atoi(const char *str)
 	int		current_digit;
 
 	if (!str)
-		return (-1);
+		return (0);
 	res = 0;
 	i = 0;
 	while (ft_isspace(str[i]))
