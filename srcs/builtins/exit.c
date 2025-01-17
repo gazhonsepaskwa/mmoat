@@ -23,7 +23,7 @@ void	bash_exit(int code)
 	exit(code);
 }
 
-void	bash_exit_error(char *arg)
+void	bash_exit_errornum(char *arg)
 {
 	ft_putendl_fd("exit", 2);
 	ft_put_s_fd("minishell: exit: ", 2);
@@ -44,6 +44,39 @@ static	char	*get_arg(char *str)
 	return (&str[i]);
 }
 
+int	is_sep(char c)
+{
+	if ((c >= 9 && c <= 13) || c == ' ' || c == '\0')
+		return (1);
+	else
+		return (0);
+}
+
+int	count_arg(char *str)
+{
+	int	count;
+	int	i;
+
+	count = 0;
+	i = 0;
+	while (str[i] && str[i + 1])
+	{
+		if (!is_sep(str[i]) && is_sep(str[i + 1]))
+			count++;
+		i++;
+	}
+	return (count);
+}
+
+void	bash_exiterrorcount(void)
+{
+	ft_putendl_fd("exit", 2);
+	ft_putendl_fd("minishell: exit: too many arguments", 2);
+	/*
+	 * SET EXIT CODE WITHOUT EXITING MINISHELL
+	 */
+}
+
 void	builtin_exit(char *str, bool depth)
 {
 	char 	*arg;
@@ -51,6 +84,11 @@ void	builtin_exit(char *str, bool depth)
 	arg = get_arg(str);
 	if (depth == true)
 	{
+		if (count_arg(str) >= 2)
+		{
+			ft_putendl_fd("minishell: exit: too many arguments", 2);
+			exit (1);
+		}
 		if (!ft_isnumeric(arg))
 		{
 			ft_put_s_fd("minishell: exit: ", 2);
@@ -60,8 +98,10 @@ void	builtin_exit(char *str, bool depth)
 		}
 		exit(ft_atoi(arg));
 	}
-	if (ft_isnumeric(arg))
+	if (count_arg(str) >= 2)
+		bash_exiterrorcount();
+	else if (ft_isnumeric(arg))
 		bash_exit(ft_atoi(arg));
 	else
-		bash_exit_error(arg);
+		bash_exit_errornum(arg);
 }

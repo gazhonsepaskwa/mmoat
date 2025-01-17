@@ -57,6 +57,10 @@ int	main(int ac, char **av, char **envp)
 			builtin_env(input, envp);
 		if (ft_strncmp(input, "unset", 5) == 0)
 			builtin_unset(input, envp);
+		if (ft_strncmp(input, "cd", 2) == 0)
+			envp = builtin_cd(ft_split(input, ' '), envp);
+		if (ft_strncmp(input, "export", 6) == 0)
+			envp = builtin_export(ft_split(input, ' '), envp);
 		free(input);
 	}
 	return (0);
