@@ -13,3 +13,16 @@ int	is_charset(char c, char *set)
 	}
 	return (0);
 }
+
+void	free_tab(char **tab)
+{
+	int	i;
+
+	i = 0;
+	while (tab[i])
+	{
+		free(tab[i]);
+		i++;
+	}
+	free(tab);
+}
