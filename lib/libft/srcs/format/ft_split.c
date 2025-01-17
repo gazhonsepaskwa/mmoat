@@ -33,8 +33,8 @@ static int	count_strings(char const *s, char *set)
 	count = 0;
 	while (*s)
 	{
-		if (!is_charset(*s, set) && is_charset(*(s + 1), set)
-				|| *(s + 1) == '\0')
+		if (!is_charset(*s, set) && ( is_charset(*(s + 1), set)
+			|| *(s + 1) == '\0'))
 			count ++;
 		s++;
 	}

@@ -1,4 +1,4 @@
-#include "lib/libft/libft.h"
+#include "../../libft.h"
 
 int	is_charset(char c, char *set)
 {
