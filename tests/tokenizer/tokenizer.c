@@ -12,48 +12,75 @@
 
 #include "tokenizer.h"
 
-static t_node	*create_head(int *depth, char *str, char *last_token)
+static t_node	*tokenize_base(char *str)
 {
+	int		i;
 	t_node	*head;
-	char	*token;
+	char	**tab;
 
-	ajust_depth(depth, str[0]);
-	token = copy_token_string(&str[0], *last_token);
-	if (!(*token))
+	tab = ft_split(str, " \t\n");
+	if (!tab)
 		return (NULL);
-	head = create_node(token, get_priority(token), *depth);
+	head = create_node(tab[0], 0);
 	if (!head)
-		return (NULL);
-	*last_token = str[0];
-	free(token);
+		return (free(tab), NULL);
+	i = 1;
+	while (tab[i])
+	{
+		if (!add_node_back(head, tab[i], 0))
+			return (free(tab), NULL);
+		i++;
+	}
+	free_tab(tab);
 	return (head);
+}
+
+static void	set_token(t_node *head)
+{
+	t_node *it;
+
+	it = head;
+	while (it != NULL)
+	{
+		it->token = get_token(it->val);
+		it = it->next;
+	}
+}
+
+static int	unstick_nodes(t_node *head)
+{
+	t_node *it;
+
+	it = head;
+	while (it != NULL)
+	{
+		if (is_sticked(it->val)) // undefined fct for the moment 
+		{
+			// if meta -> first part = jusqua plus meta
+			// else -> first part = jusqua meta
+			// secnd part = rest
+			// it->val = first part
+			// create a new node after [create_node_after()] with the second part of the string
+		}
+		it = it->next;
+	}
+	return (1);
 }
 
 t_node	*tokenize(char *str)
 {
-	int		i;
-	int		depth;
-	char	*token;
 	t_node	*head;
-	char	last_token;
 
-	depth = 0;
-	last_token = ' ';
-	head = create_head(&depth, str, &last_token);
-	i = goto_next_token(&str[0]);
-	while (str[i])
-	{
-		ajust_depth(&depth, str[i]);
-		token = copy_token_string(&str[i], last_token);
-		if (!token)
-			return (NULL);
-		if (token[0] != 0)
-			add_node_back(head, depth, token);
-		while (str[i] == ' ')
-			i++;
-		last_token = str[i];
-		i += goto_next_token(&str[i]);
-		free(token);
-	}
+	head = tokenize_base(str);
+	if (!head)
+		return (NULL);
+	debug_linked_list(head, "base tokenized");
+	if (!unstick_nodes(head))
+		return (NULL);
+	debug_linked_list(head, "nodes unsticked");
+	// stick_quote_node(head);
+	// debug_linked_list(head);
+	set_token(head);
+	debug_linked_list(head, "token set");
 	return (head);
 }

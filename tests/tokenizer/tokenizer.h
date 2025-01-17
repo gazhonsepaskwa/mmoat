@@ -15,23 +15,26 @@
 
 # include "../includes/minishell.h"
 
+typedef enum e_token
+{
+	UNSET,
+	OPERATOR,
+	WORD
+}	t_token;
+
 typedef struct s_node
 {
 	struct s_node	*next;
-	char			*token;
-	int				priority;
-	int				depth;
+	char			*val;
+	enum e_token	token;
 }					t_node;
 
 t_node	*tokenize(char *str);
-t_node	*create_node(char *token, int priority, int depth);
-void	add_node_back(t_node *head, int depth, char *token);
-void	ajust_depth(int *depth, char c);
-int		get_priority(char *token);
-char	*copy_token_string(char *start, char last_token);
-int		goto_next_token(char *str);
-int		skip_meta_token(char *str);
-int		is_meta_token(char c);
-int		go_to_next_meta_token(char *str);
+t_node	*create_node(char *val, t_token token);
+int		add_node_back(t_node *head, char *val, t_token token);
+void	free_linked_list(t_node *stack);
+t_token	get_token(char *str);
+int		create_node_after(t_node *elem, char *val);
+void debug_linked_list(t_node *head, char *msg);
 
 #endif
