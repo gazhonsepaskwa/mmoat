@@ -21,4 +21,8 @@ char	**builtin_export(char **arg, char **envp);
 
 //UTILS
 int	count_char(char *str);
+int	count_args(char **tab);
+int	extractenv(char *str, char **envp);
+char	*ft_getenv(char *str, char **envp);
+
 #endif

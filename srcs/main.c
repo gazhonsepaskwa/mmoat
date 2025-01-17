@@ -4,6 +4,7 @@ char	*powerline(void)
 {
 	char	*pwd;
 	char	*tilt;
+	char	*input;
 
 	pwd = getcwd(NULL, 0);
 	if (ft_strncmp(pwd, "/home/", 6) == 0)
@@ -19,7 +20,10 @@ char	*powerline(void)
 ----------------------------------%s", POW5, RESET);
 	printf("\n%s   MMOAT %s%s%s%s%s %s%s%s ",
 		POW1, POW2, POW3, POW4, tilt, pwd, RESET, POW5, RESET);
-	return (readline(""));
+	input = readline("");
+	if (ft_strlen(input) > 0)
+		add_history(input);
+	return (input);
 }
 
 char	**ft_setnewenv(void)
@@ -58,9 +62,9 @@ int	main(int ac, char **av, char **envp)
 		if (ft_strncmp(input, "unset", 5) == 0)
 			builtin_unset(input, envp);
 		if (ft_strncmp(input, "cd", 2) == 0)
-			envp = builtin_cd(ft_split(input, ' '), envp);
+			envp = builtin_cd(ft_split(input, " "), envp);
 		if (ft_strncmp(input, "export", 6) == 0)
-			envp = builtin_export(ft_split(input, ' '), envp);
+			envp = builtin_export(ft_split(input, " "), envp);
 		free(input);
 	}
 	return (0);

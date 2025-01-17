@@ -41,7 +41,7 @@ char	*ft_getenv(char *str, char **envp)
 	return (&envp[j][len]);
 }
 
-static int	extractenv(char *str, char **envp)
+int	extractenv(char *str, char **envp)
 {
 	int		i;
 	char	*var;
