@@ -12,77 +12,85 @@
 
 #include "../../libft.h"
 
-static int	ft_word_count(const char *str, char c)
+static char	**free_all(char **tab, int count)
+{
+	int	i;
+
+	i = 0;
+	while (i < count)
+	{
+		free(tab[i]);
+		i++;
+	}
+	free(tab);
+	return (NULL);
+}
+
+static int	count_strings(char const *s, char *set)
 {
 	int	count;
 
-	if (!str)
-		return (0);
 	count = 0;
-	while (*str)
+	while (*s)
 	{
-		while (*str && *str == c)
-			str++;
-		if (*str && *str != c)
-			count++;
-		while (*str && *str != c)
-			str++;
+		if (!is_charset(*s, set) && is_charset(*(s + 1), set)
+				|| *(s + 1) == '\0')
+			count ++;
+		s++;
 	}
 	return (count);
 }
 
-static char	*malloccpy(const char *str, char c)
+static	void	build_str(char const *src, char *dest, char *set)
 {
-	char	*result;
-	int		i;
+	int	i;
 
 	i = 0;
-	while (str[i] && str[i] != c)
-		i++;
-	result = (char *)malloc(sizeof(char) * (i + 1));
-	if (!result)
-		return (NULL);
-	ft_strlcpy(result, str, i + 1);
-	return (result);
-}
-
-void	free_tab(char **tab)
-{
-	char	**pos;
-
-	if (!tab)
-		return ;
-	pos = tab;
-	while (*pos != NULL)
-		free(*(pos++));
-	free(tab);
-}
-
-char	**ft_split(const char *s, char c)
-{
-	char	**result;
-	int		i;
-	int		strs_len;
-
-	if (!s)
-		return (NULL);
-	strs_len = ft_word_count(s, c);
-	result = (char **)malloc(sizeof(char *) * (strs_len + 1));
-	if (!result)
-		return (NULL);
-	i = -1;
-	while (++i < strs_len)
+	while (src[i] && !is_charset(src[i], set))
 	{
-		while (*s && *s == c)
-			s++;
-		result[i] = malloccpy(s, c);
-		if (!result[i])
-		{
-			free_tab(result);
-			return (NULL);
-		}
-		s += ft_strlen(result[i]);
+		dest[i] = src[i];
+		i++;
 	}
-	result[i] = 0;
-	return (result);
+	dest[i] = '\0';
+}
+
+static	char	**build_tab(char **tab, char const *s, char *set)
+{
+	int	i;
+	int	j;
+	int	count;
+
+	i = 0;
+	count = 0;
+	while (tab && s[i])
+	{
+		if (is_charset(s[i], set))
+			i++;
+		else
+		{
+			j = 0;
+			while (!is_charset(s[i + j], set) && s[i + j])
+				j++;
+			tab[count] = ft_calloc((j + 1), sizeof(char));
+			if (!tab[count])
+				return (free_all(tab, count));
+			build_str(&s[i], tab[count++], set);
+			i = i + j;
+		}
+	}
+	return (tab);
+}
+
+char	**ft_split(char const *s, char *set)
+{
+	int		count;
+	char	**tab;
+
+	count = count_strings(s, set);
+	tab = ft_calloc(count + 1, sizeof(char *));
+	if (!tab)
+		return (NULL);
+	tab[count] = 0;
+	tab = build_tab(tab, s, set);
+	return (tab);
 }
