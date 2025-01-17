@@ -12,81 +12,21 @@
 
 #include "tokenizer.h"
 
-int	important_token(char c)
+static t_node	*create_head(int *depth, char *str, char *last_token)
 {
-	if (c == '(' || c == ')'
-		|| c == '|' || c == '&')
-		return (1);
-	return (0);
-}
+	t_node	*head;
+	char	*token;
 
-char *copy_token_string(char *start)
-{
-	char	*out;
-	int		i;
-	int		j;
-
-	i = 0;
-	while (start[i] && start[i] == ' ')
-		i++;
-	if (start[i] == '&')
-		i = 2;
-	else if (start[i] == '|' && start[i + 1] && start[i + 1] == '|')
-		i = 2;
-	else if (start[i] == '|' && start[i + 1] && start[i + 1] != '|')
-		i = 1;
-	else if (start[i] == '(')
-		i = 1;
-	else if (start[i] == ')')
-		i = 1;
-	else
-	{
-		while (start [i]
-			&& start[i] != '&'
-			&& start[i] != '|'
-			&& start[i] != '('
-			&& start[i] != ')')
-		i++;
-	}
-	out = malloc(i + 1);
-	if (!out)
+	ajust_depth(depth, str[0]);
+	token = copy_token_string(&str[0], *last_token);
+	if (!(*token))
 		return (NULL);
-	j = -1;
-	while (++j < i)
-		out[j] = start[j];
-	out[j] = 0;
-	return (out);
-}
-
-int	goto_next_token(char *str)
-{
-	int	i;
-
-	i = 0;
-	if (str[0] == '(' || str[0] == ')')
-	{
-		if (str[1] && str[1] == ' ')
-			return (2);
-		else
-			return (1);
-	}
-	else if (str[0] == '&' && str[1] && str[1] == '&')
-		return (2);
-	else if (str[0] == '|' && str[1] && str[1] == '|')
-		return (2);
-	else if (str[0] == '|' && str[1] && str[1] != '|' && str[1] && str[1] == ' ')
-		return (2);
-	else if (str[0] == '|' && str[1] && str[1] != '|' && str[1] != ' ')
-		return (1);
-	else
-	{
-		while (str[i] && str[i] != '&' && str[i] != '|'
-				&& str[i] != '(' && str[i] != ')')
-			i++;
-		if (str[i] == ' ')
-			i++;
-	}
-	return (i);
+	head = create_node(token, get_priority(token), *depth);
+	if (!head)
+		return (NULL);
+	*last_token = str[0];
+	free(token);
+	return (head);
 }
 
 t_node	*tokenize(char *str)
@@ -94,32 +34,26 @@ t_node	*tokenize(char *str)
 	int		i;
 	int		depth;
 	char	*token;
-	char	*trimed_token;
 	t_node	*head;
+	char	last_token;
 
-	i = 0;
 	depth = 0;
-	ajust_depth(&depth, str[i]);
-	token = copy_token_string(&str[i]);
-	if (!token)
-		return (NULL);
-	trimed_token = ft_strtrim(token, " ");
-	head = create_node(trimed_token, get_priority(trimed_token), depth);
-	free(token);
-	free(trimed_token);
-	i += goto_next_token(&str[i]);
-	while(str[i])
+	last_token = ' ';
+	head = create_head(&depth, str, &last_token);
+	i = goto_next_token(&str[0]);
+	while (str[i])
 	{
 		ajust_depth(&depth, str[i]);
-		token = copy_token_string(&str[i]);
+		token = copy_token_string(&str[i], last_token);
 		if (!token)
 			return (NULL);
-		trimed_token = ft_strtrim(token, " ");
-		if (trimed_token[0] != 0)
-			add_node_back(head, depth, trimed_token);
-		free(token);
-		free(trimed_token);
+		if (token[0] != 0)
+			add_node_back(head, depth, token);
+		while (str[i] == ' ')
+			i++;
+		last_token = str[i];
 		i += goto_next_token(&str[i]);
+		free(token);
 	}
 	return (head);
 }

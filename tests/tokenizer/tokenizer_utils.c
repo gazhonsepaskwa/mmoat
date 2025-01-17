@@ -14,7 +14,7 @@
 
 t_node	*create_node(char *token, int priority, int depth)
 {
-	t_node *node;
+	t_node	*node;
 
 	node = malloc(sizeof(t_node));
 	if (!node)
@@ -41,7 +41,7 @@ int	get_priority(char *token)
 	return (priority);
 }
 
-void	add_node_back(t_node* head, int depth, char *token)
+void	add_node_back(t_node *head, int depth, char *token)
 {
 	while (head->next != NULL)
 		head = head->next;

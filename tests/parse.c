@@ -12,7 +12,12 @@
 
 #include "tokenizer/tokenizer.h"
 
-/*void truncate_after_exit_word(char **lst)*/
+/*str_equal(char *original)*/
+/*{*/
+/**/
+/*}*/
+
+/*void truncate_after_exit_word(char *str)*/
 /*{*/
 /*	int	i;*/
 /*	int	depth;*/
@@ -23,31 +28,7 @@
 /*	truncate_mode = FALSE;*/
 /*	while (lst[i])*/
 /*	{*/
-/*		if (truncate_mode)*/
-/*		{*/
-/*			free(lst[i]);*/
-/*			lst[i] = NULL;*/
-/*		}*/
-/*		else*/
-/*		{*/
-/*			if (lst[i][0] == '(')*/
-/*				depth += 1;*/
-/*			if (lst[i][ft_strlen(lst[i]) - 1] == ')')*/
-/*				depth -= 1;*/
-/*			if (!ft_strncmp(lst[i], "exit", 4) && depth == 0)*/
-/*				truncate_mode = TRUE;*/
-/*		}*/
-/*		i++;*/
-/*	}*/
-/*}*/
-
-/*void print_tab(char **lst)*/
-/*{*/
-/*	int i = 0;*/
-/*	while (lst[i])*/
-/*	{*/
-/*		printf("%s\n", lst[i]);*/
-/*		i++;*/
+/**/
 /*	}*/
 /*}*/
 
@@ -68,8 +49,7 @@ int main (int ac, char **av)
 
 	if (str)
 	{
-		/*truncate_after_exit_word(lst);*/
-		/*free_tab(lst);*/
+		/*truncate_after_exit_word(str);*/
 		lst = tokenize(str);
 		print_linked_list(lst);
 	}
