@@ -40,7 +40,7 @@ char	**ft_setnewenv(void)
 	return (envp);
 }
 
-t_data	*init_data(char **envp)
+static t_data	*init_data(char **envp)
 {
 	t_data	*data;
 
@@ -75,7 +75,7 @@ int	main(int ac, char **av, char **envp)
 		if (ft_strncmp(input, "cd", 2) == 0)
 			builtin_cd(ft_split(input, " "), data);
 		if (ft_strncmp(input, "export", 6) == 0)
-			data->env = builtin_export(ft_split(input, " "), data->env);
+			builtin_export(ft_split(input, " "), data);
 		free(input);
 	}
 	return (0);

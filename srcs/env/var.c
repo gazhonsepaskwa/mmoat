@@ -136,15 +136,14 @@ void	set_var_env(char *key, char *value, t_data *data)
 	char	*tmp;
 
 	i = get_var_index(key, data);
-	if (!value)
-		value = "";
-	tmp = ft_strjoin("=", value);
+	if (value)
+		tmp = ft_strjoin(key, "=");
 	if (!tmp)
 		return ;
 	if (i != -1 && data->env[i])
 	{
 		free_null_ptr(data->env[i]);
-		data->env[i] = ft_strjoin(key, tmp);
+		data->env[i] = ft_strjoin(tmp, value);
 	}
 	else
 	{
@@ -152,7 +151,7 @@ void	set_var_env(char *key, char *value, t_data *data)
 		data->env = copy_env_var(data->env, i + 1);
 		if (!data->env)
 			return ;
-		data->env[i] = ft_strjoin(key, tmp);
+		data->env[i] = ft_strjoin(tmp, value);
 	}
 	free_null_ptr(tmp);
 	return ;
