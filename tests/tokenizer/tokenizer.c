@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nalebrun <nalebrun@student.s19.be>        +#+  +:+       +#+         */
+/*   By: nalebrun <nalebrun@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/15 13:27:57  by nalebrun         #+#    #+#             */
-/*   Updated: 2025/01/15 13:27:57  by nalebrun        ###   ########.fr       */
+/*   Created: 2025/01/15 13:27:57 by  nalebrun         #+#    #+#             */
+/*   Updated: 2025/01/20 13:15:25 by nalebrun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ static t_node	*tokenize_base(char *str)
 
 static void	set_token(t_node *head)
 {
-	t_node *it;
+	t_node	*it;
 
 	it = head;
 	while (it != NULL)
@@ -49,18 +49,47 @@ static void	set_token(t_node *head)
 
 static int	unstick_nodes(t_node *head)
 {
-	t_node *it;
+	t_node	*it;
+	char	*first_str;
+	char	*second_str;
+	int		copied;
 
 	it = head;
 	while (it != NULL)
 	{
-		if (is_sticked(it->val)) // undefined fct for the moment 
+		if (is_sticked(it->val))
 		{
-			// if meta -> first part = jusqua plus meta
-			// else -> first part = jusqua meta
-			// secnd part = rest
-			// it->val = first part
-			// create a new node after [create_node_after()] with the second part of the string
+			if (is_meta(it->val[0]))
+				first_str = copy_meta_xor(it->val, &copied, 0);
+			else
+				first_str = copy_meta_xor(it->val, &copied, 1);
+			second_str = ft_substr(it->val, copied, ft_strlen(it->val)
+					- copied);
+			ft_free(&it->val);
+			it->val = ft_strdup(first_str);
+			create_node_after(it, second_str);
+			ft_free(&first_str);
+			ft_free(&second_str);
+		}
+		it = it->next;
+	}
+	return (1);
+}
+
+static int	stick_quote_node(t_node *head)
+{
+	t_node	*it;
+
+	it = head;
+	while (it != NULL)
+	{
+		if (it->val[0] == '"')
+		{
+			while (it->next->val[0] != '"')
+				if (!merge_with_next_node(it))
+					return (0);
+			if (!merge_with_next_node(it))
+				return (0);
 		}
 		it = it->next;
 	}
@@ -74,13 +103,9 @@ t_node	*tokenize(char *str)
 	head = tokenize_base(str);
 	if (!head)
 		return (NULL);
-	debug_linked_list(head, "base tokenized");
 	if (!unstick_nodes(head))
 		return (NULL);
-	debug_linked_list(head, "nodes unsticked");
-	// stick_quote_node(head);
-	// debug_linked_list(head);
+	stick_quote_node(head);
 	set_token(head);
-	debug_linked_list(head, "token set");
 	return (head);
 }
