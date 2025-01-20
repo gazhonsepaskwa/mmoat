@@ -52,7 +52,7 @@ int	extractenv(char *str, char **envp)
 		i++;
 	if (i >= 1)
 		tmp = ft_substr(str, 1, i - 1);
-	var = ft_getenv(tmp, envp);
+	var = get_var_value(tmp, envp);
 	free(tmp);
 	if (var)
 		ft_printf("%s", var);

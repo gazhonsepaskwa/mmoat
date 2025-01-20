@@ -25,5 +25,5 @@ int	builtin_unset(char **arg, t_data *data)
 {
 	if (count_var(arg) == 1)
 		return (err_msg_cmd("unset", NULL, "not enough arguments", EXIT_FAILURE));
-	return (remove_env_var(arg[1], data->env));	
+	return (remove_env_var(arg[1], data));	
 }

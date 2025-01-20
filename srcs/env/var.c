@@ -63,7 +63,7 @@ char	*get_var_value(char	*key, char **envp)
 	return (NULL);
 }
 
-bool	is_valid_key(char *key, char **envp)
+bool	is_valid_key(char *key, t_data *data)
 {
 	char	*tmp;
 	int		i;
@@ -71,9 +71,9 @@ bool	is_valid_key(char *key, char **envp)
 	tmp = ft_strjoin(key, "=");
 	if (!tmp)
 		return (false);
-	while (envp[i])
+	while (data->env[i])
 	{
-		if (ft_strncmp(envp[i], tmp, ft_strlen(tmp)) == 0)
+		if (ft_strncmp(data->env[i], tmp, ft_strlen(tmp)) == 0)
 		{
 			free_null_ptr(tmp);
 			return (true);
@@ -84,7 +84,7 @@ bool	is_valid_key(char *key, char **envp)
 	return (false);
 }
 
-int	get_var_index(char *key, char **envp)
+int	get_var_index(char *key, t_data *data)
 {
 	int		i;
 	char	*new_key;
@@ -93,9 +93,9 @@ int	get_var_index(char *key, char **envp)
 	if (!new_key)
 		return (-1);
 	i = 0;
-	while (envp[i])
+	while (data->env[i])
 	{
-		if (ft_strncmp(envp[i], new_key, ft_strlen(new_key)) == 0)
+		if (ft_strncmp(data->env[i], new_key, ft_strlen(new_key)) == 0)
 		{
 			free_null_ptr(new_key);
 			return (i);
@@ -107,25 +107,25 @@ int	get_var_index(char *key, char **envp)
 }
 
 
-int	remove_env_var(char *key, char **envp)
+int	remove_env_var(char *key, t_data *data)
 {
 	int	i;
 	int	j;
 
-	i = get_var_index(key, envp);
+	i = get_var_index(key, data);
 	if (i == -1)
 		return (0);
 	j = i;
-	free_null_ptr(envp[i]);
-	while (envp[i + 1])
+	free_null_ptr(data->env[i]);
+	while (data->env[i + 1])
 	{
-		envp[i] = ft_strdup(envp[i + 1]);
-		free_null_ptr(envp[i + 1]);
+		data->env[i] = ft_strdup(data->env[i + 1]);
+		free_null_ptr(data->env[i + 1]);
 		j++;
 		i++;
 	}
-	envp = copy_env_var(envp, j);
-	if (!envp)
+	data->env = copy_env_var(data->env, j);
+	if (data->env)
 		return (1);
 	return (0);
 }
@@ -135,7 +135,7 @@ void	set_var_env(char *key, char *value, t_data *data)
 	int		i;
 	char	*tmp;
 
-	i = get_var_index(key, data->env);
+	i = get_var_index(key, data);
 	if (!value)
 		value = "";
 	tmp = ft_strjoin("=", value);
