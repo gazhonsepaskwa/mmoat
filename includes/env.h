@@ -20,5 +20,6 @@ char	*get_var_value(char	*key, char **envp);
 bool	is_valid_key(char *key, t_data *data);
 int		remove_env_var(char *key, t_data *data);
 void	set_var_env(char *key, char *value, t_data *t_data);
+char	**init_env(char **envp);
 
 #endif

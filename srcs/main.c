@@ -40,24 +40,6 @@ char	**ft_setnewenv(void)
 	return (envp);
 }
 
-char	**init_env(char **envp)
-{
-	char	**env;
-	int		i;
-
-	i = 0;
-	env = malloc(sizeof(char *) * (count_var(envp) + 1));
-	if (!env)
-		return (NULL);
-	env[count_var(envp)] = NULL;
-	while (envp[i])
-	{
-		env[i] = ft_strdup(envp[i]);
-		i++;
-	}
-	return (env);
-}
-
 t_data	*init_data(char **envp)
 {
 	t_data	*data;

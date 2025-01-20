@@ -157,3 +157,21 @@ void	set_var_env(char *key, char *value, t_data *data)
 	free_null_ptr(tmp);
 	return ;
 }
+
+char	**init_env(char **envp)
+{
+	char	**env;
+	int		i;
+
+	i = 0;
+	env = malloc(sizeof(char *) * (count_var(envp) + 1));
+	if (!env)
+		return (NULL);
+	env[count_var(envp)] = NULL;
+	while (envp[i])
+	{
+		env[i] = ft_strdup(envp[i]);
+		i++;
+	}
+	return (env);
+}
