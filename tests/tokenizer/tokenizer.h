@@ -22,11 +22,21 @@ typedef enum e_token
 	WORD
 }					t_token;
 
+typedef enum e_pres
+{
+	AND,
+	OR,
+	PIPE,
+	SUBSH_S,
+	SUBSH_E
+}					t_pres;
+
 typedef struct s_node
 {
 	struct s_node	*next;
 	char			*val;
 	enum e_token	token;
+	enum e_pres		pressision;
 }					t_node;
 
 t_node				*tokenize(char *str);
