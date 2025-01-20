@@ -1,111 +1,45 @@
 #include "../../includes/builtins.h"
 
-int	count_args(char **tab)
+void	pwd_update(t_data *data, char *src, char *dest)
 {
-	int	i;
-
-	i = 0;
-	while (tab[i])
-		i++;
-	return (i);
+	set_var_env("OLDPWD", src, data);
+	set_var_env("PWD", dest, data);
+	free_null_ptr(src);
+	free_null_ptr(dest);
 }
 
-char	**update_oldpwd(char **envp)
+int	exec_cd(char *path, t_data *data)
 {
-	char	**new_envp;
-	int		i;
+	char	*src;
+	char	*dest;
 
-	i = 0;
-	while (envp[i])
-		i++;
-	new_envp = malloc(sizeof(char *) * i + 1);
-	if (!new_envp)
-		return (perror("malloc"), NULL);
-	new_envp[i] = NULL;
-	i = -1;
-	while (envp[++i])
-	{
-		if (ft_strnstr(envp[i], "OLDPWD=", 7) == NULL)
-			new_envp[i] = ft_strdup(envp[i]);
-		else
-			new_envp[i] = ft_strjoin("OLDPWD=", getcwd(NULL, 0));
-	}
-	return (new_envp);
+	src = getcwd(NULL, 0);
+	if (chdir(path) == -1)
+		return (err_msg_cmd("cd", path, strerror(errno), EXIT_FAILURE));
+	dest = getcwd(NULL, 0);
+	pwd_update(data, src, dest);
+	return (0);
 }
 
-char	**update_pwd(char **envp)
+int	builtin_cd(char **arg, t_data *data)
 {
-	char	**new_envp;
-	int		i;
+	char	*path;
 
-	i = 0;
-	while (envp[i])
-		i++;
-	new_envp = malloc(sizeof(char *) * i + 1);
-	if (!new_envp)
-		return (perror("malloc"), NULL);
-	new_envp[i] = NULL;
-	i = -1;
-	while (envp[++i])
+	if (count_var(arg) == 1 || (count_var(arg) == 2 && ft_strncmp(arg[1], "~", 1) == 0))
 	{
-		if (ft_strnstr(envp[i], "PWD=", 4) == NULL)
-			new_envp[i] = ft_strdup(envp[i]);
-		else
-			new_envp[i] = ft_strjoin("PWD=", getcwd(NULL, 0));
+		path = get_var_value("HOME", data->env);
+		if (!path)
+			return (err_msg_cmd("cd", NULL, "HOME not set\n", EXIT_FAILURE));
+		return (exec_cd(path, data));
 	}
-	return (new_envp);
-}
-
-int	check_path(char *str)
-{
-	if (access(str, F_OK | X_OK) == -1)
+	if (count_var(arg) > 2)
+		return (err_msg_cmd("cd", NULL, "too many arguments\n", EXIT_FAILURE));
+	if (ft_strncmp(arg[1], "-", 1) == 0)
 	{
-		ft_put_s_fd(str, 2);
-		ft_put_s_fd(": ", 2);
-		perror("cd");
-		return (0);
+		path = get_var_value("OLDPWD", data->env);
+		if (!path)
+			return (err_msg_cmd("cd", NULL, "OLDPWD not set\n", EXIT_FAILURE));
+		return (exec_cd(path, data));
 	}
-	return (1);
-}
-
-// void	expand_var(char *str, char **envp)
-// {
-// 	char	*new_arg;
-// 	char	*tmp;
-// 	int		i;
-// 	int 	j;
-//
-// 	i = -1;
-// 	while (str[++i])
-// 	{
-// 		if (str[i] == '$')
-// 		{
-// 			j = 0;
-// 			while (str[j] && str[j] != ' ')
-// 				j++;
-// 			if (j >= 1)
-// 		}
-// 	}
-// }
-
-char	**builtin_cd(char **arg, char **envp)
-{
-	// char *path;
-
-	if (count_args(arg) >= 3)
-	{
-		ft_putendl_fd("cd: too many arguments", 2);
-		return (envp);
-	}
-	// path = expand_var(arg[1], envp);
-	if (!check_path(arg[1]))
-		return (envp);
-	envp = update_oldpwd(envp);
-	if (chdir(arg[1]) == -1)
-	{
-		perror("cd");
-		return (envp);
-	}
-	envp = update_pwd(envp);
-	return (envp);
+	return (exec_cd(arg[1], data));
 }

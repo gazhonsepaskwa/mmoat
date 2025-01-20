@@ -10,7 +10,7 @@ char	*powerline(void)
 	if (ft_strncmp(pwd, "/home/", 6) == 0)
 	{
 		pwd = pwd + 6;
-		while ((*pwd) != '/')
+		while (*pwd && (*pwd) != '/')
 			pwd = pwd + 1;
 		tilt = " ~";
 	}
@@ -40,14 +40,43 @@ char	**ft_setnewenv(void)
 	return (envp);
 }
 
+char	**init_env(char **envp)
+{
+	char	**env;
+	int		i;
+
+	i = 0;
+	env = malloc(sizeof(char *) * (count_var(envp) + 1));
+	if (!env)
+		return (NULL);
+	env[count_var(envp)] = NULL;
+	while (envp[i])
+	{
+		env[i] = ft_strdup(envp[i]);
+		i++;
+	}
+	return (env);
+}
+
+t_data	*init_data(char **envp)
+{
+	t_data	*data;
+
+	data = malloc (sizeof(t_data));
+	data->env = init_env(envp);
+	return (data);
+}
+
 int	main(int ac, char **av, char **envp)
 {
 	char	*input;
+	t_data	*data;
 
 	(void)ac;
 	(void)av;
-	if (!envp[0])
-		envp = ft_setnewenv();
+	// if (!envp[0])
+	// 	env = ft_setnewenv();
+	data = init_data(envp);
 	while (1)
 	{
 		input = powerline();
@@ -56,15 +85,15 @@ int	main(int ac, char **av, char **envp)
 		if (ft_strncmp(input, "pwd", 3) == 0)
 			builtin_pwd(input);
 		if (ft_strncmp(input, "echo", 4) == 0)
-			builtin_echo(input, envp);
+			builtin_echo(input, data->env);
 		if (ft_strncmp(input, "env", 3) == 0)
-			builtin_env(input, envp);
+			builtin_env(input, data->env);
 		if (ft_strncmp(input, "unset", 5) == 0)
-			builtin_unset(input, envp);
+			builtin_unset(ft_split(input, " "), data);
 		if (ft_strncmp(input, "cd", 2) == 0)
-			envp = builtin_cd(ft_split(input, " "), envp);
+			builtin_cd(ft_split(input, " "), data);
 		if (ft_strncmp(input, "export", 6) == 0)
-			envp = builtin_export(ft_split(input, " "), envp);
+			data->env = builtin_export(ft_split(input, " "), data->env);
 		free(input);
 	}
 	return (0);
