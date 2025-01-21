@@ -103,23 +103,36 @@ void	debug_linked_list(t_node *head, char *msg)
 			token = ft_strdup("   UNSET");
 		else
 			token = ft_strdup("     ???");
-	
+
 		// set vals for pressision token
-		if (current->pressision == AND)
+		if (current->pressision == COMMAND)
+			pres = ft_strdup("COMMAND");
+		else if (current->pressision == UNDEFINED)
+			pres = ft_strdup("UNDEF  ");
+		else if (current->pressision == AND)
 			pres = ft_strdup("AND    ");
-		if (current->pressision == OR)
+		else if (current->pressision == OR)
 			pres = ft_strdup("OR     ");
-		if (current->pressision == PIPE)
+		else if (current->pressision == PIPE)
 			pres = ft_strdup("PIPE   ");
-		if (current->pressision == SUBSH_S)
+		else if (current->pressision == SUBSH_S)
 			pres = ft_strdup("SUBSH_S");
-		if (current->pressision == SUBSH_E)
+		else if (current->pressision == SUBSH_E)
 			pres = ft_strdup("SUBSH_E");
+		else if (current->pressision == RED_L)
+			pres = ft_strdup("RED_L  ");
+		else if (current->pressision == RED_R)
+			pres = ft_strdup("RED_R  ");
+		else if (current->pressision == HEREDOC)
+			pres = ft_strdup("HEREDOC");
+		else if (current->pressision == D_RED_R)
+			pres = ft_strdup("D_RED_R");
 		else
 			pres = ft_strdup("???    ");
 
 		printf("| Node - TOKEN: %s.%s -> val: |%s|\n", token, pres, current->val);
 		free(token);
+		free(pres);
 		current = current->next;
 	}
 	printf("----------------------------------------------------------\n\n");

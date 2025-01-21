@@ -8,11 +8,7 @@ char	*copy_meta_xor(char *val, int *copied, int rev)
 
 	i = 0;
 	while (is_meta(val[i]) ^ rev)
-	{
-		if (!rev && val[i] != val[0])
-			break ;
 		i++;
-	}
 	*copied = i;
 	out = malloc(i + 1);
 	j = -1;

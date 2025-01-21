@@ -18,7 +18,7 @@ static t_node	*tokenize_base(char *str)
 	t_node	*head;
 	char	**tab;
 
-	tab = ft_split(str, " \t\n");
+	tab = ft_split_keep(str, " \t\n");
 	if (!tab)
 		return (NULL);
 	head = create_node(tab[0], 0);
@@ -43,6 +43,7 @@ static void	set_token(t_node *head)
 	while (it != NULL)
 	{
 		it->token = get_token(it->val);
+		it->pressision = get_pressision(it->val, it->token);
 		it = it->next;
 	}
 }
@@ -76,16 +77,17 @@ static int	unstick_nodes(t_node *head)
 	return (1);
 }
 
-static int	stick_quote_node(t_node *head)
+static int	stick_quote_node(t_node *head, char q)
 {
 	t_node	*it;
 
 	it = head;
 	while (it != NULL)
 	{
-		if (it->val[0] == '"')
+		if (it->val[0] == q && !ft_strchr(&it->val[1], q)
+			&& find_quote_node(it->next, q))
 		{
-			while (it->next->val[0] != '"')
+			while (it->next->val[0] != q)
 				if (!merge_with_next_node(it))
 					return (0);
 			if (!merge_with_next_node(it))
@@ -103,9 +105,16 @@ t_node	*tokenize(char *str)
 	head = tokenize_base(str);
 	if (!head)
 		return (NULL);
+	debug_linked_list(head, "Base_cut");
+	if (!trim_nodes(head))
+		return (NULL);
+	debug_linked_list(head, "Trimed");
 	if (!unstick_nodes(head))
 		return (NULL);
-	stick_quote_node(head);
+	debug_linked_list(head, "Nodes Unsticked");
+	stick_quote_node(head, 39);
+	stick_quote_node(head, '"');
+	debug_linked_list(head, "Quote Sticked");
 	set_token(head);
 	return (head);
 }
