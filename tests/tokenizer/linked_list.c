@@ -23,6 +23,7 @@ t_node	*create_node(char *val, t_token token)
 		return (NULL);
 	node->val = ft_strdup(val);
 	node->token = token;
+	node->pressision = 0;
 	node->next = NULL;
 	return (node);
 }
@@ -86,21 +87,38 @@ void	debug_linked_list(t_node *head, char *msg)
 {
 	t_node	*current;
 	char	*token;
+	char	*pres;
 
 	current = head;
 	printf("----------------------------------------------------------{%s} \n",
 		msg);
 	while (current != NULL)
 	{
+		// set val for base token
 		if (current->token == OPERATOR)
 			token = ft_strdup("OPERATOR");
 		else if (current->token == WORD)
-			token = ft_strdup("WORD    ");
+			token = ft_strdup("    WORD");
 		else if (current->token == UNSET)
-			token = ft_strdup("UNSET   ");
+			token = ft_strdup("   UNSET");
 		else
-			token = ft_strdup("???     ");
-		printf("| Node - TOKEN: %s -> val: |%s|\n", token, current->val);
+			token = ft_strdup("     ???");
+	
+		// set vals for pressision token
+		if (current->pressision == AND)
+			pres = ft_strdup("AND    ");
+		if (current->pressision == OR)
+			pres = ft_strdup("OR     ");
+		if (current->pressision == PIPE)
+			pres = ft_strdup("PIPE   ");
+		if (current->pressision == SUBSH_S)
+			pres = ft_strdup("SUBSH_S");
+		if (current->pressision == SUBSH_E)
+			pres = ft_strdup("SUBSH_E");
+		else
+			pres = ft_strdup("???    ");
+
+		printf("| Node - TOKEN: %s.%s -> val: |%s|\n", token, pres, current->val);
 		free(token);
 		current = current->next;
 	}

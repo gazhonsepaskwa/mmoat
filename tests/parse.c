@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "tokenizer/tokenizer.h"
+/*#include "../includes/env.h"*/
 
 void	truncate_comment(char *str)
 {
@@ -30,18 +31,28 @@ void	truncate_comment(char *str)
 	}
 }
 
-int	main(int ac, char **av)
+/*static t_data	*init_data(char **envp)*/
+/*{*/
+/*	t_data	*data;*/
+/**/
+/*	data = malloc (sizeof(t_data));*/
+/*	data->env = init_env(envp);*/
+/*	return (data);*/
+/*}*/
+
+int	main(int ac, char **av, char **envp)
 {
 	t_node	*lst;
-	char	*expanded;
 
 	(void)ac;
+	(void)envp;
+	/*t_data data;*/
+
+	/*data = init_data(envp);*/
 	truncate_comment(av[1]);
-	expanded = expander(av[1]);
-	lst = tokenize(expanded);
+	lst = tokenize(av[1]);
 	if (!lst)
-		return (free(expanded), 1);
-	ft_free(expanded);
+		return (1);
 	debug_linked_list(lst, "Tokenized");
 	free_linked_list(lst);
 }
