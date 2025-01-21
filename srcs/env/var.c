@@ -100,6 +100,13 @@ int	get_var_index(char *key, t_data *data)
 			free_null_ptr(new_key);
 			return (i);
 		}
+		else if (ft_strncmp(data->env[i], key, ft_strlen(key)) == 0
+			&& (ft_strchr(data->env[i], '=') == NULL && 
+			(ft_strlen(data->env[i]) == ft_strlen(key))))
+		{
+			free_null_ptr(new_key);
+			return (i);
+		}
 		i++;
 	}
 	free_null_ptr(new_key);

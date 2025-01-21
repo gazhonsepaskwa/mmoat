@@ -19,6 +19,7 @@
 # include <unistd.h>
 # include <limits.h>
 # include <stdarg.h>
+# include <errno.h>
 
 # include "colors.h"
 # include "general.h"
@@ -53,6 +54,7 @@ int		ft_toupper(int c);
 int		ft_tolower(int c);
 
 int		ft_atoi(const char *str);
+long	ft_atol(const char *str);
 char	*ft_itoa(int n);
 
 void	*ft_calloc(size_t count, size_t size);

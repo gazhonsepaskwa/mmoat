@@ -1,27 +1,20 @@
 #include "../../includes/builtins.h"
 
-int	is_silentchar(char c)
-{
-	if (c == 'n' || c == '-' || c == ' ')
-		return (1);
-	else
-		return (0);
-}
-
 int	is_silent(char *str)
 {
-	int	i;
+	int		i;
+	bool	flag;
 
-	i = 4;
-	while (str[i] && str[i] == ' ')
+	i = 0;
+	flag = false;
+	if (str[i] && str[i] != '-')
+		return (flag);
+	i++;
+	while (str[i] && str[i] == 'n')
 		i++;
-	if (str[i] && str[i] == '-')
-	{
-		i++;
-		if (str[i] && str[i] == 'n')
-			return (1);
-	}
-	return (0);
+	if (!str[i])
+		flag = true;
+	return (flag);
 }
 
 char	*ft_getenv(char *str, char **envp)
@@ -59,33 +52,44 @@ int	extractenv(char *str, char **envp)
 	return (i);
 }
 
-static void	echo_print(char *str, char **envp)
+static void	echo_print(char **arg, int j, char **envp)
 {
 	int	i;
 
-	i = 0;
-	while (str[i])
+	while (arg[j])
 	{
-		if (str[i] == '$')
+		i = 0;
+		while (arg[j][i])
 		{
-			if (!str[i + 1] || str[i + 1] == ' ')
-				ft_put_c(str[i++]);
+			if (arg[j][i] == '$')
+			{
+				if (!arg[j][i + 1] || arg[j][i + 1] == ' ')
+					ft_put_c(arg[j][i++]);
+				else
+					i += extractenv(&arg[j][i], envp);
+			}
 			else
-				i += extractenv(&str[i], envp);
+				ft_put_c(arg[j][i++]);
 		}
-		else
-			ft_put_c(str[i++]);
+		j++;
+		if (arg[j])
+			ft_put_c(' ');
 	}
 }
 
-void	builtin_echo(char *arg, char **envp)
+void	builtin_echo(char **arg, char **envp)
 {
-	int	i;
+	int		i;
+	bool	flag;
 
-	i = 4;
-	while (arg[i] && is_silentchar(arg[i]))
+	flag = false;
+	i = 1;
+	while (arg[i] && is_silent(arg[i]))
+	{
+		flag = true;
 		i++;
-	echo_print(&arg[i], envp);
-	if (!is_silent(arg))
+	}
+	echo_print(arg, i, envp);
+	if (!flag)
 		printf("\n");
 }

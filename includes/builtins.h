@@ -13,7 +13,7 @@
 # include <string.h>
 
 // void 	echo(char *msg, int flag);
-void	builtin_echo(char *arg, char **envp);
+void	builtin_echo(char **arg, char **envp);
 void	builtin_exit(char *arg, bool depth);
 void	builtin_pwd(char *arg);
 void	builtin_env(char *str, char **envp);

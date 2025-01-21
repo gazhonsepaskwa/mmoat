@@ -82,6 +82,10 @@ void	builtin_exit(char *str, bool depth)
 	char 	*arg;
 
 	arg = get_arg(str);
+	long res = ft_atol(arg);
+	(void)res;
+	if (errno == ERANGE)
+		ft_printf("error numeric aarg\n");
 	if (depth == true)
 	{
 		if (count_arg(str) >= 2)
@@ -96,12 +100,12 @@ void	builtin_exit(char *str, bool depth)
 			ft_putendl_fd(": numeric argument required", 2);
 			exit(2);
 		}
-		exit(ft_atoi(arg));
+		exit(ft_atoi(arg) % 256);
 	}
 	if (count_arg(str) >= 2)
 		bash_exiterrorcount();
 	else if (ft_isnumeric(arg))
-		bash_exit(ft_atoi(arg));
+		bash_exit(ft_atoi(arg) % 256);
 	else
 		bash_exit_errornum(arg);
 }

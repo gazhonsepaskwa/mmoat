@@ -1,47 +1,5 @@
 #include "../../includes/builtins.h"
 
-void	print_arr(char **envp)
-{
-	int		i;
-	char	*equal;
-
-	(void)equal;
-	i = -1;
-	while (envp[++i])
-	{
-			ft_printf("declare -x %s\n", envp[i]);
-	}
-}
-
-void	print_export(char **envp)
-{
-	int		i;
-	int		j;
-	char	*tmp;
-	int		len;
-
-	i = 0;
-	len = 0;
-	while (envp[len])
-		len++;
-	while (i < len - 1)
-	{
-		j = 0;
-		while (j < len - i - 1)
-		{
-			if (ft_strncmp(envp[j], envp[j + 1], ft_strchr(envp[j], '=') - envp[j]) > 0)
-			{
-				tmp = envp[j];
-				envp[j] = envp[j + 1];
-				envp[j + 1] = tmp;
-			}
-			j++;
-		}
-		i++;
-	}
-	print_arr(envp);
-}
-
 static void	free_tmp(char **tab)
 {
 	int	i;
@@ -68,6 +26,53 @@ char	**key_value(char *str)
 		tmp[1] = ft_substr(equal, 1, ft_strlen(equal));
 	tmp[2] = NULL;
 	return (tmp);
+}
+
+void	print_arr(char **envp)
+{
+	int		i;
+	char	*equal;
+	char	**print;
+
+	(void)equal;
+	i = -1;
+	while (envp[++i])
+	{
+		print = key_value(envp[i]);
+		if (print[1])
+			ft_printf("declare -x %s=\"%s\"\n", print[0], print[1]);
+		else
+			ft_printf("declare -x %s\n", print[0]);
+		free_tmp(print);
+	}
+}
+
+void	print_export(char **envp)
+{
+	int		i;
+	int		j;
+	char	*tmp;
+	int		len;
+
+	i = -1;
+	len = 0;
+	while (envp[len])
+		len++;
+	while (++i < len - 1)
+	{
+		j = 0;
+		while (j < len - i - 1)
+		{
+			if (ft_strncmp(envp[j], envp[j + 1], ft_strchr(envp[j], '=') - envp[j]) > 0)
+			{
+				tmp = envp[j];
+				envp[j] = envp[j + 1];
+				envp[j + 1] = tmp;
+			}
+			j++;
+		}
+	}
+	print_arr(envp);
 }
 
 void	builtin_export(char **arg, t_data *data)

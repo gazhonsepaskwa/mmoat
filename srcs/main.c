@@ -67,7 +67,7 @@ int	main(int ac, char **av, char **envp)
 		if (ft_strncmp(input, "pwd", 3) == 0)
 			builtin_pwd(input);
 		if (ft_strncmp(input, "echo", 4) == 0)
-			builtin_echo(input, data->env);
+			builtin_echo(ft_split(input, " "), data->env);
 		if (ft_strncmp(input, "env", 3) == 0)
 			builtin_env(input, data->env);
 		if (ft_strncmp(input, "unset", 5) == 0)
