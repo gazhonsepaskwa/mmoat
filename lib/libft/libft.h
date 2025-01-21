@@ -59,8 +59,10 @@ void	*ft_calloc(size_t count, size_t size);
 void	ft_bzero(void *s, size_t n);
 
 char	**ft_split(const char *s, char *set);
+char	**ft_split_keep(const char *s, char *set);
 int		is_charset(char c, char *set);
 void	free_tab(char **tab);
+char	**free_all(char **tab, int count);
 
 void	ft_put_c_fd(char c, int fd);
 void	ft_put_s_fd(char *s, int fd);
