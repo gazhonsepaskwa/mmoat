@@ -19,7 +19,7 @@ void	builtin_pwd(char *arg);
 void	builtin_env(char *str, char **envp);
 int	builtin_unset(char **arg, t_data *data);
 int	builtin_cd(char **arg, t_data *data);
-char	**builtin_export(char **arg, char **envp);
+void	builtin_export(char **arg, t_data *data);
 
 //UTILS
 int	count_char(char *str);

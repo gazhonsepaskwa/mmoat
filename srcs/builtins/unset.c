@@ -23,7 +23,13 @@
 //
 int	builtin_unset(char **arg, t_data *data)
 {
+	int	i;
+	int	ret;
+
+	i = 0;
 	if (count_var(arg) == 1)
 		return (err_msg_cmd("unset", NULL, "not enough arguments", EXIT_FAILURE));
-	return (remove_env_var(arg[1], data));	
+	while (++i < count_var(arg))
+		ret = remove_env_var(arg[i], data);	
+	return (ret);
 }
