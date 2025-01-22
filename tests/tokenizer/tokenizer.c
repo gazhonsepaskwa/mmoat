@@ -38,12 +38,15 @@ static t_node	*tokenize_base(char *str)
 static void	set_token(t_node *head)
 {
 	t_node	*it;
+	t_token	last_token;
 
 	it = head;
+	last_token = UNSET;
 	while (it != NULL)
 	{
 		it->token = get_token(it->val);
-		it->pressision = get_pressision(it->val, it->token);
+		it->pressision = get_pressision(it->val, it->token, last_token);
+		last_token = it->token;
 		it = it->next;
 	}
 }

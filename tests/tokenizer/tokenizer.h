@@ -34,7 +34,8 @@ typedef enum e_pres
 	RED_L,
 	RED_R,
 	HEREDOC,
-	D_RED_R
+	D_RED_R,
+	PARAMETER
 }					t_pres;
 
 typedef struct s_node
@@ -51,7 +52,7 @@ int					add_node_back(t_node *head, char *val, t_token token);
 int					merge_with_next_node(t_node *node);
 void				free_linked_list(t_node *stack);
 t_token				get_token(char *str);
-t_pres				get_pressision(char *str, t_token token);
+t_pres				get_pressision(char *s, t_token token, t_token last_token);
 int					create_node_after(t_node *elem, char *val);
 char				*copy_meta_xor(char *val, int *copied, int rev);
 int					is_meta(char c);

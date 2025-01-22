@@ -15,14 +15,20 @@
 
 void	truncate_comment(char *str)
 {
-	int	i;
+	int		i;
+	char	inquote;
 
 	if (!str)
 		return ;
 	i = 0;
+	inquote = 0;
 	while (str[i])
 	{
-		if (str[i] == '#')
+		if (!inquote && (str[i] == 39 || str[i] == '"'))
+			inquote = str[i];
+		else if (inquote && (str[i] == inquote))
+			inquote = 0;
+		if (str[i] == '#' && !inquote && str[i - 1] && str[i - 1] != '\\')
 		{
 			str[i] = 0;
 			return ;

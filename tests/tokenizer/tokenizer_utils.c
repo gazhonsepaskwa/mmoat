@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   tokenizer_utils.c                                  :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: nalebrun <nalebrun@student.s19.be>        +#+  +:+       +#+         */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/01/22 14:24:05 by nalebrun          #+#    #+#             */
+/*   Updated: 2025/01/22 14:24:05 by nalebrun         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "tokenizer.h"
 
 int	is_meta(char c)
@@ -43,7 +55,6 @@ int	ft_str_count(char *s, char c)
 	return (count);
 }
 
-
 int	trim_nodes(t_node *head)
 {
 	t_node	*it;
@@ -88,4 +99,3 @@ int	find_quote_node(t_node *head, char q)
 	}
 	return (0);
 }
-

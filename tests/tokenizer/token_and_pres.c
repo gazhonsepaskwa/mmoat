@@ -48,9 +48,11 @@ t_token	get_token(char *str)
 	return (token);
 }
 
-t_pres get_pressision(char *s, t_token token)
+t_pres get_pressision(char *s, t_token token, t_token last_token)
 {
 	if (token == OPERATOR)
 		return (get_operator(s));
-	return (COMMAND);
+	else if (last_token == OPERATOR || last_token == UNSET)
+		return (COMMAND);
+	return (PARAMETER);
 }

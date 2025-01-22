@@ -106,27 +106,29 @@ void	debug_linked_list(t_node *head, char *msg)
 
 		// set vals for pressision token
 		if (current->pressision == COMMAND)
-			pres = ft_strdup("COMMAND");
+			pres = ft_strdup("COMMAND  ");
 		else if (current->pressision == UNDEFINED)
-			pres = ft_strdup("UNDEF  ");
+			pres = ft_strdup("UNDEF    ");
 		else if (current->pressision == AND)
-			pres = ft_strdup("AND    ");
+			pres = ft_strdup("AND      ");
 		else if (current->pressision == OR)
-			pres = ft_strdup("OR     ");
+			pres = ft_strdup("OR       ");
 		else if (current->pressision == PIPE)
-			pres = ft_strdup("PIPE   ");
+			pres = ft_strdup("PIPE     ");
 		else if (current->pressision == SUBSH_S)
-			pres = ft_strdup("SUBSH_S");
+			pres = ft_strdup("SUBSH_S  ");
 		else if (current->pressision == SUBSH_E)
-			pres = ft_strdup("SUBSH_E");
+			pres = ft_strdup("SUBSH_E  ");
 		else if (current->pressision == RED_L)
-			pres = ft_strdup("RED_L  ");
+			pres = ft_strdup("RED_L    ");
 		else if (current->pressision == RED_R)
-			pres = ft_strdup("RED_R  ");
+			pres = ft_strdup("RED_R    ");
 		else if (current->pressision == HEREDOC)
-			pres = ft_strdup("HEREDOC");
+			pres = ft_strdup("HEREDOC  ");
 		else if (current->pressision == D_RED_R)
-			pres = ft_strdup("D_RED_R");
+			pres = ft_strdup("D_RED_R  ");
+		else if (current->pressision == PARAMETER)
+			pres = ft_strdup("PARAMETER");
 		else
 			pres = ft_strdup("???    ");
 
