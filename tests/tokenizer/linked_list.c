@@ -129,6 +129,10 @@ void	debug_linked_list(t_node *head, char *msg)
 			pres = ft_strdup("D_RED_R  ");
 		else if (current->pressision == PARAMETER)
 			pres = ft_strdup("PARAMETER");
+		else if (current->pressision == RED_FILE)
+			pres = ft_strdup("RED_FILE ");
+		else if (current->pressision == LIM)
+			pres = ft_strdup("LIM      ");
 		else
 			pres = ft_strdup("???    ");
 
