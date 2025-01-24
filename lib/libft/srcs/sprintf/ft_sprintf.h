@@ -13,10 +13,7 @@
 #ifndef FT_SPRINTF_H
 # define FT_SPRINTF_H
 
-# include <stdlib.h>
-# include <stdarg.h>
-# include <stdio.h>
-# include "../lib/libft/libft.h" 
+# include "../../libft.h" 
 
 char	*ft_strfjoin(char *s1, char *s2);
 char	*ft_strfjoinc(char *s1, char c);

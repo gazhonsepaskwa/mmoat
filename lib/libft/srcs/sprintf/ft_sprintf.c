@@ -21,12 +21,15 @@ static int	is_spec(char c)
 
 static char	*add_arg(char c, char *str, va_list args)
 {
+	char	*out;
+
 	if (c == 'c')
-		return (ft_strfjoinc(str, va_arg(args, int)));
+		out = ft_strfjoinc(str, va_arg(args, int));
 	else if (c == 's')
-		return (ft_strfjoin(str, va_arg(args, char *)));
+		out = ft_strfjoin(str, va_arg(args, char *));
 	else if (c == 'd')
-		return (ft_strfjoind(str, ft_itoa(va_arg(args, int))));
+		out = ft_strfjoind(str, ft_itoa(va_arg(args, int)));
+	return (out);
 }
 
 static char	*build_str(const char *str, va_list args)

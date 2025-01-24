@@ -19,10 +19,12 @@
 # include <unistd.h>
 # include <limits.h>
 # include <stdarg.h>
+# include <fcntl.h>
 # include <errno.h>
 
 # include "colors.h"
 # include "general.h"
+# include "srcs/drawio/drawio.h"
 
 int		ft_isalpha(int c);
 int		ft_isdigit(int c);
@@ -80,6 +82,7 @@ void	ft_error(char *e);
 
 int		ft_printf(const char *fstr, ...);
 int		ft_fprintf(int fd, const char *str, ...);
+char	*ft_sprintf(const char *str, ...);
 int		ft_debug(const char *fstr, ...);
 
 char	*get_next_line(int fd);

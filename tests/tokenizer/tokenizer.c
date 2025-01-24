@@ -111,16 +111,12 @@ t_node	*tokenize(char *str)
 	head = tokenize_base(str);
 	if (!head)
 		return (NULL);
-	debug_linked_list(head, "Base_cut");
 	if (!trim_nodes(head))
 		return (NULL);
-	debug_linked_list(head, "Trimed");
 	if (!unstick_nodes(head))
 		return (NULL);
-	debug_linked_list(head, "Nodes Unsticked");
 	stick_quote_node(head, 39);
 	stick_quote_node(head, '"');
-	debug_linked_list(head, "Quote Sticked");
 	set_token(head);
 	return (head);
 }

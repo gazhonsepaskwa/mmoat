@@ -46,7 +46,7 @@ $(TEST_OBJDIR)/%.o: $(TEST_SRCDIR)/%.c
 	@mkdir -p $(dir $@)
 	@$(CC) $(WFLAGS) -MMD -MP -I$(INCDIR) -c $< -g3 -ggdb -o $@ $(LINK)
 
-test: $(LIBFT) $(TEST_OBJS)
+tests: $(LIBFT) $(TEST_OBJS)
 	@$(CC) $(WFLAGS) $(TEST_OBJS) $(LIBFT) -o test $(LINK)
 	@echo "$(CYAN)Test build completed: test$(RESET)"
 
