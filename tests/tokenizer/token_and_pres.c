@@ -48,10 +48,16 @@ t_token	get_token(char *str)
 	return (token);
 }
 
-t_pres get_pressision(char *s, t_token token, t_token last_token)
+t_pres get_pressision(char *s, t_token token,
+						t_token last_token, t_pres last_pres)
 {
 	if (token == OPERATOR)
 		return (get_operator(s));
+	else if (last_token == OPERATOR && (last_pres == RED_R 
+				|| last_pres == RED_L || last_pres == D_RED_R))
+		return (RED_FILE);
+	else if (last_token == OPERATOR && last_pres == HEREDOC)
+		return (LIM);
 	else if (last_token == OPERATOR || last_token == UNSET)
 		return (COMMAND);
 	return (PARAMETER);

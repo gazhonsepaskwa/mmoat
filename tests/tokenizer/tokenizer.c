@@ -39,14 +39,17 @@ static void	set_token(t_node *head)
 {
 	t_node	*it;
 	t_token	last_token;
+	t_pres	last_pres;
 
 	it = head;
 	last_token = UNSET;
+	last_pres = UNDEFINED;
 	while (it != NULL)
 	{
 		it->token = get_token(it->val);
-		it->pressision = get_pressision(it->val, it->token, last_token);
+		it->pressision = get_pressision(it->val, it->token, last_token, last_pres);
 		last_token = it->token;
+		last_pres = it->pressision;
 		it = it->next;
 	}
 }
