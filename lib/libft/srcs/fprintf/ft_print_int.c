@@ -27,7 +27,7 @@ static char	*ft_itoa_num(int num, t_flags flags)
 	nbr = num;
 	len = num_len(nbr);
 	len = get_size(num, len, flags);
-	str = malloc(len + 1);
+	str = ft_calloc(len + 1, sizeof(char));
 	if (!str)
 		return (NULL);
 	str[len] = '\0';
