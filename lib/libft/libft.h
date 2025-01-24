@@ -79,6 +79,7 @@ int		ft_put_ui(unsigned int n);
 void	ft_error(char *e);
 
 int		ft_printf(const char *fstr, ...);
+int		ft_fprintf(int fd, const char *str, ...);
 int		ft_debug(const char *fstr, ...);
 
 char	*get_next_line(int fd);
