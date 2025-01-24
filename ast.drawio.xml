@@ -1,0 +1,42 @@
+<mxfile host="app.diagrams.net" modified="2025-01-24T12:00:00Z" agent="C-Shell-AST" version="15.8.7" type="device">
+  <diagram id="AST" name="AST-Diagram">
+    <mxGraphModel>
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+      <mxCell id="104" value="SEQUENCE" style="shape=rectangle;whiteSpace=wrap;html=1;"
+               vertex="1" parent="1">
+        <mxGeometry x="160.00" y="0.00" width="120.00" height="60.00" as="geometry"/>
+      </mxCell>
+      <mxCell id="103" value="PIPE" style="shape=rectangle;whiteSpace=wrap;html=1;"
+               vertex="1" parent="1">
+        <mxGeometry x="80.00" y="160.00" width="120.00" height="60.00" as="geometry"/>
+      </mxCell>
+      <mxCell id="100" value="COMMAND\nls -l " style="shape=rectangle;whiteSpace=wrap;html=1;"
+               vertex="1" parent="1">
+        <mxGeometry x="0.00" y="320.00" width="120.00" height="60.00" as="geometry"/>
+      </mxCell>
+      <mxCell id="101" value="COMMAND\ngrep .c " style="shape=rectangle;whiteSpace=wrap;html=1;"
+               vertex="1" parent="1">
+        <mxGeometry x="160.00" y="320.00" width="120.00" height="60.00" as="geometry"/>
+      </mxCell>
+      <mxCell id="102" value="COMMAND\necho done " style="shape=rectangle;whiteSpace=wrap;html=1;"
+               vertex="1" parent="1">
+        <mxGeometry x="320.00" y="160.00" width="120.00" height="60.00" as="geometry"/>
+      </mxCell>
+      <mxCell id="edge_104_103" edge="1" parent="1" source="104" target="103">
+        <mxGeometry relative="1" as="geometry"/>
+      </mxCell>
+      <mxCell id="edge_104_102" edge="1" parent="1" source="104" target="102">
+        <mxGeometry relative="1" as="geometry"/>
+      </mxCell>
+      <mxCell id="edge_103_100" edge="1" parent="1" source="103" target="100">
+        <mxGeometry relative="1" as="geometry"/>
+      </mxCell>
+      <mxCell id="edge_103_101" edge="1" parent="1" source="103" target="101">
+        <mxGeometry relative="1" as="geometry"/>
+      </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
