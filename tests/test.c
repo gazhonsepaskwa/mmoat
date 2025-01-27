@@ -49,24 +49,20 @@ void	truncate_comment(char *str)
 int	main(int ac, char **av, char **envp)
 {
 	t_node	*lst;
-
-	(void)ac;
-	(void)envp;
+	/*t_data data;*/
 
 	if (ac != 3)
 	{
 		ft_error("./test drawio_file command_str\n");
 		return (1);
 	}
-
-	/*t_data data;*/
-
 	/*data = init_data(envp);*/
 	truncate_comment(av[1]);
 	lst = tokenize(av[2]);
 	if (!lst)
 		return (1);
 	gen_dio_linked_list(lst, av[1]);
-	debug_linked_list(lst, "ff");
+	/*debug_linked_list(lst, "ff");*/
+	return_hardcode_ast(envp);
 	free_linked_list(lst);
 }
