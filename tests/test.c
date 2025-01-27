@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "tokenizer/tokenizer.h"
+#include "parsing.h"
 /*#include "../includes/env.h"*/
 
 void	truncate_comment(char *str)
@@ -35,36 +35,6 @@ void	truncate_comment(char *str)
 		}
 		i++;
 	}
-}
-
-void gen_dio_linked_list(t_node *head, char *fp)
-{
-	int fd;
-	t_dio_elem rect;
-	t_dio_elem arrow;
-	t_node *current;
-
-	current = head;
-	fd = drawio_init(fp);
-	rect.type = RECT;
-	rect.rounded = 0;
-	rect.x = 50;
-	rect.y = 50;
-	rect.w = 100;
-	rect.h = 50;
-	arrow.id_src = 0;
-	arrow.type = ARROW;
-	while (current != NULL)
-	{
-		rect.text = ft_sprintf("%s", current->val);
-		arrow.id_dst = drawio_create_elem(fd, &rect);
-		drawio_create_elem(fd, &arrow);
-		arrow.id_src = arrow.id_dst;
-		rect.x += 150;
-		free(rect.text);
-		current = current->next;
-	}
-	drawio_end_file(fd);
 }
 
 /*static t_data	*init_data(char **envp)*/
@@ -96,7 +66,7 @@ int	main(int ac, char **av, char **envp)
 	lst = tokenize(av[2]);
 	if (!lst)
 		return (1);
-	debug_linked_list(lst, "Tokenized");
 	gen_dio_linked_list(lst, av[1]);
+	debug_linked_list(lst, "ff");
 	free_linked_list(lst);
 }

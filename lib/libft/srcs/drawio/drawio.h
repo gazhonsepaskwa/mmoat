@@ -13,7 +13,7 @@
 #ifndef DRAWIO_H
 # define DRAWIO_H
 
-#include "../../libft.h" 
+# include "../../libft.h" 
 
 typedef enum e_dio_elemtype
 {
@@ -35,8 +35,8 @@ typedef struct s_dio_elem
 
 }	t_dio_elem;
 
-int drawio_init(char *file_path);
-int drawio_create_elem(int fd, t_dio_elem *elem);
-void drawio_end_file(int fd);
+int		drawio_init(char *file_path);
+int		drawio_create_elem(int fd, t_dio_elem *elem);
+void	drawio_end_file(int fd);
 
 #endif
