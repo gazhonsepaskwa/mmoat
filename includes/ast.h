@@ -3,17 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   ast.h                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nalebrun <nalebrun@student.s19.be>        +#+  +:+       +#+         */
+/*   By: lderidde <lderidde@student.s19.be>        +#+  +:+       +#+         */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/24 08:23:27 by nalebrun          #+#    #+#             */
-/*   Updated: 2025/01/24 08:23:27 by nalebrun         ###   ########.fr       */
+/*   Created: 2025/01/24 08:23:27 by lderidde          #+#    #+#             */
+/*   Updated: 2025/01/27 14:15:24 by lderidde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef AST_H
 # define AST_H
 
-# include "../../includes/env.h"
+# include "env.h"
 
 typedef enum e_state
 {

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: lderidde <lderidde@student.s19.be>        +#+  +:+       +#+         */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/01/27 14:16:52 by lderidde          #+#    #+#             */
+/*   Updated: 2025/01/27 15:13:16 by lderidde         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/minishell.h" 
 
 char	*powerline(void)
@@ -40,43 +52,44 @@ char	**ft_setnewenv(void)
 	return (envp);
 }
 
-static t_data	*init_data(char **envp)
-{
-	t_data	*data;
-
-	data = malloc (sizeof(t_data));
-	data->env = init_env(envp);
-	return (data);
-}
+// static t_data	*init_data(char **envp)
+// {
+// 	t_data	*data;
+//
+// 	data = malloc (sizeof(t_data));
+// 	data->env = init_env(envp);
+// 	return (data);
+// }
 
 int	main(int ac, char **av, char **envp)
 {
-	char	*input;
-	t_data	*data;
+	// char	*input;
+	t_ast_n	*node;
 
 	(void)ac;
 	(void)av;
 	// if (!envp[0])
 	// 	env = ft_setnewenv();
-	data = init_data(envp);
-	while (1)
-	{
-		input = powerline();
-		if (ft_strncmp(input, "exit", 4) == 0)
-			builtin_exit(input, true);
-		if (ft_strncmp(input, "pwd", 3) == 0)
-			builtin_pwd(input);
-		if (ft_strncmp(input, "echo", 4) == 0)
-			builtin_echo(ft_split(input, " "), data->env);
-		if (ft_strncmp(input, "env", 3) == 0)
-			builtin_env(input, data->env);
-		if (ft_strncmp(input, "unset", 5) == 0)
-			builtin_unset(ft_split(input, " "), data);
-		if (ft_strncmp(input, "cd", 2) == 0)
-			builtin_cd(ft_split(input, " "), data);
-		if (ft_strncmp(input, "export", 6) == 0)
-			builtin_export(ft_split(input, " "), data);
-		free(input);
-	}
+	node = return_hardcode_ast(envp);
+	execute_command(node);
+	// while (1)
+	// {
+	// 	input = powerline();
+	// 	if (ft_strncmp(input, "exit", 4) == 0)
+	// 		builtin_exit(input, true);
+	// 	if (ft_strncmp(input, "pwd", 3) == 0)
+	// 		builtin_pwd(input);
+	// 	if (ft_strncmp(input, "echo", 4) == 0)
+	// 		builtin_echo(ft_split(input, " "), data->env);
+	// 	if (ft_strncmp(input, "env", 3) == 0)
+	// 		builtin_env(input, data->env);
+	// 	if (ft_strncmp(input, "unset", 5) == 0)
+	// 		builtin_unset(ft_split(input, " "), data);
+	// 	if (ft_strncmp(input, "cd", 2) == 0)
+	// 		builtin_cd(ft_split(input, " "), data);
+	// 	if (ft_strncmp(input, "export", 6) == 0)
+	// 		builtin_export(ft_split(input, " "), data);
+	// 	free(input);
+	// }
 	return (0);
 }

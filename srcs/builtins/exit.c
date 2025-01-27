@@ -6,7 +6,7 @@
 /*   By: lderidde <lderidde@student.s19.be>        +#+  +:+       +#+         */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/24 14:32:13 by lderidde          #+#    #+#             */
-/*   Updated: 2025/01/24 14:32:13 by lderidde         ###   ########.fr       */
+/*   Updated: 2025/01/27 11:19:17 by lderidde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,12 +112,12 @@ void	builtin_exit(char *str, bool depth)
 			ft_putendl_fd(": numeric argument required", 2);
 			exit(2);
 		}
-		exit(ft_atoi(arg) % 256);
+		exit(ft_atol(arg) % 256);
 	}
 	if (count_arg(str) >= 2)
 		bash_exiterrorcount();
 	else if (ft_isnumeric(arg))
-		bash_exit(ft_atoi(arg) % 256);
+		bash_exit(ft_atol(arg) % 256);
 	else
 		bash_exit_errornum(arg);
 }
