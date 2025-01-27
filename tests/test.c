@@ -49,6 +49,8 @@ void	truncate_comment(char *str)
 int	main(int ac, char **av, char **envp)
 {
 	t_node	*lst;
+	t_ast_n	*ast;
+	int 	dio;
 	/*t_data data;*/
 
 	if (ac != 3)
@@ -61,8 +63,11 @@ int	main(int ac, char **av, char **envp)
 	lst = tokenize(av[2]);
 	if (!lst)
 		return (1);
-	gen_dio_linked_list(lst, av[1]);
+	dio = drawio_init(av[1]);
+	gen_dio_linked_list(lst, dio);
 	/*debug_linked_list(lst, "ff");*/
-	return_hardcode_ast(envp);
+	ast = return_hardcode_ast(envp);
+	gen_dio_ast(ast, dio);
+	drawio_end_file(dio);
 	free_linked_list(lst);
 }

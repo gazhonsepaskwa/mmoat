@@ -30,6 +30,9 @@ t_ast_n	*created_ast_n(t_state st, t_ast_n *prt, t_ast_n *he)
 	node->redir = _NR;
 	node->infile = NULL;
 	node->outfile = NULL;
+	node->left = NULL;
+	node->right = NULL;
+	node->pline = NULL;
 	if (prt)
 		node->shlvl = prt->shlvl;
 	else

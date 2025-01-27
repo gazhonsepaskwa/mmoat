@@ -15,9 +15,9 @@
 
 # include "tokenizer/tokenizer.h"
 # include "ast/ast.h"
+# include "drawio/drawio.h"
 
 // drawio
-void 	gen_dio_linked_list(t_node *head, char *fp);
 
 // tmp_env
 char	**init_env(char **envp);

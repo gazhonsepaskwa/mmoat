@@ -5,38 +5,22 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: nalebrun <nalebrun@student.s19.be>        +#+  +:+       +#+         */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/24 09:34:41 by nalebrun          #+#    #+#             */
-/*   Updated: 2025/01/24 09:34:41 by nalebrun         ###   ########.fr       */
+/*   Created: 2025/01/27 14:20:35 by nalebrun          #+#    #+#             */
+/*   Updated: 2025/01/27 14:20:35 by nalebrun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef DRAWIO_H
 # define DRAWIO_H
 
-# include "../../libft.h" 
+# include "../../lib/libft/libft.h"
+# include "../tokenizer/tokenizer.h"
+# include "../ast/ast.h"
 
-typedef enum e_dio_elemtype
-{
-	RECT,
-	ARROW,
-}	t_dio_elemtype;
+// internal
+char* replace_ampercent(char *src);
 
-typedef struct s_dio_elem
-{
-	t_dio_elemtype	type;
-	char			*text;
-	int				x;
-	int				y;
-	int				w;
-	int				h;
-	int				id_src;
-	int				id_dst;
-	int				rounded;
-
-}	t_dio_elem;
-
-int		drawio_init(char *file_path);
-int		drawio_create_elem(int fd, t_dio_elem *elem);
-void	drawio_end_file(int fd);
-
+// external
+void 	gen_dio_linked_list(t_node *head, int fd);
+void	gen_dio_ast(t_ast_n *head, int fd);
 #endif
