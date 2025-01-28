@@ -6,7 +6,7 @@
 /*   By: lderidde <lderidde@student.s19.be>        +#+  +:+       +#+         */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 14:16:52 by lderidde          #+#    #+#             */
-/*   Updated: 2025/01/27 15:13:16 by lderidde         ###   ########.fr       */
+/*   Updated: 2025/01/28 08:46:01 by lderidde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ int	main(int ac, char **av, char **envp)
 	// if (!envp[0])
 	// 	env = ft_setnewenv();
 	node = return_hardcode_ast(envp);
-	execute_command(node);
+	return (execute_command(node));
 	// while (1)
 	// {
 	// 	input = powerline();
@@ -91,5 +91,4 @@ int	main(int ac, char **av, char **envp)
 	// 		builtin_export(ft_split(input, " "), data);
 	// 	free(input);
 	// }
-	return (0);
 }

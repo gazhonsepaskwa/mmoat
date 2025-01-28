@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   builtins.h                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: lderidde <lderidde@student.s19.be>        +#+  +:+       +#+         */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/01/28 09:01:33 by lderidde          #+#    #+#             */
+/*   Updated: 2025/01/28 10:35:06 by lderidde         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef BUILTINS_H
 # define BUILTINS_H
 
@@ -13,13 +25,13 @@
 # include <string.h>
 
 // void 	echo(char *msg, int flag);
-void	builtin_echo(char **arg, char **envp);
-void	builtin_exit(char *arg, bool depth);
-void	builtin_pwd(char *arg);
-void	builtin_env(char *str, char **envp);
-int	builtin_unset(char **arg, t_data *data);
-int	builtin_cd(char **arg, t_data *data);
-void	builtin_export(char **arg, t_data *data);
+int		builtin_echo(char **arg, char **envp);
+int		builtin_exit(char **arg, bool depth);
+int		builtin_pwd(char **arg);
+int		builtin_env(char **arg, char **envp);
+int	builtin_unset(char **arg, t_ast_n *head);
+int	builtin_cd(char **arg, t_ast_n *head);
+int	builtin_export(char **arg, t_ast_n *head);
 
 //UTILS
 int	count_char(char *str);

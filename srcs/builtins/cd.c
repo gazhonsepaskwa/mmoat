@@ -6,21 +6,21 @@
 /*   By: lderidde <lderidde@student.s19.be>        +#+  +:+       +#+         */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/24 14:31:49 by lderidde          #+#    #+#             */
-/*   Updated: 2025/01/24 14:31:49 by lderidde         ###   ########.fr       */
+/*   Updated: 2025/01/28 10:06:11 by lderidde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/builtins.h"
 
-void	pwd_update(t_data *data, char *src, char *dest)
+void	pwd_update(t_ast_n *head, char *src, char *dest)
 {
-	set_var_env("OLDPWD", src, data);
-	set_var_env("PWD", dest, data);
+	set_var_env("OLDPWD", src, head);
+	set_var_env("PWD", dest, head);
 	free_null_ptr(src);
 	free_null_ptr(dest);
 }
 
-int	exec_cd(char *path, t_data *data)
+int	exec_cd(char *path, t_ast_n *head)
 {
 	char	*src;
 	char	*dest;
@@ -29,29 +29,29 @@ int	exec_cd(char *path, t_data *data)
 	if (chdir(path) == -1)
 		return (err_msg_cmd("cd", path, strerror(errno), EXIT_FAILURE));
 	dest = getcwd(NULL, 0);
-	pwd_update(data, src, dest);
+	pwd_update(head, src, dest);
 	return (0);
 }
 
-int	builtin_cd(char **arg, t_data *data)
+int	builtin_cd(char **arg, t_ast_n *head)
 {
 	char	*path;
 
 	if (count_var(arg) == 1 || (count_var(arg) == 2 && ft_strncmp(arg[1], "~", 1) == 0))
 	{
-		path = get_var_value("HOME", data->env);
+		path = get_var_value("HOME", head->env);
 		if (!path)
 			return (err_msg_cmd("cd", NULL, "HOME not set\n", EXIT_FAILURE));
-		return (exec_cd(path, data));
+		return (exec_cd(path, head));
 	}
 	if (count_var(arg) > 2)
 		return (err_msg_cmd("cd", NULL, "too many arguments\n", EXIT_FAILURE));
 	if (ft_strncmp(arg[1], "-", 1) == 0)
 	{
-		path = get_var_value("OLDPWD", data->env);
+		path = get_var_value("OLDPWD", head->env);
 		if (!path)
 			return (err_msg_cmd("cd", NULL, "OLDPWD not set\n", EXIT_FAILURE));
-		return (exec_cd(path, data));
+		return (exec_cd(path, head));
 	}
-	return (exec_cd(arg[1], data));
+	return (exec_cd(arg[1], head));
 }

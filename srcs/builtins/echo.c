@@ -6,7 +6,7 @@
 /*   By: lderidde <lderidde@student.s19.be>        +#+  +:+       +#+         */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/24 14:31:56 by lderidde          #+#    #+#             */
-/*   Updated: 2025/01/24 14:31:56 by lderidde         ###   ########.fr       */
+/*   Updated: 2025/01/28 09:34:41 by lderidde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,7 @@ static void	echo_print(char **arg, int j, char **envp)
 	}
 }
 
-void	builtin_echo(char **arg, char **envp)
+int	builtin_echo(char **arg, char **envp)
 {
 	int		i;
 	bool	flag;
@@ -104,4 +104,5 @@ void	builtin_echo(char **arg, char **envp)
 	echo_print(arg, i, envp);
 	if (!flag)
 		printf("\n");
+	return (0);
 }

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   var.c                                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: lderidde <lderidde@student.s19.be>        +#+  +:+       +#+         */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/01/28 10:08:49 by lderidde          #+#    #+#             */
+/*   Updated: 2025/01/28 10:09:55 by lderidde         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../includes/minishell.h"
 
 void	free_null_ptr(void *ptr)
@@ -63,7 +75,7 @@ char	*get_var_value(char	*key, char **envp)
 	return (NULL);
 }
 
-bool	is_valid_key(char *key, t_data *data)
+bool	is_valid_key(char *key, t_ast_n *head)
 {
 	char	*tmp;
 	int		i;
@@ -71,9 +83,9 @@ bool	is_valid_key(char *key, t_data *data)
 	tmp = ft_strjoin(key, "=");
 	if (!tmp)
 		return (false);
-	while (data->env[i])
+	while (head->env[i])
 	{
-		if (ft_strncmp(data->env[i], tmp, ft_strlen(tmp)) == 0)
+		if (ft_strncmp(head->env[i], tmp, ft_strlen(tmp)) == 0)
 		{
 			free_null_ptr(tmp);
 			return (true);
@@ -84,7 +96,7 @@ bool	is_valid_key(char *key, t_data *data)
 	return (false);
 }
 
-int	get_var_index(char *key, t_data *data)
+int	get_var_index(char *key, t_ast_n *head)
 {
 	int		i;
 	char	*new_key;
@@ -93,16 +105,16 @@ int	get_var_index(char *key, t_data *data)
 	if (!new_key)
 		return (-1);
 	i = 0;
-	while (data->env[i])
+	while (head->env[i])
 	{
-		if (ft_strncmp(data->env[i], new_key, ft_strlen(new_key)) == 0)
+		if (ft_strncmp(head->env[i], new_key, ft_strlen(new_key)) == 0)
 		{
 			free_null_ptr(new_key);
 			return (i);
 		}
-		else if (ft_strncmp(data->env[i], key, ft_strlen(key)) == 0
-			&& (ft_strchr(data->env[i], '=') == NULL && 
-			(ft_strlen(data->env[i]) == ft_strlen(key))))
+		else if (ft_strncmp(head->env[i], key, ft_strlen(key)) == 0
+			&& (ft_strchr(head->env[i], '=') == NULL && 
+			(ft_strlen(head->env[i]) == ft_strlen(key))))
 		{
 			free_null_ptr(new_key);
 			return (i);
@@ -114,51 +126,51 @@ int	get_var_index(char *key, t_data *data)
 }
 
 
-int	remove_env_var(char *key, t_data *data)
+int	remove_env_var(char *key, t_ast_n *head)
 {
 	int	i;
 	int	j;
 
-	i = get_var_index(key, data);
+	i = get_var_index(key, head);
 	if (i == -1)
 		return (0);
 	j = i;
-	free_null_ptr(data->env[i]);
-	while (data->env[i + 1])
+	free_null_ptr(head->env[i]);
+	while (head->env[i + 1])
 	{
-		data->env[i] = ft_strdup(data->env[i + 1]);
-		free_null_ptr(data->env[i + 1]);
+		head->env[i] = ft_strdup(head->env[i + 1]);
+		free_null_ptr(head->env[i + 1]);
 		j++;
 		i++;
 	}
-	data->env = copy_env_var(data->env, j);
-	if (data->env)
+	head->env = copy_env_var(head->env, j);
+	if (head->env)
 		return (1);
 	return (0);
 }
 
-void	set_var_env(char *key, char *value, t_data *data)
+void	set_var_env(char *key, char *value, t_ast_n *head)
 {
 	int		i;
 	char	*tmp;
 
-	i = get_var_index(key, data);
+	i = get_var_index(key, head);
 	if (value)
 		tmp = ft_strjoin(key, "=");
 	if (!tmp)
 		return ;
-	if (i != -1 && data->env[i])
+	if (i != -1 && head->env[i])
 	{
-		free_null_ptr(data->env[i]);
-		data->env[i] = ft_strjoin(tmp, value);
+		free_null_ptr(head->env[i]);
+		head->env[i] = ft_strjoin(tmp, value);
 	}
 	else
 	{
-		i = count_var(data->env);
-		data->env = copy_env_var(data->env, i + 1);
-		if (!data->env)
+		i = count_var(head->env);
+		head->env = copy_env_var(head->env, i + 1);
+		if (!head->env)
 			return ;
-		data->env[i] = ft_strjoin(tmp, value);
+		head->env[i] = ft_strjoin(tmp, value);
 	}
 	free_null_ptr(tmp);
 	return ;

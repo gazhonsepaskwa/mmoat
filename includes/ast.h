@@ -6,14 +6,14 @@
 /*   By: lderidde <lderidde@student.s19.be>        +#+  +:+       +#+         */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/24 08:23:27 by lderidde          #+#    #+#             */
-/*   Updated: 2025/01/27 14:15:24 by lderidde         ###   ########.fr       */
+/*   Updated: 2025/01/28 10:49:53 by lderidde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef AST_H
 # define AST_H
 
-# include "env.h"
+# include "../lib/libft/libft.h"
 
 typedef enum e_state
 {

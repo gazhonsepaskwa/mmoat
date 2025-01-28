@@ -6,7 +6,7 @@
 /*   By: lderidde <lderidde@student.s19.be>        +#+  +:+       +#+         */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/24 14:32:20 by lderidde          #+#    #+#             */
-/*   Updated: 2025/01/24 14:32:20 by lderidde         ###   ########.fr       */
+/*   Updated: 2025/01/28 10:19:06 by lderidde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ void	print_arr(char **envp)
 	}
 }
 
-void	print_export(char **envp)
+int	print_export(char **envp)
 {
 	int		i;
 	int		j;
@@ -85,25 +85,29 @@ void	print_export(char **envp)
 		}
 	}
 	print_arr(envp);
+	return (0);
 }
 
-void	builtin_export(char **arg, t_data *data)
+int	builtin_export(char **arg, t_ast_n *head)
 {
 	int	i;
 	char	**tmp;
 
 	i = 0;
-	if (count_var(arg) == 1)
-		return (print_export(data->env));
-	while (++i < count_var(arg))
+	if (count_args(arg) == 1)
+		return (print_export(head->env));
+	while (++i < count_args(arg))
 	{
 		if (ft_strchr(arg[i], '=') != NULL)
 		{
 			tmp = key_value(arg[i]);
-			set_var_env(tmp[0], tmp[1], data);
+			if (!tmp)
+				return (1);
+			set_var_env(tmp[0], tmp[1], head);
 			free_tmp(tmp);
 		}
 		else
-			set_var_env(arg[i], NULL, data);
+			set_var_env(arg[i], NULL, head);
 	}
+	return (0);
 }

@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   drawio.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nalebrun <nalebrun@student.s19.be>        +#+  +:+       +#+         */
+/*   By: lderidde <lderidde@student.s19.be>        +#+  +:+       +#+         */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/24 08:47:41 by nalebrun          #+#    #+#             */
-/*   Updated: 2025/01/24 08:47:41 by nalebrun         ###   ########.fr       */
+/*   Created: 2025/01/24 08:47:41 by lderidde          #+#    #+#             */
+/*   Updated: 2025/01/28 10:45:02 by lderidde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../drawio.h"
+#include "../lib_drawio.h"
 #include "../header/dio_private.h"
 
 int	drawio_init(char *file_path)

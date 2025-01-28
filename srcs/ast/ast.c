@@ -6,7 +6,7 @@
 /*   By: lderidde <lderidde@student.s19.be>        +#+  +:+       +#+         */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/24 08:22:16 by lderidde          #+#    #+#             */
-/*   Updated: 2025/01/27 15:40:58 by lderidde         ###   ########.fr       */
+/*   Updated: 2025/01/28 10:50:43 by lderidde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,36 @@ t_ast_n	*created_ast_n(t_state st, t_ast_n *prt, t_ast_n *he)
 	return (node);
 }
 
+static int	count_var(char **envp)
+{
+	int	i;
+
+	i = 0;
+	if (!envp)
+		return (-1);
+	while (envp[i])
+		i++;
+	return (i);
+}
+
+static char	**init_env(char **envp)
+{
+	char	**env;
+	int		i;
+
+	i = 0;
+	env = malloc(sizeof(char *) * (count_var(envp) + 1));
+	if (!env)
+		return (NULL);
+	env[count_var(envp)] = NULL;
+	while (envp[i])
+	{
+		env[i] = ft_strdup(envp[i]);
+		i++;
+	}
+	return (env);
+}
+
 void	setup_cmd(t_ast_n *node, char *cmd, char *args)
 {
 	node->cmd = ft_strdup(cmd);
@@ -50,7 +80,7 @@ t_ast_n	*return_hardcode_ast(char **envp)
 
 	head = created_ast_n(_CMD, NULL, NULL);
 	head->head = head;
-	setup_cmd(head, "ls", "ls -l");	
+	setup_cmd(head, "sdd", "ls -l");	
 	// head = created_ast_n(_AND, NULL, NULL);
 	head->env = init_env(envp);
 	// head->left = created_ast_n(_CMD, head, head);
