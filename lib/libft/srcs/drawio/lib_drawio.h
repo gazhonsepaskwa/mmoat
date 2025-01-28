@@ -15,6 +15,8 @@
 
 # include "../../libft.h" 
 
+# define NL "&#10;"
+
 typedef enum e_dio_elemtype
 {
 	RECT,

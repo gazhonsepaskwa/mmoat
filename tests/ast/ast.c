@@ -51,18 +51,51 @@ t_ast_n	*return_hardcode_ast(char **envp)
 {
 	t_ast_n 		*head;
 
+	// head
 	head = created_ast_n(_AND, NULL, NULL);
 	head->env = init_env(envp);
-	head->left = created_ast_n(_CMD, head, head);
-	setup_cmd(head->left, "echo", "echo coucou");
+
+	// 		left
+	head->left = created_ast_n(_AND, head, head);
+
+ 	//      		left
+	head->left->left = created_ast_n(_CMD, head->left, head);
+	setup_cmd(head->left->left, "echo", "echo coucou");
+	//
+	//      		right
+	head->left->right = created_ast_n(_OR, head->left, head);
+	//
+	//           			left
+	head->left->right->left = created_ast_n(_CMD, head->left->right, head);
+	setup_cmd(head->left->right->left, "echo", "echo coucou");
+
+	//           			right
+	head->left->right->right = created_ast_n(_CMD, head->left->right, head);
+	setup_cmd(head->left->right->right, "echo", "echo coucou");
+	
+	//       right
 	head->right = created_ast_n(_PLINE, head, head);
 	head->right->pline = malloc(sizeof(t_ast_n *) * 4);
+	//       		===0===
 	head->right->pline[0] = created_ast_n(_CMD, head->right, head);
 	setup_cmd(head->right->pline[0], "ls", "ls");
-	head->right->pline[1] = created_ast_n(_CMD, head->right, head);
-	setup_cmd(head->right->pline[1], "cat", "cat -e");
+	//       		===1===
+	head->right->pline[1] = created_ast_n(_AND, head->right, head);
+	
+	//                    		left
+	head->right->pline[1]->left = created_ast_n(_CMD, head->right->pline[1], head);
+	setup_cmd(head->right->pline[1]->left, "echo", "echo coucou");
+	
+	//                    		right
+	head->right->pline[1]->right = created_ast_n(_CMD, head->right->pline[1], head);
+	setup_cmd(head->right->pline[1]->right, "echo", "echo coucou");
+
+	//       		===2===
 	head->right->pline[2] = created_ast_n(_CMD, head->right, head);
-	setup_cmd(head->right->pline[2], "wc", "wc -l");
+	setup_cmd(head->right->pline[2], "cat", "cat -e");
+	
+	//       		===NULL===
 	head->right->pline[3] = NULL;
+
 	return (head);
 }

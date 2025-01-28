@@ -13,7 +13,8 @@
 #ifndef AST_H
 # define AST_H
 
-# include "../../includes/env.h"
+/*# include "../../includes/env.h"*/
+# include "../../lib/libft/libft.h"
 
 typedef enum e_state
 {
@@ -54,5 +55,8 @@ typedef struct s_ast_n
 }					t_ast_n;
 
 t_ast_n	*return_hardcode_ast(char **envp);
+
+// env TMP
+char	**init_env(char **envp);
 
 #endif
