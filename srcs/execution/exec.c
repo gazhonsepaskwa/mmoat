@@ -6,11 +6,55 @@
 /*   By: lderidde <lderidde@student.s19.be>        +#+  +:+       +#+         */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 11:22:33 by lderidde          #+#    #+#             */
-/*   Updated: 2025/01/28 10:41:39 by lderidde         ###   ########.fr       */
+/*   Updated: 2025/01/28 15:39:37 by lderidde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/minishell.h"
+#include "minishell.h"
+
+void	handle_file(t_ast_n *node, int check)
+{
+	int	fd;
+
+	if (check == 1)
+		fd = open(node->infile, O_RDONLY);
+	else if (check == 2)
+		fd = open(node->outfile, O_WRONLY | O_CREAT | O_TRUNC, 0666);
+	else if (check == 3)
+		fd = open(node->outfile, O_WRONLY | O_CREAT | O_APPEND, 0666);
+	if (fd == -1)
+	{
+		perror("open");
+		exit(1);
+	}
+	if (check == 1)
+		node->_stdin = fd;
+	else if (check == 2 || check == 3)
+		node->_stdout = fd;
+}
+
+void	handle_redir(t_ast_n *node)
+{
+	if (node->redir == _NR)
+		return ;
+	else if (node->redir == _RED_L)
+		handle_file(node, 1);
+	else if (node->redir == _RED_R)
+		handle_file(node, 2);
+	else if (node->redir == _RED_DR)
+		handle_file(node, 3);
+	if (node->redir == _RED_L)
+	{
+		dup2(node->_stdin, STDIN_FILENO);
+		close(node->_stdin);
+	}
+	else if (node->redir == _RED_R || node->redir == _RED_DR)
+	{
+		dup2(node->_stdout, STDOUT_FILENO);
+		close(node->_stdout);
+	}
+}
+
 
 int	is_builtin(char *str)
 {
@@ -34,6 +78,7 @@ int	is_builtin(char *str)
 
 int	exec_builtin(t_ast_n *node)
 {
+	handle_redir(node);
 	if (ft_strncmp(node->cmd, "exit", 4) == 0)
 		return (builtin_exit(node->args, true));
 	else if (ft_strncmp(node->cmd, "pwd", 3) == 0)
@@ -83,49 +128,6 @@ void	return_error(char *arg, char *msg, int code)
 	exit(code);
 }
 
-void	handle_file(t_ast_n *node, int check)
-{
-	int	fd;
-
-	if (check == 1)
-		fd = open(node->infile, O_RDONLY);
-	else if (check == 2)
-		fd = open(node->outfile, O_WRONLY | O_CREAT | O_TRUNC, 0666);
-	else if (check == 3)
-		fd = open(node->outfile, O_WRONLY | O_CREAT | O_APPEND, 0666);
-	if (fd == -1)
-	{
-		perror("open");
-		exit(1);
-	}
-	if (check == 1)
-		node->_stdin = fd;
-	else if (check == 2 || check == 3)
-		node->_stdout = fd;
-}
-
-void	handle_redir(t_ast_n *node)
-{
-	if (node->redir == _NR)
-		return ;
-	else if (node->redir == _RED_L)
-		handle_file(node, 1);
-	else if (node->redir == _RED_R)
-		handle_file(node, 2);
-	else if (node->redir == _RED_DR)
-		handle_file(node, 3);
-	if (node->redir == _RED_L)
-	{
-		dup2(node->_stdin, STDIN_FILENO);
-		close(node->_stdin);
-	}
-	else if (node->redir == _RED_R || node->redir == _RED_DR)
-	{
-		dup2(node->_stdout, STDOUT_FILENO);
-		close(node->_stdout);
-	}
-}
-
 int	exec(t_ast_n *node)
 {
 	char	*path;
@@ -156,9 +158,7 @@ int	exec_scmd(t_ast_n *node)
 	{
 		pid = fork();
 		if (pid == 0)
-		{
 			exec(node);
-		}
 		else
 		{
 			waitpid(pid, &status, 0);
@@ -171,6 +171,32 @@ int	exec_scmd(t_ast_n *node)
 	}
 }
 
+// int	exec_pipe(t_ast_n **pline)
+// {
+// 	int		i;
+// 	pid_t	pid;
+//
+// 	i = -1;
+// 	while (pline[++i])
+// 	{
+// 		pipe(pline[i]->fds);
+// 		pid = fork();
+// 		if (pid == 0)
+// 		{
+// 			close(pline[i]->fds[0]);
+// 			dup2(pline[i]->fds[1], STDOUT_FILENO);
+// 			close(pline[i]->fds[1]);
+// 			execute_command(pline[i]);
+// 		}
+// 		else
+// 		{
+// 			close(pline[i]->fds[1]);
+// 			dup2(pline[i]->fds[0], STDIN_FILENO);
+// 			close(pline[i]->fds[0]);
+// 		}
+// 	}
+// }
+
 int	execute_command(t_ast_n *node)
 {
 	int	status;
@@ -180,18 +206,18 @@ int	execute_command(t_ast_n *node)
 	else if (node->state == _AND)
 	{
 		status = execute_command(node->left);
-		if (WEXITSTATUS(status) == 0)
+		if (status == 0)
 			return (execute_command(node->right));
 		return (status);
 	}
 	else if (node->state == _OR)
 	{
 		status = execute_command(node->left);
-		if (WEXITSTATUS(status) != 0)
+		if (status != 0)
 			return (execute_command(node->right));
 		return (status);
 	}
-	return (0);
 	// else if (node->state == _PLINE)
-	// 	return (exec_pipe(node));
+	// 	return (exec_pipe(node->pline));
+	return (0);
 }

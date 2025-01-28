@@ -6,7 +6,7 @@
 /*   By: lderidde <lderidde@student.s19.be>        +#+  +:+       +#+         */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/24 14:31:56 by lderidde          #+#    #+#             */
-/*   Updated: 2025/01/28 09:34:41 by lderidde         ###   ########.fr       */
+/*   Updated: 2025/01/28 12:40:27 by lderidde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,6 +103,6 @@ int	builtin_echo(char **arg, char **envp)
 	}
 	echo_print(arg, i, envp);
 	if (!flag)
-		printf("\n");
+		ft_printf("\n");
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: lderidde <lderidde@student.s19.be>        +#+  +:+       +#+         */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/24 14:32:36 by lderidde          #+#    #+#             */
-/*   Updated: 2025/01/28 10:32:54 by lderidde         ###   ########.fr       */
+/*   Updated: 2025/01/28 12:43:49 by lderidde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,9 +39,9 @@ int	builtin_unset(char **arg, t_ast_n *head)
 	int	ret;
 
 	i = 0;
-	if (count_var(arg) == 1)
+	if (count_args(arg) == 1)
 		return (err_msg_cmd("unset", NULL, "not enough arguments", EXIT_FAILURE));
-	while (++i < count_var(arg))
+	while (++i < count_args(arg))
 		ret = remove_env_var(arg[i], head);	
-	return (ret);
+	return (!ret);
 }

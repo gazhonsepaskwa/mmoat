@@ -6,7 +6,7 @@
 /*   By: lderidde <lderidde@student.s19.be>        +#+  +:+       +#+         */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/24 08:22:16 by lderidde          #+#    #+#             */
-/*   Updated: 2025/01/28 10:50:43 by lderidde         ###   ########.fr       */
+/*   Updated: 2025/01/28 13:31:27 by lderidde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,13 +78,18 @@ t_ast_n	*return_hardcode_ast(char **envp)
 {
 	t_ast_n 		*head;
 
-	head = created_ast_n(_CMD, NULL, NULL);
-	head->head = head;
-	setup_cmd(head, "sdd", "ls -l");	
-	// head = created_ast_n(_AND, NULL, NULL);
+	// head = created_ast_n(_CMD, NULL, NULL);
+	// head->head = head;
+	// setup_cmd(head, "sdd", "ls -l");	
+	head = created_ast_n(_AND, NULL, NULL);
 	head->env = init_env(envp);
-	// head->left = created_ast_n(_CMD, head, head);
-	// setup_cmd(head->left, "echo", "echo coucou");
+	head->left = created_ast_n(_CMD, head, head);
+	setup_cmd(head->left, "cd", "cd srcs/../..");
+	head->right = created_ast_n(_AND, head, head);
+	head->right->left = created_ast_n(_CMD, head->right, head);
+	setup_cmd(head->right->left, "echo", "echo $PWD");
+	head->right->right = created_ast_n(_CMD, head->right, head);
+	setup_cmd(head->right->right, "ls", "ls -l");
 	// head->right = created_ast_n(_PLINE, head, head);
 	// head->right->pline = malloc(sizeof(t_ast_n *) * 4);
 	// head->right->pline[0] = created_ast_n(_CMD, head->right, head);
