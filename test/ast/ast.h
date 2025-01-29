@@ -23,7 +23,8 @@ typedef enum e_state
 	_AND,
 	_OR,
 	_CMD,
-	_PLINE
+	_PLINE,
+	_SUBSH
 }		t_state;
 
 typedef enum e_redir

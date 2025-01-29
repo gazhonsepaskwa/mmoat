@@ -24,6 +24,8 @@ const char	*translate_state(t_state state)
 		out = "CMD_PIPELINE";
 	else if (state == _CMD)
 		out = "SIMPLE_CMD";
+	else if (state == _SUBSH)
+		out = "SUBSHELL";
 	else
 		out = "UNDEFINED";
 	return (out);

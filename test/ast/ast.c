@@ -47,56 +47,105 @@ void	setup_cmd(t_ast_n *node, char *cmd, char *args)
 	node->args = ft_split(args, " ");
 }
 
+int	last_tok_subsh(t_node *lst)
+{
+	while (lst)
+	{
+		if (lst->next == NULL && !ft_strncmp(lst->val, ")", 1))
+			return (1);
+		lst = lst->next;
+	}
+	return (0);
+}
+
+t_node	*find_token(char *tok, t_node *lst)
+{
+	while (lst)
+	{
+		if (!ft_strncmp(lst->val, tok, ft_strlen(tok)))
+			return (lst);
+		lst = lst->next;
+	}
+	return (NULL);
+}
+
+t_node *get_top_token(t_node *lst, t_state *state)
+{
+	*state = _SUBSH;
+	if (!ft_strncmp(lst->val, "(", 1) && last_tok_subsh(lst))
+		return (lst);
+	else if (find_token("&&", lst))
+	{
+		*state = _AND;
+		return (find_token("&&", lst));
+	}
+	else if (find_token("||", lst))
+	{
+		*state = _OR;
+		return (find_token("||", lst));
+	}
+	else if (find_token("|", lst))
+	{
+		*state = _PLINE;
+		return (find_token("|", lst));
+	}
+	else
+	{
+		*state = UNDEF;
+		return (NULL);
+	}
+}
+
+/*t_ast_n	create_ast_n(t_node *lst, t_ast_n *parent);*/
+
+/*void	create_and_or(t_ast_n *parrent, t_node *lst, t_node *token)*/
+/*{*/
+/*	t_node **sublsts;*/
+/**/
+	/*sublsts = cutll(lst, token);*/
+/*	parrent->left = create_ast_n(sublsts[0], parrent);*/
+/*	parrent->left = create_ast_n(sublsts[1], parrent);*/
+/*	free_lltab(sublsts);*/
+/*	free(token);*/
+/*}*/
+
+
+/*void	create_cmd(t_ast_n *parent, t_node *lst, t_node *token)*/
+/*{*/
+/*}*/
+
+/*void	create_pline(t_ast_n *parent, t_node *lst, t_node *token)*/
+/*{*/
+/*}*/
+
+t_ast_n	*create_ast_n(t_node *lst, t_ast_n *parent)
+{
+	t_ast_n *node;
+	t_node	*token;
+
+	node = malloc(sizeof(t_ast_n));
+	token = get_top_token(lst, &node->state);
+
+	(void)token;
+	(void)parent;
+
+	/*if (node->state == _PLINE)*/
+		/*create_pline(node, lst, token);*/
+	/*else if (node->state == _CMD)*/
+		/*create_cmd(node, lst, token);*/
+	/*else if (node->state == _SUBSH)*/
+		/*create_subsh(node, lst, token);*/
+	/*else*/
+		/*create_and_or(node, lst, token);*/
+
+	return (node);
+}
+
 t_ast_n	*get_ast(char **envp, t_node *lst)
 {
-	t_ast_n 		*head;
+	t_ast_n *head;
+	(void)envp;
 
-	(void)lst;
-	// head
-	head = created_ast_n(_AND, NULL, NULL);
-	head->env = init_env(envp);
-
-	// 		left
-	head->left = created_ast_n(_AND, head, head);
-
- 	//      		left
-	head->left->left = created_ast_n(_CMD, head->left, head);
-	setup_cmd(head->left->left, "echo", "echo coucou");
-	//
-	//      		right
-	head->left->right = created_ast_n(_OR, head->left, head);
-	//
-	//           			left
-	head->left->right->left = created_ast_n(_CMD, head->left->right, head);
-	setup_cmd(head->left->right->left, "echo", "echo coucou");
-
-	//           			right
-	head->left->right->right = created_ast_n(_CMD, head->left->right, head);
-	setup_cmd(head->left->right->right, "echo", "echo coucou");
-
-	//       right
-	head->right = created_ast_n(_PLINE, head, head);
-	head->right->pline = malloc(sizeof(t_ast_n *) * 4);
-	//       		===0===
-	head->right->pline[0] = created_ast_n(_CMD, head->right, head);
-	setup_cmd(head->right->pline[0], "ls", "ls");
-	//       		===1===
-	head->right->pline[1] = created_ast_n(_AND, head->right, head);
-
-	//                    		left
-	head->right->pline[1]->left = created_ast_n(_CMD, head->right->pline[1], head);
-	setup_cmd(head->right->pline[1]->left, "echo", "echo coucou");
-
-	//                    		right
-	head->right->pline[1]->right = created_ast_n(_CMD, head->right->pline[1], head);
-	setup_cmd(head->right->pline[1]->right, "echo", "echo coucou");
-
-	//       		===2===
-	head->right->pline[2] = created_ast_n(_CMD, head->right, head);
-	setup_cmd(head->right->pline[2], "cat", "cat -e");
-
-	//       		===NULL===
-	head->right->pline[3] = NULL;
-
+	head = create_ast_n(lst, NULL);
 	return (head);
 }
