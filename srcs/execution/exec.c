@@ -6,7 +6,7 @@
 /*   By: lderidde <lderidde@student.s19.be>        +#+  +:+       +#+         */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 11:22:33 by lderidde          #+#    #+#             */
-/*   Updated: 2025/01/29 13:33:57 by lderidde         ###   ########.fr       */
+/*   Updated: 2025/01/29 15:07:44 by lderidde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,7 +144,7 @@ int	exec(t_ast_n *node)
 {
 	char	*path;
 
-	// handle_redir(node);
+	handle_redir(node);
 	path = find_path(node->cmd, node->head->env);
 	if (!path)
 		return_error(node->cmd, "command not found", 127);
@@ -171,7 +171,7 @@ int	exec_scmd(t_ast_n *node)
 		pid = fork();
 		if (pid == 0)
 			exec(node);
-		else
+		else if (pid > 0)
 		{
 			waitpid(pid, &status, 0);
 			if (WIFEXITED(status))
@@ -179,45 +179,48 @@ int	exec_scmd(t_ast_n *node)
 			else
 				return (1);
 		}
+		else
+			perror("fork");
 		return (1);
 	}
 }
 
-int	*create_pipes(t_ast_n **pline)
+// int	*create_pipes(t_ast_n **pline)
+// {
+// 	int	i;
+// 	int	arg;
+// 	int	*pipes;
+//
+// 	arg = count_cmds(pline);
+// 	pipes = malloc(2 * (arg - 1) * sizeof(int));
+// 	if (!pipes)
+// 		return (NULL);
+// 	i = -1;
+// 	while (++i < arg - 1)
+// 	{
+// 		pipe(&pipes[2 * i]);
+// 	}
+// 	return (pipes);
+// }
+//
+// void	close_pipes(int *pipes, int count, bool flag)
+// {
+// 	int	i;
+//
+// 	i = -1;
+// 	while (++i < count)
+// 	{
+// 		close(pipes[2 * i]);
+// 		close(pipes[(2 * i) + 1]);
+// 	}
+// 	if (flag)
+// 		free(pipes);
+// }
+
+int	err_fork_pline(int *pipes)
 {
-	int	i;
-	int	arg;
-	int	*pipes;
-
-	arg = count_cmds(pline);
-	pipes = malloc(2 * (arg - 1) * sizeof(int));
-	if (!pipes)
-		return (NULL);
-	i = -1;
-	while (++i < arg - 1)
-	{
-		pipe(&pipes[2 * i]);
-	}
-	return (pipes);
-}
-
-void	close_pipes(int *pipes, int count, bool flag)
-{
-	int	i;
-
-	i = -1;
-	while (++i < count)
-	{
-		close(pipes[2 * i]);
-		close(pipes[(2 * i) + 1]);
-	}
-	if (flag)
-		free(pipes);
-}
-
-int	err_fork_pline(int *pipes, int count)
-{
-	close_pipes(pipes, count,  true);
+	close(pipes[0]);
+	close(pipes[1]);
 	perror("fork");
 	return (1);
 }
@@ -226,13 +229,10 @@ void	exec_pchild(int *pipes, int index, t_ast_n *pcmd, int cmds)
 {
 	int	ret;
 
-	if (index > 0)
-		dup2(pipes[2 * (index - 1)], STDIN_FILENO);
 	if (index < cmds - 1)
-		dup2(pipes[(2 * index) + 1], STDOUT_FILENO);
-	ft_fprintf(2, "cmd %d: STDIN = %d | STDOUT = %d\n", index, pipes[2 * (index - 1)], pipes[(2* index) + 1]);
-	fflush(stderr);
-	// close_pipes(pipes, cmds, false);
+		dup2(pipes[1], STDOUT_FILENO);
+	close(pipes[0]);
+	close(pipes[1]);
 	if (is_builtin(pcmd->cmd))
 	{
 		ret = exec_builtin(pcmd);
@@ -257,32 +257,31 @@ int	end_pline(pid_t last_pid, t_ast_n **pline)
 		return (1);
 }
 
-int	exec_pipe(t_ast_n **pline)
+int	exec_pline(t_ast_n **pline)
 {
 	int		i;
 	pid_t	pid;
 	pid_t	last_pid;
-	int		*pipes;
+	int		pipes[2];
 
-	pipes = create_pipes(pline);
-	if (!pipes)
-		return (1);
 	i = -1;
 	while (pline[++i])
 	{
+		pipe(pipes);
 		pid = fork();
 		if (pid == 0)
 			exec_pchild(pipes, i, pline[i], count_cmds(pline));
 		else if (pid > 0)
 		{
-			wait(NULL);
+			dup2(pipes[0], STDIN_FILENO);
+			close(pipes[0]);
+			close(pipes[1]);
 			if(i == count_cmds(pline) - 1)
 				last_pid = pid;
 		}
 		else if (pid < 0)
-			return (err_fork_pline(pipes,count_cmds(pline)));		
+			return (err_fork_pline(pipes));		
 	}
-	// close_pipes(pipes, count_cmds(pline), true);
 	return (end_pline(last_pid, pline));
 }
 
@@ -307,6 +306,6 @@ int	execute_command(t_ast_n *node)
 		return (status);
 	}
 	else if (node->state == _PLINE)
-		return (exec_pipe(node->pline));
+		return (exec_pline(node->pline));
 	return (0);
 }
