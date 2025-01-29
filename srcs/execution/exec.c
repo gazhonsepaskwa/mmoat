@@ -6,7 +6,7 @@
 /*   By: lderidde <lderidde@student.s19.be>        +#+  +:+       +#+         */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 11:22:33 by lderidde          #+#    #+#             */
-/*   Updated: 2025/01/28 15:39:37 by lderidde         ###   ########.fr       */
+/*   Updated: 2025/01/29 13:33:57 by lderidde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,6 +95,18 @@ int	exec_builtin(t_ast_n *node)
 		return (builtin_export(node->args, node->head));
 }
 
+int	count_cmds(t_ast_n **pline)
+{
+	int	i;
+
+	i = 0;
+	if (!pline || !*pline)
+		return (0);
+	while (pline[i])
+		i++;
+	return (i);
+}
+
 char	*find_path(char *cmd, char **env)
 {
 	char	*tmp;
@@ -132,7 +144,7 @@ int	exec(t_ast_n *node)
 {
 	char	*path;
 
-	handle_redir(node);
+	// handle_redir(node);
 	path = find_path(node->cmd, node->head->env);
 	if (!path)
 		return_error(node->cmd, "command not found", 127);
@@ -165,37 +177,114 @@ int	exec_scmd(t_ast_n *node)
 			if (WIFEXITED(status))
 				return (WEXITSTATUS(status));
 			else
-				return (-1);
+				return (1);
 		}
 		return (1);
 	}
 }
 
-// int	exec_pipe(t_ast_n **pline)
-// {
-// 	int		i;
-// 	pid_t	pid;
-//
-// 	i = -1;
-// 	while (pline[++i])
-// 	{
-// 		pipe(pline[i]->fds);
-// 		pid = fork();
-// 		if (pid == 0)
-// 		{
-// 			close(pline[i]->fds[0]);
-// 			dup2(pline[i]->fds[1], STDOUT_FILENO);
-// 			close(pline[i]->fds[1]);
-// 			execute_command(pline[i]);
-// 		}
-// 		else
-// 		{
-// 			close(pline[i]->fds[1]);
-// 			dup2(pline[i]->fds[0], STDIN_FILENO);
-// 			close(pline[i]->fds[0]);
-// 		}
-// 	}
-// }
+int	*create_pipes(t_ast_n **pline)
+{
+	int	i;
+	int	arg;
+	int	*pipes;
+
+	arg = count_cmds(pline);
+	pipes = malloc(2 * (arg - 1) * sizeof(int));
+	if (!pipes)
+		return (NULL);
+	i = -1;
+	while (++i < arg - 1)
+	{
+		pipe(&pipes[2 * i]);
+	}
+	return (pipes);
+}
+
+void	close_pipes(int *pipes, int count, bool flag)
+{
+	int	i;
+
+	i = -1;
+	while (++i < count)
+	{
+		close(pipes[2 * i]);
+		close(pipes[(2 * i) + 1]);
+	}
+	if (flag)
+		free(pipes);
+}
+
+int	err_fork_pline(int *pipes, int count)
+{
+	close_pipes(pipes, count,  true);
+	perror("fork");
+	return (1);
+}
+
+void	exec_pchild(int *pipes, int index, t_ast_n *pcmd, int cmds)
+{
+	int	ret;
+
+	if (index > 0)
+		dup2(pipes[2 * (index - 1)], STDIN_FILENO);
+	if (index < cmds - 1)
+		dup2(pipes[(2 * index) + 1], STDOUT_FILENO);
+	ft_fprintf(2, "cmd %d: STDIN = %d | STDOUT = %d\n", index, pipes[2 * (index - 1)], pipes[(2* index) + 1]);
+	fflush(stderr);
+	// close_pipes(pipes, cmds, false);
+	if (is_builtin(pcmd->cmd))
+	{
+		ret = exec_builtin(pcmd);
+		exit(ret);
+	}
+	else
+		exec(pcmd);
+}
+
+int	end_pline(pid_t last_pid, t_ast_n **pline)
+{
+	int	status;
+	int	i;
+
+	i = -1;
+	waitpid(last_pid, &status, 0);
+	while (++i < count_cmds(pline) - 1)
+		wait(NULL);
+	if (WIFEXITED(status))
+		return (WEXITSTATUS(status));
+	else
+		return (1);
+}
+
+int	exec_pipe(t_ast_n **pline)
+{
+	int		i;
+	pid_t	pid;
+	pid_t	last_pid;
+	int		*pipes;
+
+	pipes = create_pipes(pline);
+	if (!pipes)
+		return (1);
+	i = -1;
+	while (pline[++i])
+	{
+		pid = fork();
+		if (pid == 0)
+			exec_pchild(pipes, i, pline[i], count_cmds(pline));
+		else if (pid > 0)
+		{
+			wait(NULL);
+			if(i == count_cmds(pline) - 1)
+				last_pid = pid;
+		}
+		else if (pid < 0)
+			return (err_fork_pline(pipes,count_cmds(pline)));		
+	}
+	// close_pipes(pipes, count_cmds(pline), true);
+	return (end_pline(last_pid, pline));
+}
 
 int	execute_command(t_ast_n *node)
 {
@@ -217,7 +306,7 @@ int	execute_command(t_ast_n *node)
 			return (execute_command(node->right));
 		return (status);
 	}
-	// else if (node->state == _PLINE)
-	// 	return (exec_pipe(node->pline));
+	else if (node->state == _PLINE)
+		return (exec_pipe(node->pline));
 	return (0);
 }
