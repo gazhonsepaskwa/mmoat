@@ -56,5 +56,3 @@ char	*replace_ampercent(char *src)
 	out[j] = 0;
 	return (out);
 }
-
-

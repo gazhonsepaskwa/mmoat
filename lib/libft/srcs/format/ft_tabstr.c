@@ -1,35 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   drawio_ast.c                                       :+:      :+:    :+:   */
+/*   ft_tabstr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nalebrun <nalebrun@student.s19.be>        +#+  +:+       +#+         */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/27 17:15:39 by nalebrun          #+#    #+#             */
-/*   Updated: 2025/01/27 17:15:39 by nalebrun         ###   ########.fr       */
+/*   Created: 2025/01/29 08:54:00 by nalebrun          #+#    #+#             */
+/*   Updated: 2025/01/29 08:54:00 by nalebrun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "drawio.h"
+#include "../../libft.h"
 
-void	set_ast_rect(t_dio_elem *rect)
+char	*ft_tabstr(char **tab)
 {
-	rect->type = RECT;
-	rect->rounded = 0;
-	rect->x = 50;
-	rect->y = 150;
-	rect->w = 150;
-	rect->h = 120;
-}
+	int		i;
+	int		alloc_count;
+	char	*out;
+	char	*tmp;
 
-void	gen_dio_ast(t_ast_n *head, int fd)
-{
-	t_elems	e;
-
-	set_ast_rect(&e.rect);
-	e.arrow.type = ARROW;
-	e.arrow.id_src = 0;
-	e.arrow.id_dst = 0;
-	print_ast(head, &e, fd);
-	return ;
+	i = -1;
+	alloc_count = 0;
+	while (tab[++i])
+		alloc_count += ft_strlen(tab[i]) + 1;
+	i = 0;
+	out = tab[0];
+	while (tab[++i])
+	{
+		tmp = out;
+		out = ft_sprintf("%s %s", out, tab[i]);
+		free(tmp);
+	}
+	out[alloc_count] = 0;
+	return (out);
 }

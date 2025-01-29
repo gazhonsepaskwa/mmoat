@@ -24,9 +24,9 @@ void	set_ll_rect(t_dio_elem *rect)
 
 void	gen_dio_linked_list(t_node *head, int fd)
 {
-	t_dio_elem rect;
-	t_dio_elem arrow;
-	t_node *current;
+	t_dio_elem	rect;
+	t_dio_elem	arrow;
+	t_node		*current;
 
 	current = head;
 	set_ll_rect(&rect);

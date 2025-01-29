@@ -64,6 +64,7 @@ void	ft_bzero(void *s, size_t n);
 
 char	**ft_split(const char *s, char *set);
 char	**ft_split_keep(const char *s, char *set);
+char	*ft_tabstr(char **tab);
 int		is_charset(char c, char *set);
 void	free_tab(char **tab);
 char	**free_all(char **tab, int count);

@@ -17,10 +17,28 @@
 # include "../tokenizer/tokenizer.h"
 # include "../ast/ast.h"
 
+typedef struct s_dio_node
+{
+	const char	*st;
+	const char	*redir;
+	char		*cmd;
+	char		*args;
+	char		*inf;
+	char		*outf;
+}			t_dio_node;
+
+typedef struct s_elems
+{
+	t_dio_elem	rect;
+	t_dio_elem	arrow;
+}				t_elems;
+
 // internal
-char* replace_ampercent(char *src);
+char		*replace_ampercent(char *src);
+t_dio_node	get_cmd_txt(t_ast_n *node);
+int			print_ast(t_ast_n *node, t_elems *e, int fd);
 
 // external
-void 	gen_dio_linked_list(t_node *head, int fd);
-void	gen_dio_ast(t_ast_n *head, int fd);
+void		gen_dio_linked_list(t_node *head, int fd);
+void		gen_dio_ast(t_ast_n *head, int fd);
 #endif
