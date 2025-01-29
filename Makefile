@@ -36,7 +36,7 @@ $(NAME): $(LIBFT) $(OBJS)
 
 # test part
 
-TEST_SRCDIR = tests
+TEST_SRCDIR = test
 TEST_OBJDIR = .TEST_objs
 TEST_SRCS = $(shell find $(TEST_SRCDIR) -name "*.c")
 TEST_OBJS = $(patsubst $(TEST_SRCDIR)/%.c, $(TEST_OBJDIR)/%.o, $(TEST_SRCS))
@@ -46,8 +46,8 @@ $(TEST_OBJDIR)/%.o: $(TEST_SRCDIR)/%.c
 	@mkdir -p $(dir $@)
 	@$(CC) $(WFLAGS) -MMD -MP -I$(INCDIR) -c $< -g3 -ggdb -o $@ $(LINK)
 
-tests: $(LIBFT) $(TEST_OBJS)
-	@$(CC) $(WFLAGS) $(TEST_OBJS) $(LIBFT) -o test $(LINK)
+parser: $(LIBFT) $(TEST_OBJS)
+	@$(CC) $(WFLAGS) $(TEST_OBJS) $(LIBFT) -o parser $(LINK)
 	@echo "$(CYAN)Test build completed: test$(RESET)"
 
 # test part end

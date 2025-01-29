@@ -13,11 +13,13 @@
 #ifndef PARSING_H
 # define PARSING_H
 
+#  define DEBUG 1
+
 # include "tokenizer/tokenizer.h"
 # include "ast/ast.h"
-# include "drawio/drawio.h"
 
 // drawio
+# include "drawio/drawio.h"
 
 // tmp_env
 char	**init_env(char **envp);

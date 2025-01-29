@@ -15,6 +15,7 @@
 
 /*# include "../../includes/env.h"*/
 # include "../../lib/libft/libft.h"
+# include "../tokenizer/tokenizer.h"
 
 typedef enum e_state
 {
@@ -54,7 +55,7 @@ typedef struct s_ast_n
 	char			**env;
 }					t_ast_n;
 
-t_ast_n	*return_hardcode_ast(char **envp);
+t_ast_n	*get_ast(char **envp, t_node *lst);
 
 // env TMP
 char	**init_env(char **envp);

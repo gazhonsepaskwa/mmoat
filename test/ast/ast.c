@@ -47,10 +47,11 @@ void	setup_cmd(t_ast_n *node, char *cmd, char *args)
 	node->args = ft_split(args, " ");
 }
 
-t_ast_n	*return_hardcode_ast(char **envp)
+t_ast_n	*get_ast(char **envp, t_node *lst)
 {
 	t_ast_n 		*head;
 
+	(void)lst;
 	// head
 	head = created_ast_n(_AND, NULL, NULL);
 	head->env = init_env(envp);
@@ -72,7 +73,7 @@ t_ast_n	*return_hardcode_ast(char **envp)
 	//           			right
 	head->left->right->right = created_ast_n(_CMD, head->left->right, head);
 	setup_cmd(head->left->right->right, "echo", "echo coucou");
-	
+
 	//       right
 	head->right = created_ast_n(_PLINE, head, head);
 	head->right->pline = malloc(sizeof(t_ast_n *) * 4);
@@ -81,11 +82,11 @@ t_ast_n	*return_hardcode_ast(char **envp)
 	setup_cmd(head->right->pline[0], "ls", "ls");
 	//       		===1===
 	head->right->pline[1] = created_ast_n(_AND, head->right, head);
-	
+
 	//                    		left
 	head->right->pline[1]->left = created_ast_n(_CMD, head->right->pline[1], head);
 	setup_cmd(head->right->pline[1]->left, "echo", "echo coucou");
-	
+
 	//                    		right
 	head->right->pline[1]->right = created_ast_n(_CMD, head->right->pline[1], head);
 	setup_cmd(head->right->pline[1]->right, "echo", "echo coucou");
@@ -93,7 +94,7 @@ t_ast_n	*return_hardcode_ast(char **envp)
 	//       		===2===
 	head->right->pline[2] = created_ast_n(_CMD, head->right, head);
 	setup_cmd(head->right->pline[2], "cat", "cat -e");
-	
+
 	//       		===NULL===
 	head->right->pline[3] = NULL;
 

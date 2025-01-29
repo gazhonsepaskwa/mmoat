@@ -13,7 +13,7 @@
 #ifndef TOKENIZER_H
 # define TOKENIZER_H
 
-# include "../includes/minishell.h"
+# include "../../lib/libft/libft.h"
 
 typedef enum e_token
 {

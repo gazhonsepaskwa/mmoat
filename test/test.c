@@ -11,7 +11,6 @@
 /* ************************************************************************** */
 
 #include "parsing.h"
-/*#include "../includes/env.h"*/
 
 void	truncate_comment(char *str)
 {
@@ -37,37 +36,34 @@ void	truncate_comment(char *str)
 	}
 }
 
-/*static t_data	*init_data(char **envp)*/
-/*{*/
-/*	t_data	*data;*/
-/**/
-/*	data = malloc (sizeof(t_data));*/
-/*	data->env = init_env(envp);*/
-/*	return (data);*/
-/*}*/
-
 int	main(int ac, char **av, char **envp)
 {
 	t_node	*lst;
 	t_ast_n	*ast;
 	int 	dio;
-	/*t_data data;*/
 
 	if (ac != 3)
 	{
 		ft_error("./test drawio_file command_str\n");
 		return (1);
 	}
-	/*data = init_data(envp);*/
 	truncate_comment(av[1]);
 	lst = tokenize(av[2]);
 	if (!lst)
 		return (1);
-	dio = drawio_init(av[1]);
-	gen_dio_linked_list(lst, dio);
-	/*debug_linked_list(lst, "ff");*/
-	ast = return_hardcode_ast(envp);
-	gen_dio_ast(ast, dio);
-	drawio_end_file(dio);
+	if (DEBUG)
+	{
+		dio = drawio_init(av[1]);
+		gen_dio_linked_list(lst, dio);
+	}
+	ast = get_ast(envp, lst);
+	if (!ast)
+		return (1);
+	if (DEBUG)
+	{
+		gen_dio_ast(ast, dio);
+		drawio_end_file(dio);
+		ft_debug(" draw.io file generated !\n");
+	}
 	free_linked_list(lst);
 }
