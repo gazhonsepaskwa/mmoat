@@ -6,7 +6,7 @@
 /*   By: lderidde <lderidde@student.s19.be>        +#+  +:+       +#+         */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/24 08:22:16 by lderidde          #+#    #+#             */
-/*   Updated: 2025/01/28 13:31:27 by lderidde         ###   ########.fr       */
+/*   Updated: 2025/01/29 13:32:50 by lderidde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,20 +84,22 @@ t_ast_n	*return_hardcode_ast(char **envp)
 	head = created_ast_n(_AND, NULL, NULL);
 	head->env = init_env(envp);
 	head->left = created_ast_n(_CMD, head, head);
-	setup_cmd(head->left, "cd", "cd srcs/../..");
-	head->right = created_ast_n(_AND, head, head);
-	head->right->left = created_ast_n(_CMD, head->right, head);
-	setup_cmd(head->right->left, "echo", "echo $PWD");
-	head->right->right = created_ast_n(_CMD, head->right, head);
-	setup_cmd(head->right->right, "ls", "ls -l");
-	// head->right = created_ast_n(_PLINE, head, head);
-	// head->right->pline = malloc(sizeof(t_ast_n *) * 4);
-	// head->right->pline[0] = created_ast_n(_CMD, head->right, head);
-	// setup_cmd(head->right->pline[0], "ls", "ls");
-	// head->right->pline[1] = created_ast_n(_CMD, head->right, head);
-	// setup_cmd(head->right->pline[1], "cat", "cat -e");
-	// head->right->pline[2] = created_ast_n(_CMD, head->right, head);
-	// setup_cmd(head->right->pline[2], "wc", "wc -l");
-	// head->right->pline[3] = NULL;
+	setup_cmd(head->left, "ls", "ls");
+	// head->right = created_ast_n(_AND, head, head);
+	// head->right->left = created_ast_n(_CMD, head->right, head);
+	// setup_cmd(head->right->left, "echo", "echo $PWD");
+	// head->right->right = created_ast_n(_CMD, head->right, head);
+	// setup_cmd(head->right->right, "ls", "ls -l");
+	head->right = created_ast_n(_PLINE, head, head);
+	head->right->pline = malloc(sizeof(t_ast_n *) * 5);
+	head->right->pline[0] = created_ast_n(_CMD, head->right, head);
+	setup_cmd(head->right->pline[0], "ls", "ls");
+	head->right->pline[1] = created_ast_n(_CMD, head->right, head);
+	setup_cmd(head->right->pline[1], "echo", "echo test test2");
+	head->right->pline[2] = created_ast_n(_CMD, head->right, head);
+	setup_cmd(head->right->pline[2], "grep", "grep test");
+	head->right->pline[3] = created_ast_n(_CMD, head->right, head);
+	setup_cmd(head->right->pline[3], "cat", "cat -e");
+	head->right->pline[4] = NULL;
 	return (head);
 }
