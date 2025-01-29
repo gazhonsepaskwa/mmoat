@@ -6,7 +6,7 @@
 /*   By: lderidde <lderidde@student.s19.be>        +#+  +:+       +#+         */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/24 08:22:16 by lderidde          #+#    #+#             */
-/*   Updated: 2025/01/29 13:32:50 by lderidde         ###   ########.fr       */
+/*   Updated: 2025/01/29 14:11:01 by lderidde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,13 +93,17 @@ t_ast_n	*return_hardcode_ast(char **envp)
 	head->right = created_ast_n(_PLINE, head, head);
 	head->right->pline = malloc(sizeof(t_ast_n *) * 5);
 	head->right->pline[0] = created_ast_n(_CMD, head->right, head);
-	setup_cmd(head->right->pline[0], "ls", "ls");
+	setup_cmd(head->right->pline[0], "cat", "cat");
 	head->right->pline[1] = created_ast_n(_CMD, head->right, head);
-	setup_cmd(head->right->pline[1], "echo", "echo test test2");
+	setup_cmd(head->right->pline[1], "cat", "cat -e");
 	head->right->pline[2] = created_ast_n(_CMD, head->right, head);
-	setup_cmd(head->right->pline[2], "grep", "grep test");
+	setup_cmd(head->right->pline[2], "sdd", "");
 	head->right->pline[3] = created_ast_n(_CMD, head->right, head);
-	setup_cmd(head->right->pline[3], "cat", "cat -e");
+	setup_cmd(head->right->pline[3], "echo", "echo abc");
+	head->right->pline[0]->redir = _RED_L;
+	head->right->pline[0]->infile = "Makefile";
+	head->right->pline[1]->redir = _RED_R;
+	head->right->pline[1]->outfile = "test";
 	head->right->pline[4] = NULL;
 	return (head);
 }
