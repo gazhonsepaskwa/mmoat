@@ -6,20 +6,37 @@
 /*   By: lderidde <lderidde@student.s19.be>        +#+  +:+       +#+         */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/24 14:32:20 by lderidde          #+#    #+#             */
-/*   Updated: 2025/01/28 10:19:06 by lderidde         ###   ########.fr       */
+/*   Updated: 2025/01/30 13:07:49 by lderidde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/builtins.h"
 
-static void	free_tmp(char **tab)
+int	is_export_valid(char *str)
 {
-	int	i;
+	char	*equal;
 
-	i = 0;
-	while (tab[i])
-		free(tab[i++]);
-	free(tab);
+	if (!ft_isalpha(*str) && str[0] != '_')
+		return (0);
+	equal = ft_strchr(str, '=');
+	if(!equal)
+	{
+		while (*(++str))
+		{
+			if (!ft_isalnum(*str) && *str != '_')
+				return (0);
+		}
+		return (1);
+	}
+	else
+	{
+		while (++str < equal)
+		{
+			if (!ft_isalnum(*str) && *str != '_')
+				return (0);
+		}
+		return (1);
+	}
 }
 
 char	**key_value(char *str)
@@ -33,7 +50,7 @@ char	**key_value(char *str)
 	equal = ft_strchr(str, '=');
 	tmp[0] = ft_substr(str, 0, equal - str);
 	if (equal - str == 0)
-		tmp[2] = ft_strdup("");
+		tmp[1] = ft_strdup("");
 	else
 		tmp[1] = ft_substr(equal, 1, ft_strlen(equal));
 	tmp[2] = NULL;
@@ -55,7 +72,7 @@ void	print_arr(char **envp)
 			ft_printf("declare -x %s=\"%s\"\n", print[0], print[1]);
 		else
 			ft_printf("declare -x %s\n", print[0]);
-		free_tmp(print);
+		free_tab(print);
 	}
 }
 
@@ -98,16 +115,21 @@ int	builtin_export(char **arg, t_ast_n *head)
 		return (print_export(head->env));
 	while (++i < count_args(arg))
 	{
-		if (ft_strchr(arg[i], '=') != NULL)
+		if (is_export_valid(arg[i]))
 		{
-			tmp = key_value(arg[i]);
-			if (!tmp)
-				return (1);
-			set_var_env(tmp[0], tmp[1], head);
-			free_tmp(tmp);
+			if (ft_strchr(arg[i], '=') != NULL)
+			{
+				tmp = key_value(arg[i]);
+				if (!tmp)
+					return (1);
+				set_var_env(tmp[0], tmp[1], head);
+				free_tab(tmp);
+			}
+			else
+				set_var_env(arg[i], NULL, head);
 		}
 		else
-			set_var_env(arg[i], NULL, head);
+			return (err_msg_cmd("export", arg[i], EXPRT_INV, 1));
 	}
 	return (0);
 }

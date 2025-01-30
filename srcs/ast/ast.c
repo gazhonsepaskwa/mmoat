@@ -6,7 +6,7 @@
 /*   By: lderidde <lderidde@student.s19.be>        +#+  +:+       +#+         */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/24 08:22:16 by lderidde          #+#    #+#             */
-/*   Updated: 2025/01/29 14:11:01 by lderidde         ###   ########.fr       */
+/*   Updated: 2025/01/30 13:19:40 by lderidde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ t_ast_n	*return_hardcode_ast(char **envp)
 	head = created_ast_n(_AND, NULL, NULL);
 	head->env = init_env(envp);
 	head->left = created_ast_n(_CMD, head, head);
-	setup_cmd(head->left, "ls", "ls");
+	setup_cmd(head->left, "export", "export test=");
 	// head->right = created_ast_n(_AND, head, head);
 	// head->right->left = created_ast_n(_CMD, head->right, head);
 	// setup_cmd(head->right->left, "echo", "echo $PWD");
@@ -93,17 +93,17 @@ t_ast_n	*return_hardcode_ast(char **envp)
 	head->right = created_ast_n(_PLINE, head, head);
 	head->right->pline = malloc(sizeof(t_ast_n *) * 5);
 	head->right->pline[0] = created_ast_n(_CMD, head->right, head);
-	setup_cmd(head->right->pline[0], "cat", "cat");
+	setup_cmd(head->right->pline[0], "export", "export");
 	head->right->pline[1] = created_ast_n(_CMD, head->right, head);
-	setup_cmd(head->right->pline[1], "cat", "cat -e");
+	setup_cmd(head->right->pline[1], "grep", "grep test");
 	head->right->pline[2] = created_ast_n(_CMD, head->right, head);
-	setup_cmd(head->right->pline[2], "sdd", "");
+	setup_cmd(head->right->pline[2], "cat", "cat");
 	head->right->pline[3] = created_ast_n(_CMD, head->right, head);
-	setup_cmd(head->right->pline[3], "echo", "echo abc");
-	head->right->pline[0]->redir = _RED_L;
-	head->right->pline[0]->infile = "Makefile";
+	setup_cmd(head->right->pline[3], "cat", "cat");
 	head->right->pline[1]->redir = _RED_R;
-	head->right->pline[1]->outfile = "test";
+	head->right->pline[1]->outfile = "file";
+	// head->right->pline[3]->redir = _RED_R;
+	// head->right->pline[3]->outfile = "file";
 	head->right->pline[4] = NULL;
 	return (head);
 }

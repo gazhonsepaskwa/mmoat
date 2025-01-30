@@ -6,7 +6,7 @@
 /*   By: lderidde <lderidde@student.s19.be>        +#+  +:+       +#+         */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/28 09:01:33 by lderidde          #+#    #+#             */
-/*   Updated: 2025/01/28 10:35:06 by lderidde         ###   ########.fr       */
+/*   Updated: 2025/01/30 10:40:49 by lderidde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@
 # include <stdlib.h>
 # include <string.h>
 
+# define EXPRT_INV "not a valid identifier"
 // void 	echo(char *msg, int flag);
 int		builtin_echo(char **arg, char **envp);
 int		builtin_exit(char **arg, bool depth);

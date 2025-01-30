@@ -6,7 +6,7 @@
 /*   By: lderidde <lderidde@student.s19.be>        +#+  +:+       +#+         */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 11:22:33 by lderidde          #+#    #+#             */
-/*   Updated: 2025/01/29 15:07:44 by lderidde         ###   ########.fr       */
+/*   Updated: 2025/01/30 12:41:55 by lderidde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -285,6 +285,32 @@ int	exec_pline(t_ast_n **pline)
 	return (end_pline(last_pid, pline));
 }
 
+// int	exec_subsh(t_ast_n *node)
+// {
+// 	int		status;
+// 	pid_t	pid;
+//
+// 	pid = fork();
+// 	if (pid == 0)
+// 	{
+// 		handle_redir(node);
+// 		return (execute_command(t_node));
+// 	}
+// 	else if (pid > 0)
+// 	{
+// 		waitpid(pid, &status, 0);
+// 		if (WIFEXITED(status))
+// 			return (WEXITSTATUS(status));
+// 		else
+// 			return (1);
+// 	}
+// 	else
+// 	{
+// 		perror("fork");
+// 		return (1);
+// 	}
+// }
+
 int	execute_command(t_ast_n *node)
 {
 	int	status;
@@ -307,5 +333,7 @@ int	execute_command(t_ast_n *node)
 	}
 	else if (node->state == _PLINE)
 		return (exec_pline(node->pline));
+	// else if (node->state == _SUBSH)
+	// 	return (exec_subsh(node->subsh));
 	return (0);
 }
