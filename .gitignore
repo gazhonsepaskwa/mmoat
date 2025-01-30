@@ -1,3 +1,5 @@
 minishell
 .objs/*
-srcs/builtins/test.c
+test.c
+parser
+ast.xml

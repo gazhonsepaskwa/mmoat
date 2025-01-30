@@ -38,7 +38,7 @@ char	*replace_ampercent(char *src)
 	i = -1;
 	j = 0;
 	amp_count = get_amp_count(src);
-	out = malloc(ft_strlen(src) + amp_count * 4);
+	out = malloc(ft_strlen(src) + amp_count * 4 + 1);
 	while (src[++i])
 	{
 		if (src[i] == '&')

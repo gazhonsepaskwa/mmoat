@@ -12,35 +12,6 @@
 
 #include "ast.h"
 
-t_ast_n	*created_ast_n(t_state st, t_ast_n *prt, t_ast_n *he)
-{
-	t_ast_n *node;
-
-	node = malloc(sizeof(t_ast_n));
-	if (!node)
-		return (NULL);
-	node->state = st;
-	node->parent = prt;
-	node->head = he;
-	node->ex_code = 0;
-	node->cmd = NULL;
-	node->args = NULL;
-	node->_stdout = 1;
-	node->_stdin = 0;
-	node->redir = _NR;
-	node->infile = NULL;
-	node->outfile = NULL;
-	node->left = NULL;
-	node->right = NULL;
-	node->pline = NULL;
-	if (prt)
-		node->shlvl = prt->shlvl;
-	else
-		node->shlvl = 0;
-	node->env = NULL;
-	return (node);
-}
-
 void	setup_cmd(t_ast_n *node, char *cmd, char *args)
 {
 	node->cmd = ft_strdup(cmd);
@@ -58,10 +29,24 @@ int	last_tok_subsh(t_node *lst)
 	return (0);
 }
 
+skip_parentheses(t_node **lst)
+{
+	if (!ft_strncmp((*lst)->val, "(", 1))
+	{
+		while ((*lst)->next && ft_strncmp((*lst)->next->val, ")", 1))
+		{
+			if (!ft_strncmp((*lst)->val, "(", 1))
+				skip_parentheses(&lst);
+			*lst = (*lst)->next;
+		}
+	}
+}
+
 t_node	*find_token(char *tok, t_node *lst)
 {
 	while (lst)
 	{
+		skip_parentheses(&lst);
 		if (!ft_strncmp(lst->val, tok, ft_strlen(tok)))
 			return (lst);
 		lst = lst->next;
@@ -128,6 +113,10 @@ t_ast_n	*create_ast_n(t_node *lst, t_ast_n *parent)
 
 	(void)token;
 	(void)parent;
+
+	node->left = NULL;
+	node->right = NULL;
+	node->pline = NULL;
 
 	/*if (node->state == _PLINE)*/
 		/*create_pline(node, lst, token);*/

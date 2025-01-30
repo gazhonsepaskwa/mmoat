@@ -48,7 +48,7 @@ void	draw_pline_part(t_ast_n *node, t_elems *e, int fd, int node_id)
 
 	i = 0;
 	e->rect.y += e->rect.h + 50;
-	while (node->pline[i])
+	while (node->pline && node->pline[i])
 	{
 		e->arrow.id_dst = print_ast(node->pline[i++], e, fd);
 		e->arrow.id_src = node_id;
