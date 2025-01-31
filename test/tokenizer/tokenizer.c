@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nalebrun <nalebrun@student.s19.be>         +#+  +:+       +#+        */
+/*   By: lderidde <lderidde@student.s19.be>        +#+  +:+       +#+         */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/15 13:27:57 by  nalebrun         #+#    #+#             */
-/*   Updated: 2025/01/20 13:15:25 by nalebrun         ###   ########.fr       */
+/*   Created: 2025/01/15 13:27:57 by lderidde          #+#    #+#             */
+/*   Updated: 2025/01/31 13:24:28 by lderidde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,8 @@ static t_node	*tokenize_base(char *str)
 	tab = ft_split_keep(str, " \t\n");
 	if (!tab)
 		return (NULL);
-	head = create_node(tab[0], 0);
-	if (!head)
-		return (free(tab), NULL);
-	i = 1;
+	head = NULL;
+	i = 0;
 	while (tab[i])
 	{
 		if (!add_node_back(&head, tab[i], 0, 0))

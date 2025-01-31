@@ -6,11 +6,11 @@
 /*   By: lderidde <lderidde@student.s19.be>        +#+  +:+       +#+         */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/24 08:22:16 by lderidde          #+#    #+#             */
-/*   Updated: 2025/01/30 13:19:40 by lderidde         ###   ########.fr       */
+/*   Updated: 2025/01/31 11:01:25 by lderidde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ast.h"
+#include "../../includes/ast.h"
 
 t_ast_n	*created_ast_n(t_state st, t_ast_n *prt, t_ast_n *he)
 {
@@ -84,7 +84,7 @@ t_ast_n	*return_hardcode_ast(char **envp)
 	head = created_ast_n(_AND, NULL, NULL);
 	head->env = init_env(envp);
 	head->left = created_ast_n(_CMD, head, head);
-	setup_cmd(head->left, "export", "export test=");
+	setup_cmd(head->left, "cd", "cd srcs");
 	// head->right = created_ast_n(_AND, head, head);
 	// head->right->left = created_ast_n(_CMD, head->right, head);
 	// setup_cmd(head->right->left, "echo", "echo $PWD");
@@ -93,15 +93,15 @@ t_ast_n	*return_hardcode_ast(char **envp)
 	head->right = created_ast_n(_PLINE, head, head);
 	head->right->pline = malloc(sizeof(t_ast_n *) * 5);
 	head->right->pline[0] = created_ast_n(_CMD, head->right, head);
-	setup_cmd(head->right->pline[0], "export", "export");
+	setup_cmd(head->right->pline[0], "ls", "ls -la");
 	head->right->pline[1] = created_ast_n(_CMD, head->right, head);
-	setup_cmd(head->right->pline[1], "grep", "grep test");
+	setup_cmd(head->right->pline[1], "cat", "cat -e");
 	head->right->pline[2] = created_ast_n(_CMD, head->right, head);
-	setup_cmd(head->right->pline[2], "cat", "cat");
+	setup_cmd(head->right->pline[2], "grep", "grep builtins");
 	head->right->pline[3] = created_ast_n(_CMD, head->right, head);
-	setup_cmd(head->right->pline[3], "cat", "cat");
-	head->right->pline[1]->redir = _RED_R;
-	head->right->pline[1]->outfile = "file";
+	setup_cmd(head->right->pline[3], "wc", "wc -l");
+	// head->right->pline[1]->redir = _RED_R;
+	// head->right->pline[1]->outfile = "file";
 	// head->right->pline[3]->redir = _RED_R;
 	// head->right->pline[3]->outfile = "file";
 	head->right->pline[4] = NULL;

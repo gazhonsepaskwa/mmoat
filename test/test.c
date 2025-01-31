@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parse.c                                            :+:      :+:    :+:   */
+/*   test.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nalebrun <nalebrun@student.s19.be>         +#+  +:+       +#+        */
+/*   By: lderidde <lderidde@student.s19.be>        +#+  +:+       +#+         */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/15 08:23:41 by  nalebrun         #+#    #+#             */
-/*   Updated: 2025/01/20 13:15:47 by nalebrun         ###   ########.fr       */
+/*   Created: 2025/01/15 08:23:41 by lderidde          #+#    #+#             */
+/*   Updated: 2025/01/31 13:40:10 by lderidde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,19 +60,20 @@ int	main(int ac, char **av, char **envp)
 	// ast = get_ast(envp, lst);
 	// if (!ast)
 		// return (1);
+	
+
+	// tmp
+	t_nodell *lls = cutll(lst, "||", -1);
+	while (lls)
+	{
+		gen_dio_linked_list(lls->node, dio);
+		lls = lls->next;
+	}
 	if (DEBUG)
 	{
 		// gen_dio_ast(ast, dio);
 		drawio_end_file(dio);
 		ft_debug(" draw.io file generated !\n");
-	}
-
-	// tmp
-	t_nodell *lls = cutll(lst, "||", 1);
-	while (lls)
-	{
-		gen_dio_linked_list(lls->node, dio);
-		lls = lls->next;
 	}
 	free_linked_list(lst);
 }

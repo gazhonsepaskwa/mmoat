@@ -6,11 +6,13 @@
 /*   By: lderidde <lderidde@student.s19.be>        +#+  +:+       +#+         */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 11:22:33 by lderidde          #+#    #+#             */
-/*   Updated: 2025/01/30 12:41:55 by lderidde         ###   ########.fr       */
+/*   Updated: 2025/01/31 11:47:38 by lderidde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../../includes/exec.h"
+#include "../../lib/libft/libft.h"
+#include "../../includes/builtins.h"
 
 void	handle_file(t_ast_n *node, int check)
 {
@@ -225,14 +227,10 @@ int	err_fork_pline(int *pipes)
 	return (1);
 }
 
-void	exec_pchild(int *pipes, int index, t_ast_n *pcmd, int cmds)
+void	exec_pcmd(t_ast_n *pcmd)
 {
-	int	ret;
+	int ret;
 
-	if (index < cmds - 1)
-		dup2(pipes[1], STDOUT_FILENO);
-	close(pipes[0]);
-	close(pipes[1]);
 	if (is_builtin(pcmd->cmd))
 	{
 		ret = exec_builtin(pcmd);
@@ -240,6 +238,18 @@ void	exec_pchild(int *pipes, int index, t_ast_n *pcmd, int cmds)
 	}
 	else
 		exec(pcmd);
+}
+
+void	exec_pchild(int *pipes, int index, t_ast_n *pcmd, int cmds)
+{
+	if (index < cmds - 1)
+		dup2(pipes[1], STDOUT_FILENO);
+	close(pipes[0]);
+	close(pipes[1]);
+	if (pcmd->state == _CMD)
+		exec_pcmd(pcmd);
+	// else if (pcmd->state == _SUBSH);
+	// 	exec_psubsh(pcmd);
 }
 
 int	end_pline(pid_t last_pid, t_ast_n **pline)

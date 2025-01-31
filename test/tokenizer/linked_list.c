@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   linked_list.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nalebrun <nalebrun@student.s19.be>         +#+  +:+       +#+        */
+/*   By: lderidde <lderidde@student.s19.be>        +#+  +:+       +#+         */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/15 13:38:49 by  nalebrun         #+#    #+#             */
-/*   Updated: 2025/01/20 13:15:03 by nalebrun         ###   ########.fr       */
+/*   Created: 2025/01/15 13:38:49 by lderidde          #+#    #+#             */
+/*   Updated: 2025/01/31 13:20:13 by lderidde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,19 +30,22 @@ t_node	*create_node(char *val, t_token token)
 
 int	add_node_back(t_node **head, char *val, t_token token, t_pres pres)
 {
+	t_node *tmp;
+
+	tmp = *head;
 	if (!val)
 		return (0);
-	if (!(*head))
+	if (!head || !(*head))
 	{
 		(*head) = create_node(val, token);
 		(*head)->pressision = pres;
 		return (1);
 	}
-	while ((*head)->next != NULL)
-		(*head) = (*head)->next;
-	(*head)->next = create_node(val, token);
-	(*head)->next->pressision = pres;
-	if ((*head)->next == NULL)
+	while (tmp->next != NULL)
+		tmp = tmp->next;
+	tmp->next = create_node(val, token);
+	tmp->next->pressision = pres;
+	if (tmp->next == NULL)
 		return (0);
 	return (1);
 }

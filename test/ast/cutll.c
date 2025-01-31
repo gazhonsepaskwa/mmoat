@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cutll.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nalebrun <nalebrun@student.s19.be>        +#+  +:+       +#+         */
+/*   By: lderidde <lderidde@student.s19.be>        +#+  +:+       +#+         */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/31 09:56:34 by nalebrun          #+#    #+#             */
-/*   Updated: 2025/01/31 10:32:03 by nalebrun         ###   ########.fr       */
+/*   Created: 2025/01/31 09:56:34 by lderidde          #+#    #+#             */
+/*   Updated: 2025/01/31 13:38:45 by lderidde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,22 +14,31 @@
 
 void	add_nodell(t_nodell **nodell, t_node *node)
 {
-	while (*nodell)
-		*nodell = (*nodell)->next;
-	(*nodell) = malloc(sizeof(t_nodell));
-	(*nodell)->node = node;
-	(*nodell)->next = NULL;
+	t_nodell	*tmp;
+
+	if (!nodell || !(*nodell))
+	{
+		*nodell = malloc(sizeof(t_nodell));
+		(*nodell)->node = node;
+		(*nodell)->next = NULL;
+	}
+	tmp = *nodell;
+	while (tmp->next)
+		tmp = tmp->next;
+	tmp->next = malloc(sizeof(t_nodell));
+	tmp->next->node = node;
+	tmp->next->next = NULL;
 }
 
-t_node *get_node(t_node *lst, char *expected)
+t_node *get_node(t_node **lst, char *expected)
 {
 	t_node	*node;
 
 	node = NULL;
-	while (lst && ft_strncmp(lst->val, expected, ft_strlen(expected)))
+	while ((*lst) && ft_strncmp((*lst)->val, expected, ft_strlen(expected)))
 	{
-		add_node_back(&node, lst->val, lst->token, lst->pressision);
-		lst = lst->next;
+		add_node_back(&node, (*lst)->val, (*lst)->token, (*lst)->pressision);
+		(*lst) = (*lst)->next;
 	}
 	return (node);
 }
@@ -44,10 +53,12 @@ t_nodell	*cutll(t_node *lst, char *expected, size_t limiter)
 	out = NULL;
 	while (i <= limiter)
 	{
-		node = get_node(lst, expected);
+		node = get_node(&lst, expected);
 		if (!node)
 			break;
 		add_nodell(&out, node);
+		if(lst && lst->next)
+			lst = lst->next;
 		i++;
 	}
 	return (out);

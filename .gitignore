@@ -3,3 +3,4 @@ minishell
 test.c
 parser
 ast.xml
+.TEST_objs
