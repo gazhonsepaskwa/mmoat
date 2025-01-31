@@ -39,7 +39,7 @@ void	truncate_comment(char *str)
 int	main(int ac, char **av, char **envp)
 {
 	t_node	*lst;
-	// t_ast_n	*ast;
+	t_ast_n	*ast;
 	int 	dio;
 	(void)envp;
 
@@ -57,21 +57,13 @@ int	main(int ac, char **av, char **envp)
 		dio = drawio_init(av[1]);
 		gen_dio_linked_list(lst, dio);
 	}
-	// ast = get_ast(envp, lst);
-	// if (!ast)
-		// return (1);
+	ast = get_ast(envp, lst);
+	if (!ast)
+		return (1);
 	
-
-	// tmp
-	t_nodell *lls = cutll(lst, "||", -1);
-	while (lls)
-	{
-		gen_dio_linked_list(lls->node, dio);
-		lls = lls->next;
-	}
 	if (DEBUG)
 	{
-		// gen_dio_ast(ast, dio);
+		gen_dio_ast(ast, dio);
 		drawio_end_file(dio);
 		ft_debug(" draw.io file generated !\n");
 	}

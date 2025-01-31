@@ -12,7 +12,7 @@
 
 #include "ast.h"
 
-void	add_nodell(t_nodell **nodell, t_node *node)
+static void	add_nodell(t_nodell **nodell, t_node *node)
 {
 	t_nodell	*tmp;
 
@@ -31,7 +31,7 @@ void	add_nodell(t_nodell **nodell, t_node *node)
 	tmp->next->next = NULL;
 }
 
-t_node *get_node(t_node **lst, char *expected)
+static t_node *get_node(t_node **lst, char *expected)
 {
 	t_node	*node;
 

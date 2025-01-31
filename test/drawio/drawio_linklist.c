@@ -39,6 +39,7 @@ void	gen_dio_linked_list(t_node *head, int fd)
 	{
 		rect.text = ft_sprintf("%s", current->val);
 		rect.text = replace_ampercent(rect.text);
+		rect.text = replace_left_red(rect.text);
 		arrow.id_dst = drawio_create_elem(fd, &rect);
 		drawio_create_elem(fd, &arrow);
 		arrow.id_src = arrow.id_dst;

@@ -12,7 +12,7 @@
 
 #include "drawio.h"
 
-static int	get_amp_count(char *str)
+static int	get_char_count(char *str, char c)
 {
 	int	i;
 	int	count;
@@ -21,7 +21,7 @@ static int	get_amp_count(char *str)
 	count = 0;
 	while (str[i])
 	{
-		if (str[i] == '&')
+		if (str[i] == c)
 			count++;
 		i++;
 	}
@@ -37,7 +37,7 @@ char	*replace_ampercent(char *src)
 
 	i = -1;
 	j = 0;
-	amp_count = get_amp_count(src);
+	amp_count = get_char_count(src, '&');
 	out = malloc(ft_strlen(src) + amp_count * 4 + 1);
 	while (src[++i])
 	{
@@ -54,5 +54,39 @@ char	*replace_ampercent(char *src)
 			out[j++] = src[i];
 	}
 	out[j] = 0;
+	free(src);
+	return (out);
+}
+
+char	*replace_left_red(char *src)
+{
+	int		i;
+	int		j;
+	int		redl_count;
+	char	*out;
+
+	i = -1;
+	j = 0;
+	redl_count = get_char_count(src, '<');
+	out = malloc(ft_strlen(src) + redl_count * 7 + 1);
+	while (src[++i])
+	{
+		if (src[i] == '<')
+		{
+			out[j] = '&';
+			out[j + 1] = 'a';
+			out[j + 2] = 'm';
+			out[j + 3] = 'p';
+			out[j + 4] = ';';
+			out[j + 5] = 'l';
+			out[j + 6] = 't';
+			out[j + 7] = ';';
+			j += 8;
+		}
+		else
+			out[j++] = src[i];
+	}
+	out[j] = 0;
+	free(src);
 	return (out);
 }

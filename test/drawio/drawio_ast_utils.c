@@ -36,11 +36,11 @@ const char	*translate_redir(t_redir redir)
 	const char	*out;
 
 	if (redir == _RED_L)
-		out = "redir : < &#10;";
+		out = "redir : RED_L&#10;";
 	else if (redir == _RED_R)
-		out = "redir : > &#10;";
+		out = "redir : RED_R&#10;";
 	else if (redir == _RED_DR)
-		out = "redir : >> &#10;";
+		out = "redir : _RED_DR &#10;";
 	else
 		out = "Not redirected &#10;";
 	return (out);
@@ -49,12 +49,16 @@ const char	*translate_redir(t_redir redir)
 t_dio_node	get_cmd_txt(t_ast_n *node)
 {
 	t_dio_node	txt;
+	char		*args;
 
 	txt.st = translate_state(node->state);
 	if (node->state == _CMD)
 	{
-		txt.cmd = ft_sprintf("%s%s%s", NL, node->cmd, NL);
-		txt.args = ft_sprintf(ft_tabstr(node->args), NL);
+		txt.cmd = ft_sprintf("%s%s", NL, node->cmd);
+		txt.cmd = replace_left_red(txt.cmd);
+		args = ft_tabstr(node->args);
+		txt.args = ft_sprintf("%s%s%s", NL, args, NL);
+		free(args);
 		txt.redir = translate_redir(node->redir);
 		txt.inf = ft_sprintf("Infile : %s%s", node->infile, NL);
 		txt.outf = ft_sprintf("Outfile : %s", node->outfile);
