@@ -50,7 +50,7 @@ typedef struct s_node
 
 t_node				*tokenize(char *str);
 t_node				*create_node(char *val, t_token token);
-int					add_node_back(t_node *head, char *val, t_token token);
+int					add_node_back(t_node **head, char *val, t_token token, t_pres pres);
 int					merge_with_next_node(t_node *node);
 void				free_linked_list(t_node *stack);
 t_token				get_token(char *str);

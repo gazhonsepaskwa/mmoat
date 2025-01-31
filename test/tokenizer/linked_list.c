@@ -28,14 +28,21 @@ t_node	*create_node(char *val, t_token token)
 	return (node);
 }
 
-int	add_node_back(t_node *head, char *val, t_token token)
+int	add_node_back(t_node **head, char *val, t_token token, t_pres pres)
 {
 	if (!val)
 		return (0);
-	while (head->next != NULL)
-		head = head->next;
-	head->next = create_node(val, token);
-	if (head->next == NULL)
+	if (!(*head))
+	{
+		(*head) = create_node(val, token);
+		(*head)->pressision = pres;
+		return (1);
+	}
+	while ((*head)->next != NULL)
+		(*head) = (*head)->next;
+	(*head)->next = create_node(val, token);
+	(*head)->next->pressision = pres;
+	if ((*head)->next == NULL)
 		return (0);
 	return (1);
 }

@@ -27,7 +27,7 @@ static t_node	*tokenize_base(char *str)
 	i = 1;
 	while (tab[i])
 	{
-		if (!add_node_back(head, tab[i], 0))
+		if (!add_node_back(&head, tab[i], 0, 0))
 			return (free(tab), NULL);
 		i++;
 	}

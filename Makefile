@@ -44,11 +44,11 @@ TEST_DEPS = $(TEST_OBJS:.o=.d)
 
 $(TEST_OBJDIR)/%.o: $(TEST_SRCDIR)/%.c
 	@mkdir -p $(dir $@)
-	@$(CC) $(WFLAGS) -MMD -MP -I$(INCDIR) -c $< -g3 -ggdb -o $@ $(LINK)
+	@$(CC) $(WFLAGS) -MMD -MP -I$(INCDIR) -c $< -o $@ $(LINK)
 
 parser: $(LIBFT) $(TEST_OBJS)
 	@$(CC) $(WFLAGS) $(TEST_OBJS) $(LIBFT) -o parser $(LINK)
-	@echo "$(CYAN)Test build completed: test$(RESET)"
+	@echo "$(CYAN)Test build completed: parser$(RESET)"
 
 # test part end
 

@@ -29,14 +29,14 @@ int	last_tok_subsh(t_node *lst)
 	return (0);
 }
 
-skip_parentheses(t_node **lst)
+void	skip_parentheses(t_node **lst)
 {
 	if (!ft_strncmp((*lst)->val, "(", 1))
 	{
 		while ((*lst)->next && ft_strncmp((*lst)->next->val, ")", 1))
 		{
 			if (!ft_strncmp((*lst)->val, "(", 1))
-				skip_parentheses(&lst);
+				skip_parentheses(&(*lst)->next);
 			*lst = (*lst)->next;
 		}
 	}

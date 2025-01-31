@@ -56,7 +56,14 @@ typedef struct s_ast_n
 	char			**env;
 }					t_ast_n;
 
+typedef struct s_nodell
+{
+	t_node 			*node;
+	struct s_nodell	*next;
+}					t_nodell;
+
 t_ast_n	*get_ast(char **envp, t_node *lst);
+t_nodell	*cutll(t_node *lst, char *expected, size_t limiter);
 
 // env TMP
 char	**init_env(char **envp);
