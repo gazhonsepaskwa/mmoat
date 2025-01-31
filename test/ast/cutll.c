@@ -6,7 +6,7 @@
 /*   By: lderidde <lderidde@student.s19.be>        +#+  +:+       +#+         */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/31 09:56:34 by lderidde          #+#    #+#             */
-/*   Updated: 2025/01/31 13:38:45 by lderidde         ###   ########.fr       */
+/*   Updated: 2025/01/31 14:05:12 by lderidde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ void	add_nodell(t_nodell **nodell, t_node *node)
 		*nodell = malloc(sizeof(t_nodell));
 		(*nodell)->node = node;
 		(*nodell)->next = NULL;
+		return ;
 	}
 	tmp = *nodell;
 	while (tmp->next)
@@ -57,6 +58,9 @@ t_nodell	*cutll(t_node *lst, char *expected, size_t limiter)
 		if (!node)
 			break;
 		add_nodell(&out, node);
+		t_nodell *tmp = out;
+		while (tmp)
+			tmp = tmp->next;
 		if(lst && lst->next)
 			lst = lst->next;
 		i++;

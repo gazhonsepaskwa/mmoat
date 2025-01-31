@@ -6,7 +6,7 @@
 /*   By: lderidde <lderidde@student.s19.be>        +#+  +:+       +#+         */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 08:23:41 by lderidde          #+#    #+#             */
-/*   Updated: 2025/01/31 13:40:10 by lderidde         ###   ########.fr       */
+/*   Updated: 2025/01/31 14:05:34 by lderidde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ int	main(int ac, char **av, char **envp)
 	if (DEBUG)
 	{
 		dio = drawio_init(av[1]);
-		// gen_dio_linked_list(lst, dio);
+		gen_dio_linked_list(lst, dio);
 	}
 	// ast = get_ast(envp, lst);
 	// if (!ast)
