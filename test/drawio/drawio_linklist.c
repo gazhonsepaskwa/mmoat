@@ -14,12 +14,15 @@
 
 void	set_ll_rect(t_dio_elem *rect)
 {
+	static int	y = 50;
+
 	rect->type = RECT;
 	rect->rounded = 0;
 	rect->x = 50;
-	rect->y = 50;
+	rect->y = y;
 	rect->w = 100;
 	rect->h = 50;
+	y += 100;
 }
 
 void	gen_dio_linked_list(t_node *head, int fd)
