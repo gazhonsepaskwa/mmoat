@@ -63,7 +63,7 @@ typedef struct s_nodell
 }					t_nodell;
 
 t_ast_n	*get_ast(char **envp, t_node *lst);
-t_nodell	*cutll(t_node *lst, char *expected, size_t limiter);
+t_nodell	*cutll(t_node *lst, t_node *expected, size_t limiter);
 t_node *get_top_token(t_node *lst, t_state *state);
 
 // env TMP

@@ -31,7 +31,8 @@ int	draw_arrow(int fd, int id, t_dio_elem *elem)
 	if (!elem->id_src || !elem->id_dst)
 		return (0);
 	ft_fprintf(fd, "<mxCell id=\"%d\" ", id);
-	ft_fprintf(fd, "edge=\"1\" parent=\"1\" source=");
+	ft_fprintf(fd, "edge=\"1\" style=\"edgeStyle=orthogonalEdgeStyle;\"\
+ parent=\"1\" source=");
 	ft_fprintf(fd, "\"%d\" target=\"%d\">\n", elem->id_src, elem->id_dst);
 	ft_fprintf(fd, "<mxGeometry relative=\"1\" as=\"geometry\"/>\n</mxCell>\n");
 	return (id);

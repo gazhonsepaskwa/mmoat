@@ -31,12 +31,17 @@ static void	add_nodell(t_nodell **nodell, t_node *node)
 	tmp->next->next = NULL;
 }
 
-static t_node *get_node(t_node **lst, char *expected)
+static t_node *get_node(t_node **lst, t_node *expected, int limiter)
 {
 	t_node	*node;
 
 	node = NULL;
-	while ((*lst) && ft_strncmp((*lst)->val, expected, ft_strlen(expected)))
+	while (limiter != -1 && (*lst) && (*lst) != expected)
+	{
+		add_node_back(&node, (*lst)->val, (*lst)->token, (*lst)->pressision);
+		(*lst) = (*lst)->next;
+	}
+	while (limiter == -1 && (*lst) && ft_strncmp((*lst)->val, expected->val, ft_strlen((*lst)->val)))
 	{
 		add_node_back(&node, (*lst)->val, (*lst)->token, (*lst)->pressision);
 		(*lst) = (*lst)->next;
@@ -44,7 +49,7 @@ static t_node *get_node(t_node **lst, char *expected)
 	return (node);
 }
 
-t_nodell	*cutll(t_node *lst, char *expected, size_t limiter)
+t_nodell	*cutll(t_node *lst, t_node *expected, size_t limiter)
 {
 	t_nodell	*out;
 	t_node		*node;
@@ -54,7 +59,7 @@ t_nodell	*cutll(t_node *lst, char *expected, size_t limiter)
 	out = NULL;
 	while (i <= limiter)
 	{
-		node = get_node(&lst, expected);
+		node = get_node(&lst, expected, limiter);
 		if (!node)
 			break;
 		add_nodell(&out, node);
