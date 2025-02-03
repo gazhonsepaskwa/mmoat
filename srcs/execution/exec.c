@@ -6,11 +6,13 @@
 /*   By: lderidde <lderidde@student.s19.be>        +#+  +:+       +#+         */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 11:22:33 by lderidde          #+#    #+#             */
-/*   Updated: 2025/02/03 14:05:14 by lderidde         ###   ########.fr       */
+/*   Updated: 2025/02/03 15:44:14 by lderidde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
+#include <fcntl.h>
+#include <unistd.h>
 
 void	handle_file(t_ast_n *node, int check)
 {
@@ -76,23 +78,39 @@ int	is_builtin(char *str)
 		return (0);
 }
 
+void	reset_redir(t_ast_n *node)
+{
+	int	fd;
+
+	fd = open("/dev/pts/1", O_WRONLY);
+	(void)node;
+	if (dup2(fd, 1) == -1)
+		printf("error\n");
+	close(fd);
+	// close(node->save_std);
+}
+
 int	exec_builtin(t_ast_n *node)
 {
+	int ret;
+
 	handle_redir(node);
 	if (ft_strncmp(node->cmd, "exit", 4) == 0)
-		return (builtin_exit(node->args, false, node));
+		ret = builtin_exit(node->args, false, node);
 	else if (ft_strncmp(node->cmd, "pwd", 3) == 0)
-		return (builtin_pwd(node->args));
+		ret = builtin_pwd(node->args);
 	else if (ft_strncmp(node->cmd, "echo", 4) == 0)
-		return (builtin_echo(node->args, node->msh->env));
+		ret = builtin_echo(node->args, node->msh->env);
 	else if (ft_strncmp(node->cmd, "env", 3) == 0)
-		return (builtin_env(node->args, node->msh->env));
+		ret = builtin_env(node->args, node->msh->env);
 	else if (ft_strncmp(node->cmd, "unset", 5) == 0)
-		return (builtin_unset(node->args, node));
+		ret = builtin_unset(node->args, node);
 	else if (ft_strncmp(node->cmd, "cd", 2) == 0)
-		return (builtin_cd(node->args, node));
+		ret = builtin_cd(node->args, node);
 	else 
-		return (builtin_export(node->args, node));
+		ret = builtin_export(node->args, node);
+	reset_redir(node);
+	return (ret);
 }
 
 int	count_cmds(t_ast_n **pline)

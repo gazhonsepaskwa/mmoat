@@ -3,14 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   ast.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nalebrun <nalebrun@student.s19.be>        +#+  +:+       +#+         */
+/*   By: lderidde <lderidde@student.s19.be>        +#+  +:+       +#+         */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/24 08:22:16 by nalebrun          #+#    #+#             */
-/*   Updated: 2025/02/01 11:13:58 by nalebrun         ###   ########.fr       */
+/*   Created: 2025/01/24 08:22:16 by lderidde          #+#    #+#             */
+/*   Updated: 2025/02/03 15:44:56 by lderidde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../includes/minishell.h"
+#include <unistd.h>
 
 // ===================================================================
 
@@ -211,6 +212,8 @@ t_ast_n	*create_ast_n(t_node *lst, t_ast_n *parent, t_msh *msh)
 	node->pline = NULL;
 	node->msh = msh;
 	node->parent = parent;
+	node->_stdout = 1;
+	node->_stdin = 0;
 	if (node->state == _AND || node->state == _OR)
 		create_and_or(node, lst, token, msh);
 	else if (node->state == _SUBSH)

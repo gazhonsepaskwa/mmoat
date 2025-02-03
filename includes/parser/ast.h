@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ast.h                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nalebrun <nalebrun@student.s19.be>        +#+  +:+       +#+         */
+/*   By: lderidde <lderidde@student.s19.be>        +#+  +:+       +#+         */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/24 08:23:27 by nalebrun          #+#    #+#             */
-/*   Updated: 2025/01/24 08:23:27 by nalebrun         ###   ########.fr       */
+/*   Created: 2025/01/24 08:23:27 by lderidde          #+#    #+#             */
+/*   Updated: 2025/02/03 15:10:17 by lderidde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ typedef struct s_ast_n
 	int				fds[2];
 	int				_stdout;
 	int				_stdin;
+	int				save_std;
 	t_redir			redir;
 	char			*infile;
 	char			*outfile;
