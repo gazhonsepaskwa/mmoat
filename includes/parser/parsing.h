@@ -15,6 +15,6 @@
 
 # include "../minishell.h"
 
-t_ast_n *parser(char *input, char **envp, t_msh *msh);
+t_ast_n *parser(char *input, t_msh *msh);
 
 #endif

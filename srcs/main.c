@@ -14,25 +14,25 @@
 
 char	*powerline(void)
 {
-	char	*pwd;
-	char	*tilt;
+	// char	*pwd;
+	// char	*tilt;
 	char	*input;
-
-	pwd = getcwd(NULL, 0);
-	if (ft_strncmp(pwd, "/home/", 6) == 0)
-	{
-		pwd = pwd + 6;
-		while (*pwd && (*pwd) != '/')
-			pwd = pwd + 1;
-		tilt = " ~";
-	}
-	else
-		tilt = " ";
-	printf("%s----------------------------------------------\
-----------------------------------%s", POW5, RESET);
-	printf("\n%s   MMOAT %s%s%s%s%s %s%s%s ",
-		POW1, POW2, POW3, POW4, tilt, pwd, RESET, POW5, RESET);
-	input = readline("");
+	//
+	// pwd = getcwd(NULL, 0);
+	// if (ft_strncmp(pwd, "/home/", 6) == 0)
+	// {
+	// 	pwd = pwd + 6;
+	// 	while (*pwd && (*pwd) != '/')
+	// 		pwd = pwd + 1;
+	// 	tilt = " ~";
+	// }
+	// else
+	// 	tilt = " ";
+// 	printf("%s----------------------------------------------
+//----------------------------------%s", POW5, RESET);
+// 	printf("\n%s   MMOAT %s%s%s%s%s %s%s%s ",
+// 		POW1, POW2, POW3, POW4, tilt, pwd, RESET, POW5, RESET);
+	input = readline(">> ");
 	if (ft_strlen(input) > 0)
 		add_history(input);
 	return (input);
@@ -62,7 +62,7 @@ t_msh *init_msh(char **envp)
 	if (!envp[0])
 		msh->env = ft_setnewenv();
 	else
-		msh->env = copy_env_var(envp, count_var(envp));
+		msh->env = init_env(envp);
 	return (msh);
 }
 
@@ -79,7 +79,7 @@ int	main(int ac, char **av, char **envp)
 	while (1)
 	{
 		input = powerline();
-		msh->head = parser(input, envp, msh);
+		msh->head = parser(input, msh);
 		execute_command(msh->head);
 		free(input);
 	}

@@ -14,7 +14,7 @@
 
 // ===================================================================
 
-t_ast_n	*create_ast_n(t_node *lst, t_ast_n *parent);
+t_ast_n	*create_ast_n(t_node *lst, t_ast_n *parent, t_msh *msh);
 
 // ====================================================================
 
@@ -137,7 +137,7 @@ void	create_pline(t_ast_n *self, t_node *lst, t_node *token, t_msh *msh)
 	i = 0;
 	while (cpy)
 	{
-		self->pline[i] = create_ast_n(cpy->node, self, t_msh *msh);
+		self->pline[i] = create_ast_n(cpy->node, self, msh);
 		cpy = cpy->next;
 		i++;
 	}
