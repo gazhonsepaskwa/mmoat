@@ -6,7 +6,7 @@
 /*   By: lderidde <lderidde@student.s19.be>        +#+  +:+       +#+         */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/24 14:32:13 by lderidde          #+#    #+#             */
-/*   Updated: 2025/01/28 10:39:44 by lderidde         ###   ########.fr       */
+/*   Updated: 2025/02/03 14:17:14 by lderidde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,23 +49,24 @@ int	bash_exiterrorcount(void)
 	return (2);
 }
 
-int	builtin_exit(char **arg, bool depth)
+int	builtin_exit(char **arg, bool depth, t_ast_n *node)
 {
 	long	res;
 
-	if (ft_isnumeric(arg[1]))
+	res = node->msh->ex_code;
+	if (arg[1] && ft_isnumeric(arg[1]))
 		res = ft_atol(arg[1]);
 	if (depth == true)
 	{
 		if (count_args(arg) > 2 && ft_isnumeric(arg[1]))
 			return (err_msg_cmd("exit", NULL, "too many arguments", 1));
-		else if (!ft_isnumeric(arg[1]) || errno == ERANGE)
+		else if (arg[1] && (!ft_isnumeric(arg[1]) || errno == ERANGE))
 			return (err_msg_cmd("exit", arg[1], "numeric argument required", 2));
 		return (res % 256);
 	}
 	if (count_args(arg) > 2 && ft_isnumeric(arg[1]))
 		return (bash_exiterrorcount());
-	else if (!ft_isnumeric(arg[1]) || errno == ERANGE)
+	else if (arg[1] && (!ft_isnumeric(arg[1]) || errno == ERANGE))
 		bash_exit_errornum(arg[1]);
 	else
 		bash_exit(res % 256);

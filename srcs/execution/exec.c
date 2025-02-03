@@ -6,7 +6,7 @@
 /*   By: lderidde <lderidde@student.s19.be>        +#+  +:+       +#+         */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 11:22:33 by lderidde          #+#    #+#             */
-/*   Updated: 2025/02/03 13:15:41 by lderidde         ###   ########.fr       */
+/*   Updated: 2025/02/03 14:05:14 by lderidde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ int	exec_builtin(t_ast_n *node)
 {
 	handle_redir(node);
 	if (ft_strncmp(node->cmd, "exit", 4) == 0)
-		return (builtin_exit(node->args, true));
+		return (builtin_exit(node->args, false, node));
 	else if (ft_strncmp(node->cmd, "pwd", 3) == 0)
 		return (builtin_pwd(node->args));
 	else if (ft_strncmp(node->cmd, "echo", 4) == 0)

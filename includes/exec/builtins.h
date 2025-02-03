@@ -6,7 +6,7 @@
 /*   By: lderidde <lderidde@student.s19.be>        +#+  +:+       +#+         */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/28 09:01:33 by lderidde          #+#    #+#             */
-/*   Updated: 2025/02/03 13:03:14 by lderidde         ###   ########.fr       */
+/*   Updated: 2025/02/03 14:05:25 by lderidde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@
 # define EXPRT_INV "not a valid identifier"
 // void 	echo(char *msg, int flag);
 int		builtin_echo(char **arg, char **envp);
-int		builtin_exit(char **arg, bool depth);
+int		builtin_exit(char **arg, bool depth, t_ast_n *node);
 int		builtin_pwd(char **arg);
 int		builtin_env(char **arg, char **envp);
 int	builtin_unset(char **arg, t_ast_n *head);

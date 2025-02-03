@@ -6,7 +6,7 @@
 /*   By: lderidde <lderidde@student.s19.be>        +#+  +:+       +#+         */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 14:16:52 by lderidde          #+#    #+#             */
-/*   Updated: 2025/02/03 13:19:31 by lderidde         ###   ########.fr       */
+/*   Updated: 2025/02/03 14:19:09 by lderidde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,7 @@ t_msh *init_msh(char **envp)
 	t_msh	*msh;
 
 	msh = malloc(sizeof(t_msh) * 1);
+	msh->ex_code = 0;
 	if (!msh)
 		return (NULL);
 	if (!envp[0])
@@ -80,7 +81,7 @@ int	main(int ac, char **av, char **envp)
 	{
 		input = powerline();
 		msh->head = parser(input, msh);
-		execute_command(msh->head);
+		msh->ex_code = execute_command(msh->head);
 		free(input);
 	}
 }
