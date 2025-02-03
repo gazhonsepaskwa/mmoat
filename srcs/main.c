@@ -6,7 +6,7 @@
 /*   By: lderidde <lderidde@student.s19.be>        +#+  +:+       +#+         */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 14:16:52 by lderidde          #+#    #+#             */
-/*   Updated: 2025/01/31 09:57:17 by lderidde         ###   ########.fr       */
+/*   Updated: 2025/02/03 13:19:31 by lderidde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,20 @@ char	**ft_setnewenv(void)
 	return (envp);
 }
 
+t_msh *init_msh(char **envp)
+{
+	t_msh	*msh;
+
+	msh = malloc(sizeof(t_msh) * 1);
+	if (!msh)
+		return (NULL);
+	if (!envp[0])
+		msh->env = ft_setnewenv();
+	else
+		msh->env = copy_env_var(envp, count_var(envp));
+	return (msh);
+}
+
 int	main(int ac, char **av, char **envp)
 {
 	char	*input;
@@ -59,10 +73,9 @@ int	main(int ac, char **av, char **envp)
 
 	(void)ac;
 	(void)av;
-	if (!envp[0])
-		msh->env = ft_setnewenv();
-	else
-		msh->env = copy_env_var(envp, count_var(envp));
+	msh = init_msh(envp);
+	if (!msh)
+		return (1);
 	while (1)
 	{
 		input = powerline();

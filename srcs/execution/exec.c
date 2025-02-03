@@ -6,7 +6,7 @@
 /*   By: lderidde <lderidde@student.s19.be>        +#+  +:+       +#+         */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 11:22:33 by lderidde          #+#    #+#             */
-/*   Updated: 2025/01/31 11:47:38 by lderidde         ###   ########.fr       */
+/*   Updated: 2025/02/03 13:15:41 by lderidde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,15 +84,15 @@ int	exec_builtin(t_ast_n *node)
 	else if (ft_strncmp(node->cmd, "pwd", 3) == 0)
 		return (builtin_pwd(node->args));
 	else if (ft_strncmp(node->cmd, "echo", 4) == 0)
-		return (builtin_echo(node->args, node->head->env));
+		return (builtin_echo(node->args, node->msh->env));
 	else if (ft_strncmp(node->cmd, "env", 3) == 0)
-		return (builtin_env(node->args, node->head->env));
+		return (builtin_env(node->args, node->msh->env));
 	else if (ft_strncmp(node->cmd, "unset", 5) == 0)
-		return (builtin_unset(node->args, node->head));
+		return (builtin_unset(node->args, node));
 	else if (ft_strncmp(node->cmd, "cd", 2) == 0)
-		return (builtin_cd(node->args, node->head));
+		return (builtin_cd(node->args, node));
 	else 
-		return (builtin_export(node->args, node->head));
+		return (builtin_export(node->args, node));
 }
 
 int	count_cmds(t_ast_n **pline)
@@ -145,7 +145,7 @@ int	exec(t_ast_n *node)
 	char	*path;
 
 	handle_redir(node);
-	path = find_path(node->cmd, node->head->env);
+	path = find_path(node->cmd, node->msh->env);
 	if (!path)
 		return_error(node->cmd, "command not found", 127);
 	if (access(path, X_OK) != 0)

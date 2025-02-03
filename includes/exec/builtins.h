@@ -6,14 +6,13 @@
 /*   By: lderidde <lderidde@student.s19.be>        +#+  +:+       +#+         */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/28 09:01:33 by lderidde          #+#    #+#             */
-/*   Updated: 2025/01/30 10:40:49 by lderidde         ###   ########.fr       */
+/*   Updated: 2025/02/03 13:03:14 by lderidde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef BUILTINS_H
 # define BUILTINS_H
 
-# include "../lib/libft/libft.h"
 # include "../minishell.h"
 # include <stdio.h>
 # include <sys/types.h>

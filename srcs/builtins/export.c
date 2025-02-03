@@ -6,7 +6,7 @@
 /*   By: lderidde <lderidde@student.s19.be>        +#+  +:+       +#+         */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/24 14:32:20 by lderidde          #+#    #+#             */
-/*   Updated: 2025/01/30 13:07:49 by lderidde         ###   ########.fr       */
+/*   Updated: 2025/02/03 13:11:35 by lderidde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,7 +112,7 @@ int	builtin_export(char **arg, t_ast_n *head)
 
 	i = 0;
 	if (count_args(arg) == 1)
-		return (print_export(head->env));
+		return (print_export(head->msh->env));
 	while (++i < count_args(arg))
 	{
 		if (is_export_valid(arg[i]))
@@ -122,11 +122,11 @@ int	builtin_export(char **arg, t_ast_n *head)
 				tmp = key_value(arg[i]);
 				if (!tmp)
 					return (1);
-				set_var_env(tmp[0], tmp[1], head);
+				set_var_env(tmp[0], tmp[1], head->msh);
 				free_tab(tmp);
 			}
 			else
-				set_var_env(arg[i], NULL, head);
+				set_var_env(arg[i], NULL, head->msh);
 		}
 		else
 			return (err_msg_cmd("export", arg[i], EXPRT_INV, 1));

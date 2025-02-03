@@ -6,7 +6,7 @@
 /*   By: lderidde <lderidde@student.s19.be>        +#+  +:+       +#+         */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/28 10:08:49 by lderidde          #+#    #+#             */
-/*   Updated: 2025/01/28 10:09:55 by lderidde         ###   ########.fr       */
+/*   Updated: 2025/02/03 13:10:32 by lderidde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ char	*get_var_value(char	*key, char **envp)
 	return (NULL);
 }
 
-bool	is_valid_key(char *key, t_ast_n *head)
+bool	is_valid_key(char *key, t_msh *msh)
 {
 	char	*tmp;
 	int		i;
@@ -83,9 +83,9 @@ bool	is_valid_key(char *key, t_ast_n *head)
 	tmp = ft_strjoin(key, "=");
 	if (!tmp)
 		return (false);
-	while (head->env[i])
+	while (msh->env[i])
 	{
-		if (ft_strncmp(head->env[i], tmp, ft_strlen(tmp)) == 0)
+		if (ft_strncmp(msh->env[i], tmp, ft_strlen(tmp)) == 0)
 		{
 			free_null_ptr(tmp);
 			return (true);
@@ -96,7 +96,7 @@ bool	is_valid_key(char *key, t_ast_n *head)
 	return (false);
 }
 
-int	get_var_index(char *key, t_ast_n *head)
+int	get_var_index(char *key, t_msh *msh)
 {
 	int		i;
 	char	*new_key;
@@ -105,16 +105,16 @@ int	get_var_index(char *key, t_ast_n *head)
 	if (!new_key)
 		return (-1);
 	i = 0;
-	while (head->env[i])
+	while (msh->env[i])
 	{
-		if (ft_strncmp(head->env[i], new_key, ft_strlen(new_key)) == 0)
+		if (ft_strncmp(msh->env[i], new_key, ft_strlen(new_key)) == 0)
 		{
 			free_null_ptr(new_key);
 			return (i);
 		}
-		else if (ft_strncmp(head->env[i], key, ft_strlen(key)) == 0
-			&& (ft_strchr(head->env[i], '=') == NULL && 
-			(ft_strlen(head->env[i]) == ft_strlen(key))))
+		else if (ft_strncmp(msh->env[i], key, ft_strlen(key)) == 0
+			&& (ft_strchr(msh->env[i], '=') == NULL && 
+			(ft_strlen(msh->env[i]) == ft_strlen(key))))
 		{
 			free_null_ptr(new_key);
 			return (i);
@@ -126,51 +126,51 @@ int	get_var_index(char *key, t_ast_n *head)
 }
 
 
-int	remove_env_var(char *key, t_ast_n *head)
+int	remove_env_var(char *key, t_msh *msh)
 {
 	int	i;
 	int	j;
 
-	i = get_var_index(key, head);
+	i = get_var_index(key, msh);
 	if (i == -1)
 		return (0);
 	j = i;
-	free_null_ptr(head->env[i]);
-	while (head->env[i + 1])
+	free_null_ptr(msh->env[i]);
+	while (msh->env[i + 1])
 	{
-		head->env[i] = ft_strdup(head->env[i + 1]);
-		free_null_ptr(head->env[i + 1]);
+		msh->env[i] = ft_strdup(msh->env[i + 1]);
+		free_null_ptr(msh->env[i + 1]);
 		j++;
 		i++;
 	}
-	head->env = copy_env_var(head->env, j);
-	if (head->env)
+	msh->env = copy_env_var(msh->env, j);
+	if (msh->env)
 		return (1);
 	return (0);
 }
 
-void	set_var_env(char *key, char *value, t_ast_n *head)
+void	set_var_env(char *key, char *value, t_msh *msh)
 {
 	int		i;
 	char	*tmp;
 
-	i = get_var_index(key, head);
+	i = get_var_index(key, msh);
 	if (value)
 		tmp = ft_strjoin(key, "=");
 	if (!tmp)
 		return ;
-	if (i != -1 && head->env[i])
+	if (i != -1 && msh->env[i])
 	{
-		free_null_ptr(head->env[i]);
-		head->env[i] = ft_strjoin(tmp, value);
+		free_null_ptr(msh->env[i]);
+		msh->env[i] = ft_strjoin(tmp, value);
 	}
 	else
 	{
-		i = count_var(head->env);
-		head->env = copy_env_var(head->env, i + 1);
-		if (!head->env)
+		i = count_var(msh->env);
+		msh->env = copy_env_var(msh->env, i + 1);
+		if (!msh->env)
 			return ;
-		head->env[i] = ft_strjoin(tmp, value);
+		msh->env[i] = ft_strjoin(tmp, value);
 	}
 	free_null_ptr(tmp);
 	return ;
