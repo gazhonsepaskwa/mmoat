@@ -17,7 +17,7 @@ char	*ft_tabstr(char **tab)
 	int		i;
 	int		alloc_count;
 	char	*out;
-	char	*tmp;
+	// char	*tmp;
 
 	i = -1;
 	alloc_count = 0;
@@ -27,10 +27,9 @@ char	*ft_tabstr(char **tab)
 	out = tab[0];
 	while (tab[++i])
 	{
-		tmp = out;
+		// tmp = out;
 		out = ft_sprintf("%s %s", out, tab[i]);
-		free(tmp);
+		// free(tmp);
 	}
-	out[alloc_count] = 0;
 	return (out);
 }

@@ -77,11 +77,18 @@ int	main(int ac, char **av, char **envp)
 	msh = init_msh(envp);
 	if (!msh)
 		return (1);
+	input = NULL;
 	while (1)
 	{
-		input = powerline();
+		while (!input || !input[0])
+			input = powerline();
+		ft_debug("input: %s\n", input);
+		ft_debug("powerline\n");
 		msh->head = parser(input, msh);
+		ft_debug("parsed\n");
 		msh->ex_code = execute_command(msh->head);
+		ft_debug("executed\n");
 		free(input);
+		input = NULL;
 	}
 }
