@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "drawio.h"
+#include "../../../includes/minishell.h"
 
 void	set_ast_rect(t_dio_elem *rect)
 {

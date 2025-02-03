@@ -1,44 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   tmp_env.c                                          :+:      :+:    :+:   */
+/*   unstick_node_utils.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nalebrun <nalebrun@student.s19.be>        +#+  +:+       +#+         */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/27 12:35:29 by nalebrun          #+#    #+#             */
-/*   Updated: 2025/01/27 12:35:29 by nalebrun         ###   ########.fr       */
+/*   Created: 2025/02/03 12:53:08 by nalebrun          #+#    #+#             */
+/*   Updated: 2025/02/03 12:53:08 by nalebrun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdlib.h>
-#include "../lib/libft/libft.h"
+#include "../../../includes/minishell.h"
 
-static int	count_var(char **envp)
+char	*copy_meta_xor(char *val, int *copied, int rev)
 {
-	int	i;
-
-	i = 0;
-	if (!envp)
-		return (-1);
-	while (envp[i])
-		i++;
-	return (i);
-}
-
-char	**init_env(char **envp)
-{
-	char	**env;
 	int		i;
+	int		j;
+	char	*out;
 
 	i = 0;
-	env = malloc(sizeof(char *) * (count_var(envp) + 1));
-	if (!env)
-		return (NULL);
-	env[count_var(envp)] = NULL;
-	while (envp[i])
-	{
-		env[i] = ft_strdup(envp[i]);
+	while (is_meta(val[i]) ^ rev)
 		i++;
-	}
-	return (env);
+	*copied = i;
+	out = malloc(i + 1);
+	j = -1;
+	while (++j < i)
+		out[j] = val[j];
+	out[i] = 0;
+	return (out);
 }

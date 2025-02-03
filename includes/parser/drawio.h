@@ -13,9 +13,7 @@
 #ifndef DRAWIO_H
 # define DRAWIO_H
 
-# include "../../lib/libft/libft.h"
-# include "../tokenizer/tokenizer.h"
-# include "../ast/ast.h"
+# include "../minishell.h"
 
 typedef struct s_dio_node
 {

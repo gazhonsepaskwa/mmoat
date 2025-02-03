@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ast.h"
+#include "../../../includes/minishell.h"
 
 // ===================================================================
 
@@ -19,13 +19,13 @@ t_ast_n	*create_ast_n(t_node *lst, t_ast_n *parent);
 // ====================================================================
 
 
-void	create_and_or(t_ast_n *parrent, t_node *lst, t_node *token)
+void	create_and_or(t_ast_n *parrent, t_node *lst, t_node *token, t_msh *msh)
 {
 	t_nodell *nodell;
 
 	nodell = cutll(lst, token, 1);
-	parrent->left = create_ast_n(nodell->node, parrent);
-	parrent->right = create_ast_n(nodell->next->node, parrent);
+	parrent->left = create_ast_n(nodell->node, parrent, msh);
+	parrent->right = create_ast_n(nodell->next->node, parrent, msh);
 	// free_lltab(sublsts);
 }
 
@@ -117,7 +117,7 @@ void	create_cmd(t_ast_n *self, t_node *lst)
 
 
 
-void	create_pline(t_ast_n *self, t_node *lst, t_node *token)
+void	create_pline(t_ast_n *self, t_node *lst, t_node *token, t_msh *msh)
 {
 	t_nodell	*nodell;
 	t_nodell	*cpy;
@@ -137,17 +137,13 @@ void	create_pline(t_ast_n *self, t_node *lst, t_node *token)
 	i = 0;
 	while (cpy)
 	{
-		self->pline[i] = create_ast_n(cpy->node, self);
+		self->pline[i] = create_ast_n(cpy->node, self, t_msh *msh);
 		cpy = cpy->next;
 		i++;
 	}
 	cpy = NULL;
 	// free_lltab(sublsts);
 }
-
-
-
-
 
 //======================================================================
 
@@ -176,7 +172,7 @@ void remove_parentheses(t_node **lst)
     }
 }
 
-void create_subsh(t_ast_n *parent, t_node *lst)
+void create_subsh(t_ast_n *parent, t_node *lst, t_msh *msh)
 {
 	t_node *cpy;
 
@@ -194,7 +190,7 @@ void create_subsh(t_ast_n *parent, t_node *lst)
 		ft_printf("%s\n", cpy->val);
 		cpy = cpy->next;
 	}
-	parent->left = create_ast_n(lst, parent);
+	parent->left = create_ast_n(lst, parent, msh);
 }
 
 
@@ -203,45 +199,33 @@ void create_subsh(t_ast_n *parent, t_node *lst)
 
 
 
-t_ast_n	*create_ast_n(t_node *lst, t_ast_n *parent)
+t_ast_n	*create_ast_n(t_node *lst, t_ast_n *parent, t_msh *msh)
 {
 	t_ast_n *node;
 	t_node	*token;
 
 	node = malloc(sizeof(t_ast_n));
 	token = get_top_token(lst, &node->state);
-
-	ft_debug("================\n");
-	ft_debug("NEW NODE CREATED\n");
-	if (token && token->val)
-		ft_debug("token val: %s\n", token->val);
-	else
-		ft_debug("token val : NULL\n");
-	ft_debug("node state : %d\n", node->state);
-	ft_debug("================\n\n");
-
 	node->left = NULL;
 	node->right = NULL;
 	node->pline = NULL;
+	node->msh = msh;
 	node->parent = parent;
-
 	if (node->state == _AND || node->state == _OR)
-		create_and_or(node, lst, token);
+		create_and_or(node, lst, token, msh);
 	else if (node->state == _SUBSH)
-		create_subsh(node, lst);
+		create_subsh(node, lst, msh);
 	else if (node->state == _PLINE)
-		create_pline(node, lst, token);
+		create_pline(node, lst, token, msh);
 	else
 		create_cmd(node, lst);
-
 	return (node);
 }
 
-t_ast_n	*get_ast(char **envp, t_node *lst)
+t_ast_n	*get_ast(t_msh *msh, t_node *lst)
 {
 	t_ast_n *head;
-	(void)envp;
 
-	head = create_ast_n(lst, NULL);
+	head = create_ast_n(lst, NULL, msh);
 	return (head);
 }

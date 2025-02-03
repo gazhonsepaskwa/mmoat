@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "drawio.h"
+#include "../../../includes/minishell.h"
 
 char	*get_node_txt(t_ast_n *node)
 {

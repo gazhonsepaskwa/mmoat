@@ -10,9 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/exec.h"
-#include "../../lib/libft/libft.h"
-#include "../../includes/builtins.h"
+#include "../../includes/minishell.h"
 
 void	handle_file(t_ast_n *node, int check)
 {

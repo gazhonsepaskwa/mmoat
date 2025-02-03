@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "./tokenizer.h"
+#include "../../../includes/minishell.h"
 
 static t_pres	get_operator(char *s)
 {

@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ast.h"
+#include "../../../includes/minishell.h"
 
 static int	last_tok_subsh(t_node *lst)
 {

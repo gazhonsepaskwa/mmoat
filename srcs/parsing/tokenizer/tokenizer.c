@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "tokenizer.h"
+#include "../../../includes/minishell.h"
 
 static t_node	*tokenize_base(char *str)
 {

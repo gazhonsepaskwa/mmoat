@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "drawio.h"
+#include "../../../includes/minishell.h"
 
 static int	get_char_count(char *str, char c)
 {

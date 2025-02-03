@@ -14,7 +14,7 @@
 # define BUILTINS_H
 
 # include "../lib/libft/libft.h"
-# include "env.h"
+# include "../minishell.h"
 # include <stdio.h>
 # include <sys/types.h>
 # include <signal.h>

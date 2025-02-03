@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/builtins.h"
+#include "../../includes/minishell.h"
 
 void	pwd_update(t_ast_n *head, char *src, char *dest)
 {

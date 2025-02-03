@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "tokenizer.h"
+#include "../../../includes/minishell.h"
 
 t_node	*create_node(char *val, t_token token)
 {

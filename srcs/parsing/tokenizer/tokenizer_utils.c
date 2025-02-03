@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "tokenizer.h"
+#include "../../../includes/minishell.h"
 
 int	is_meta(char c)
 {

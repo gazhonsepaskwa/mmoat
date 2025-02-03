@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/builtins.h"
+#include "../../includes/minishell.h"
 
 int	err_msg_cmd(char *cmd, char *arg, char *msg, int code)
 {

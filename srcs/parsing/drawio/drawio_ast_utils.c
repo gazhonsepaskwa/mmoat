@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "drawio.h"
+#include "../../../includes/minishell.h"
 
 const char	*translate_state(t_state state)
 {

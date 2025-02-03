@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   test.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lderidde <lderidde@student.s19.be>        +#+  +:+       +#+         */
+/*   By: nalebrun <nalebrun@student.s19.be>        +#+  +:+       +#+         */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/15 08:23:41 by lderidde          #+#    #+#             */
-/*   Updated: 2025/01/31 14:05:34 by lderidde         ###   ########.fr       */
+/*   Created: 2025/01/15 08:23:41 by nalebrun          #+#    #+#             */
+/*   Updated: 2025/02/03 11:49:21 by nalebrun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "parsing.h"
+#include "../../includes/minishell.h"
 
 void	truncate_comment(char *str)
 {
@@ -36,31 +36,24 @@ void	truncate_comment(char *str)
 	}
 }
 
-int	main(int ac, char **av, char **envp)
+t_ast_n *parser(char *input, t_msh *msh)
 {
 	t_node	*lst;
 	t_ast_n	*ast;
 	int 	dio;
-	(void)envp;
 
-	if (ac != 3)
-	{
-		ft_error("./test drawio_file command_str\n");
-		return (1);
-	}
-	truncate_comment(av[1]);
-	lst = tokenize(av[2]);
+	truncate_comment(input);
+	lst = tokenize(input);
 	if (!lst)
-		return (1);
+		return (NULL);
 	if (DEBUG)
 	{
-		dio = drawio_init(av[1]);
+		dio = drawio_init("ast.xml");
 		gen_dio_linked_list(lst, dio);
 	}
-	ast = get_ast(envp, lst);
+	ast = get_ast(msh, lst);
 	if (!ast)
-		return (1);
-	
+		return (NULL);
 	if (DEBUG)
 	{
 		gen_dio_ast(ast, dio);
@@ -68,4 +61,5 @@ int	main(int ac, char **av, char **envp)
 		ft_debug(" draw.io file generated !\n");
 	}
 	free_linked_list(lst);
+	return (ast);
 }

@@ -32,28 +32,6 @@ $(NAME): $(LIBFT) $(OBJS)
 	@$(CC) $(WFLAGS) $(OBJS) $(LIBFT) -o $(NAME) $(LINK)
 	@echo "$(CYAN)Build completed: $(NAME)$(RESET)"
 
-
-
-# test part
-
-TEST_SRCDIR = test
-TEST_OBJDIR = .TEST_objs
-TEST_SRCS = $(shell find $(TEST_SRCDIR) -name "*.c")
-TEST_OBJS = $(patsubst $(TEST_SRCDIR)/%.c, $(TEST_OBJDIR)/%.o, $(TEST_SRCS))
-TEST_DEPS = $(TEST_OBJS:.o=.d)
-
-$(TEST_OBJDIR)/%.o: $(TEST_SRCDIR)/%.c
-	@mkdir -p $(dir $@)
-	@$(CC) $(WFLAGS) -MMD -MP -I$(INCDIR) -c $< -o $@ $(LINK)
-
-parser: $(LIBFT) $(TEST_OBJS)
-	@$(CC) $(WFLAGS) $(TEST_OBJS) $(LIBFT) -o parser $(LINK)
-	@echo "$(CYAN)Test build completed: parser$(RESET)"
-
-# test part end
-
-
-
 clean:
 	@rm -rf $(OBJDIR) $(TEST_OBJDIR)
 	@make -C $(LIBFT_DIR) clean
@@ -61,7 +39,7 @@ clean:
 
 fclean: clean
 	@make -C $(LIBFT_DIR) fclean
-	@rm $(NAME) test
+	@rm $(NAME)
 	@echo "$(CYAN)Executable removed$(RESET)"
 
 re: fclean all

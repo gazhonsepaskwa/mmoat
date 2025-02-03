@@ -14,7 +14,7 @@
 # define ENV_H
 
 # include "../lib/libft/libft.h"
-# include "ast.h"
+# include "../minishell.h"
 # include <unistd.h>
 # include <stdlib.h>
 # include <stdbool.h>

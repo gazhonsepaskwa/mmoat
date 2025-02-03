@@ -13,15 +13,8 @@
 #ifndef PARSING_H
 # define PARSING_H
 
-#  define DEBUG 1
+# include "../minishell.h"
 
-# include "tokenizer/tokenizer.h"
-# include "ast/ast.h"
-
-// drawio
-# include "drawio/drawio.h"
-
-// tmp_env
-char	**init_env(char **envp);
+t_ast_n *parser(char *input, char **envp, t_msh *msh);
 
 #endif
