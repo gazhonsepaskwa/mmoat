@@ -175,7 +175,6 @@ int	exec_builtin(t_ast_n *node)
 		ret = builtin_cd(node->args, node);
 	else 
 		ret = builtin_export(node->args, node);
-	reset_redir();
 	return (ret);
 }
 
@@ -302,7 +301,7 @@ void	exec_pchild(int *pipes, int index, t_ast_n *pcmd, int cmds)
 	if (pcmd->state == _CMD)
 		exec_pcmd(pcmd);
 	else if (pcmd->state == _SUBSH)
-		execute_shcommand(pcmd->left);
+		exit (execute_shcommand(pcmd->left));
 }
 
 int	end_pline(pid_t last_pid, t_ast_n **pline)
@@ -331,7 +330,7 @@ int	exec_pline(t_ast_n **pline)
 	i = -1;
 	while (pline[++i])
 	{
-		ft_fprintf(2, "test\n");
+		/*ft_fprintf(2, "test\n");*/
 		pipe(pline[i]->fds);
 		pid = fork();
 		if (pid == 0)
@@ -356,7 +355,7 @@ int	exec_shcmd(t_ast_n *node)
 	int		status;
 
 	if (is_builtin(node->cmd))
-		exit (exec_builtin(node));
+		return (exec_builtin(node));
 	else
 	{
 		pid = fork();
@@ -366,13 +365,13 @@ int	exec_shcmd(t_ast_n *node)
 		{
 			waitpid(pid, &status, 0);
 			if (WIFEXITED(status))
-				exit (WEXITSTATUS(status));
+				return (WEXITSTATUS(status));
 			else
-				exit (1);
+				return (1);
 		}
 		else
 			perror("fork");
-		exit (1);
+		return (1);
 	}
 }
 
@@ -414,13 +413,16 @@ int	exec_subsh(t_ast_n *node)
 	if (pid == 0)
 	{
 		// handle_redir(node);
-		return (execute_shcommand(node));
+		exit (execute_shcommand(node));
 	}
 	else if (pid > 0)
 	{
 		waitpid(pid, &status, 0);
-		if (WIFEXITED(status))
+		reset_redir();
+		if (WIFEXITED(status) && node->parent->state != _PLINE)
 			return (WEXITSTATUS(status));
+		else if (WIFEXITED(status) && node->parent->state == _PLINE)
+			exit (WEXITSTATUS(status));
 		else
 			return (1);
 	}
@@ -436,24 +438,25 @@ int	execute_command(t_ast_n *node)
 	int	status;
 
 	if (node->state == _CMD)
-		return (exec_scmd(node));
+		status = exec_scmd(node);
 	else if (node->state == _AND)
 	{
 		status = execute_command(node->left);
 		if (status == 0)
-			return (execute_command(node->right));
-		return (status);
+			status = execute_command(node->right);
+		/*return (status);*/
 	}
 	else if (node->state == _OR)
 	{
 		status = execute_command(node->left);
 		if (status != 0)
-			return (execute_command(node->right));
-		return (status);
+			status = execute_command(node->right);
+		/*return (status);*/
 	}
 	else if (node->state == _PLINE)
-		return (exec_pline(node->pline));
+		status = exec_pline(node->pline);
 	else if (node->state == _SUBSH)
-		return (exec_subsh(node->left));
-	return (0);
+		status = exec_subsh(node->left);
+	reset_redir();
+	return (status);
 }
