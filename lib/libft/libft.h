@@ -68,6 +68,7 @@ char	*ft_tabstr(char **tab);
 int		is_charset(char c, char *set);
 void	free_tab(char **tab);
 char	**free_all(char **tab, int count);
+void	add_to_tab(char ***tab, char *str);
 
 void	ft_put_c_fd(char c, int fd);
 void	ft_put_s_fd(char *s, int fd);

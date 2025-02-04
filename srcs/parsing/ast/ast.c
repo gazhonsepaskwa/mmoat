@@ -36,7 +36,7 @@ void	create_and_or(t_ast_n *parrent, t_node *lst, t_node *token, t_msh *msh)
 
 
 
-t_redir	is_redir(t_node *node)
+t_redir	get_redir(t_node *node)
 {
 	if (!node)
 		return (_NR);
@@ -76,41 +76,45 @@ char 	**lltotab(t_node *lst, t_node *limiter)
 	out[count] = NULL;
 	return (out);
 }
+//
+// void	add_redir(t_redir redir, t_redir *redir_list)
+// {
+// }
 
-t_node	*get_redir_node(t_node *head)
+void	create_redir(t_node *cpy, t_ast_n *self)
 {
-	t_node *cpy;
+	t_redir redir;
 
-	cpy = head;
-	while (cpy && !is_redir(cpy))
+	while (cpy)
+	{
+		redir = get_redir(cpy);
+		if (redir == _RED_R || redir == _RED_DR)
+		{
+			// add_redir(redir, self->outredir);
+			add_to_tab(&self->outfile, cpy->next->val);
+		}
+		else if (redir == _RED_L || redir == _RED_DL)
+			{
+			// add_redir(redir, self->inredir);
+			add_to_tab(&self->infile, cpy->next->val);
+		}
 		cpy = cpy->next;
-	return (cpy);
+		while (cpy && get_redir(cpy) == _NR)
+			cpy = cpy->next;
+	}
 }
 
 void	create_cmd(t_ast_n *self, t_node *lst)
 {
-	t_node	*sec_redir_node;
+	t_node	*cpy;
 
 	self->state = _CMD;
 	self->infile = NULL;
 	self->outfile = NULL;
-	if (is_redir(lst) != _NR)
-	{
-		self->cmd = ft_strdup(lst->next->next->val);
-		self->args = lltotab(lst->next->next, NULL);
-		self->infile = ft_strdup(lst->next->val); 
-	}
-	else
-	{
-		self->cmd = ft_strdup(lst->val);
-		self->args = lltotab(lst, get_redir_node(lst->next));
-	}
-	sec_redir_node = get_redir_node(lst->next); 
-	if (lst->next && sec_redir_node) 
-	{
-		self->outfile = ft_strdup(sec_redir_node->next->val); 
-	}
-	self->redir = is_redir(get_redir_node(lst)); 
+	self->inredir = NULL;
+	self->outredir = NULL;
+	cpy = lst;
+	create_redir(cpy, self);
 }
 
 

@@ -31,7 +31,8 @@ typedef enum e_redir
 	_NR,
 	_RED_L,
 	_RED_R,
-	_RED_DR
+	_RED_DR,
+	_RED_DL
 }		t_redir;
 
 typedef struct s_ast_n
@@ -48,9 +49,10 @@ typedef struct s_ast_n
 	int				_stdout;
 	int				_stdin;
 	int				save_std;
-	t_redir			redir;
-	char			*infile;
-	char			*outfile;
+	t_redir			*inredir;
+	t_redir			*outredir;
+	char			**infile;
+	char			**outfile;
 	bool			sh;
 }					t_ast_n;
 
