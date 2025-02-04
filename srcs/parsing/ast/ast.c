@@ -40,11 +40,13 @@ t_redir	get_redir(t_node *node)
 {
 	if (!node)
 		return (_NR);
-	if (!ft_strncmp(node->val, ">", 1))
-		return (_RED_R);
-	if (!ft_strncmp(node->val, ">>", 1))
+	else if (!ft_strncmp(node->val, ">>", 2))
 		return (_RED_DR);
-	if (!ft_strncmp(node->val, "<", 1))
+	else if (!ft_strncmp(node->val, ">", 1))
+		return (_RED_R);
+	else if (!ft_strncmp(node->val, "<<", 2))
+		return (_RED_DL);
+	else if (!ft_strncmp(node->val, "<", 1))
 		return (_RED_L);
 	return (_NR);
 }
@@ -76,34 +78,64 @@ char 	**lltotab(t_node *lst, t_node *limiter)
 	out[count] = NULL;
 	return (out);
 }
-//
-// void	add_redir(t_redir redir, t_redir *redir_list)
-// {
-// 	int	i;
-// }
+
+void add_redir(t_redir redir, t_redir **redir_list)
+{
+    int     i;
+    int     j;
+    t_redir *tmp;
+
+    i = 0;
+    while ((*redir_list)[i] != _NR)
+        i++;
+    tmp = ft_calloc(i + 2, sizeof(t_redir));
+    j = -1;
+    while ((*redir_list)[++j] != _NR)
+        tmp[j] = (*redir_list)[j];
+    tmp[j++] = redir;
+    tmp[j] = _NR;
+    free(*redir_list);
+    *redir_list = tmp;
+}
 
 void	create_redir(t_node *cpy, t_ast_n *self)
 {
 	t_redir redir;
 
-	while (cpy)
+	while (cpy && cpy->next && get_redir(cpy) == _NR)
 	{
 		redir = get_redir(cpy);
-		// add_redir(redir, self->redir);
+		add_redir(redir, &self->redir);
 		add_to_tab(&self->files, cpy->next->val);
 		cpy = cpy->next;
-		while (cpy && get_redir(cpy) == _NR)
+		while (cpy && cpy->next && get_redir(cpy) == _NR)
 			cpy = cpy->next;
 	}
+}
+
+t_node	*get_cmd(t_node *lst)
+{
+	while (lst)
+	{
+		if (get_redir(lst) != _NR && lst->next && lst->next->next && get_redir(lst->next->next) == _NR)
+			return (lst);
+		lst = lst->next;
+	}
+	return (lst);
 }
 
 void	create_cmd(t_ast_n *self, t_node *lst)
 {
 	t_node	*cpy;
+	t_node	*cmd_node;
 
 	self->state = _CMD;
 	self->files = NULL;
-	self->redir = NULL;
+	self->redir = ft_calloc(1, sizeof(t_redir));
+	self->redir[0] = _NR; 
+	cmd_node = get_cmd(lst);
+	self->cmd = cmd_node->val;
+	self->args = ft_split("NOT SET", " ");
 	cpy = lst;
 	create_redir(cpy, self);
 }

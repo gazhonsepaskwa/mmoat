@@ -46,11 +46,21 @@ void	add_to_tab(char ***tab, char *str)
 	char	**tmp;
 	int		i;
 
+	if (!str)
+		return ;
 	tmp = *tab;
 	i = 0;
-	while ((*tab)[i])
-		i++;
-	*tab = add_space_to_tab(*tab, i + 1);
+	if (*tab)
+	{
+		while ((*tab) && (*tab)[i])
+			i++;
+		*tab = add_space_to_tab(*tab, i + 1);
+	}
+	else
+	{
+		*tab = malloc(sizeof(char *) * 2);
+	}
 	free(tmp);
 	(*tab)[i] = ft_strdup(str);
+	(*tab)[i + 1] = NULL;
 }

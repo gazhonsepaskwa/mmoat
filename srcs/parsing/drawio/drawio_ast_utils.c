@@ -31,20 +31,20 @@ const char	*translate_state(t_state state)
 	return (out);
 }
 
-const char	*translate_redir(t_redir redir)
-{
-	const char	*out;
-
-	if (redir == _RED_L)
-		out = "redir : RED_L&#10;";
-	else if (redir == _RED_R)
-		out = "redir : RED_R&#10;";
-	else if (redir == _RED_DR)
-		out = "redir : _RED_DR &#10;";
-	else
-		out = "Not redirected &#10;";
-	return (out);
-}
+// const char	*translate_redir(t_redir redir)
+// {
+// 	const char	*out;
+//
+// 	if (redir == _RED_L)
+// 		out = "redir : RED_L&#10;";
+// 	else if (redir == _RED_R)
+// 		out = "redir : RED_R&#10;";
+// 	else if (redir == _RED_DR)
+// 		out = "redir : _RED_DR &#10;";
+// 	else
+// 		out = "Not redirected &#10;";
+// 	return (out);
+// }
 
 t_dio_node	get_cmd_txt(t_ast_n *node)
 {
@@ -59,9 +59,12 @@ t_dio_node	get_cmd_txt(t_ast_n *node)
 		args = ft_tabstr(node->args);
 		txt.args = ft_sprintf("%s%s%s", NL, args, NL);
 		free(args);
-		txt.redir = translate_redir(node->redir);
-		txt.inf = ft_sprintf("Infile : %s%s", node->infile, NL);
-		txt.outf = ft_sprintf("Outfile : %s", node->outfile);
+		// txt.redir = translate_redir(node->redir);
+		// txt.inf = ft_sprintf("Infile : %s%s", node->infile, NL);
+		// txt.outf = ft_sprintf("Outfile : %s", node->outfile);
+		txt.redir = "";
+		txt.inf = ft_sprintf("Infile : UNCHECKED");
+		txt.outf = ft_sprintf("Outfile : UNCHECKED");
 	}
 	else
 	{
