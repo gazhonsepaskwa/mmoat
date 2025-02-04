@@ -60,7 +60,8 @@ void	add_to_tab(char ***tab, char *str)
 	{
 		*tab = malloc(sizeof(char *) * 2);
 	}
-	free(tmp);
+	if (tmp)
+		free(tmp);
 	(*tab)[i] = ft_strdup(str);
 	(*tab)[i + 1] = NULL;
 }

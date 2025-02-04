@@ -67,6 +67,14 @@ t_msh *init_msh(char **envp)
 	return (msh);
 }
 
+void	interpret_cmd(char **input, t_msh *msh)
+{
+	msh->head = parser(*input, msh);
+	msh->ex_code = execute_command(msh->head);
+	free(*input);
+	*input = NULL;
+}
+
 int	main(int ac, char **av, char **envp)
 {
 	char	*input;
@@ -78,13 +86,16 @@ int	main(int ac, char **av, char **envp)
 	if (!msh)
 		return (1);
 	input = NULL;
-	while (1)
+	if (ac == 1)
+		while (1)
+		{
+			while (!input || !input[0])
+				input = powerline();
+			interpret_cmd(&input, msh);
+		}
+	else
 	{
-		while (!input || !input[0])
-			input = powerline();
-		msh->head = parser(input, msh);
-		msh->ex_code = execute_command(msh->head);
-		free(input);
-		input = NULL;
+		input = ft_strdup(av[1]);
+		interpret_cmd(&input, msh);
 	}
 }

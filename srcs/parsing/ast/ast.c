@@ -102,14 +102,20 @@ void	create_redir(t_node *cpy, t_ast_n *self)
 {
 	t_redir redir;
 
-	while (cpy && cpy->next && get_redir(cpy) == _NR)
+	while (cpy)
 	{
+		while (cpy && get_redir(cpy) == _NR)
+			cpy = cpy->next;
+		if (!cpy)
+			break;
 		redir = get_redir(cpy);
 		add_redir(redir, &self->redir);
 		add_to_tab(&self->files, cpy->next->val);
 		cpy = cpy->next;
 		while (cpy && cpy->next && get_redir(cpy) == _NR)
+		{
 			cpy = cpy->next;
+		}
 	}
 }
 
@@ -132,14 +138,14 @@ char **get_args(t_node *cmd)
 	t_node *cpy;
 
 	cpy = cmd;
-	while (cpy && !get_redir(cpy))
+	while (cpy && cpy->next && !get_redir(cpy->next))
 		cpy = cpy->next;
-	return (lltotab(cmd, cpy));
+	// create the arg list by skipping the redir and the command but everything else is an arg (ex : ls > test.txt -la)
+	return (lltotab(cmd, cpy->next));
 }
 
 void	create_cmd(t_ast_n *self, t_node *lst)
 {
-	t_node	*cpy;
 	t_node	*cmd_node;
 
 	self->state = _CMD;
@@ -149,8 +155,15 @@ void	create_cmd(t_ast_n *self, t_node *lst)
 	cmd_node = get_cmd(lst);
 		self->cmd = ft_strdup(cmd_node->val);
 	self->args = get_args(cmd_node);
-	cpy = lst;
-	create_redir(cpy, self);
+	create_redir(lst, self);
+	// debug
+	int i = -1;
+	while (self->files && self->files[++i])
+		ft_debug("redir : [%d]%s\n",self->redir[i], self->files[i]);
+	ft_debug("====\n");
+	i = -1;
+	while (self->args && self->args[++i])
+		ft_debug("args : %s\n",self->args[i], self->args[i]);
 }
 
 
