@@ -6,12 +6,15 @@
 /*   By: lderidde <lderidde@student.s19.be>        +#+  +:+       +#+         */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 11:22:33 by lderidde          #+#    #+#             */
-/*   Updated: 2025/02/04 10:50:43 by lderidde         ###   ########.fr       */
+/*   Updated: 2025/02/04 15:34:39 by lderidde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
+#include <stdlib.h>
 #include <fcntl.h>
+#include <sys/wait.h>
+#include <time.h>
 #include <unistd.h>
 
 void	handle_file(t_ast_n *node, int check, int i)
@@ -35,21 +38,73 @@ void	handle_file(t_ast_n *node, int check, int i)
 		node->_stdout = fd;
 }
 
+void	read_input(t_ast_n *node, int j)
+{
+	char	buf[100000];
+	char	c;
+	int		r;
+	int		i;
+
+	r = 0;
+	i = 0;
+	r = read(0, &c, 1);
+	while (r && c != '\n' && c != '\0')
+	{
+		if (c != '\n' && c != '\0')
+			buf[i++] = c;
+		r = read(0, &c, 1);
+	}
+	buf[i] = '\0';
+	if (ft_strnstr(buf, node->files[j], ft_strlen(node->files[j])) == 0)
+	{
+		close(node->fds[1]);
+		exit(EXIT_SUCCESS);
+	}
+	buf[i++] = '\n';
+	buf[i] = '\0';
+	ft_fprintf(node->fds[1], "%s", buf);
+}
+
+void	here_doc(t_ast_n *node, int i)
+{
+	pid_t	pid;
+
+	pipe(node->fds);
+	pid = fork();
+	if (pid == 0)
+	{
+		close(node->fds[0]);
+		while (1)
+			read_input(node, i);
+	}
+	else if (pid > 0)
+	{
+		close(node->fds[1]);
+		dup2(node->fds[0], STDIN_FILENO);
+		close(node->fds[0]);
+		waitpid(pid, NULL, 0);
+	}
+	else if (pid < 0)
+		perror("fork");
+}
+
 void	handle_redir(t_ast_n *node)
 {
 	int	i;
 
 	i = -1;
-	while (node->redir[++i])
+	while (node->redir[++i] && node->redir[i] != _NR)
 	{
-		if (node->redir == _NR)
-			return ;
-		else if (node->redir[i] == _RED_L)
+		if (node->redir[i] == _RED_L)
 			handle_file(node, 1, i);
 		else if (node->redir[i] == _RED_R)
 			handle_file(node, 2, i);
 		else if (node->redir[i] == _RED_DR)
 			handle_file(node, 3, i);
+		else if (node->redir[i] == _RED_DL)
+			here_doc(node, i);
+		if (node->redir[i] != _RED_DL && node->input != NULL)
+			free_null_ptr(node->input);
 		if (node->redir[i] == _RED_L)
 		{
 			dup2(node->_stdin, STDIN_FILENO);
@@ -235,6 +290,9 @@ void	exec_pcmd(t_ast_n *pcmd)
 		exec(pcmd);
 }
 
+int	exec_subsh(t_ast_n *node);
+int	execute_shcommand(t_ast_n *node);
+
 void	exec_pchild(int *pipes, int index, t_ast_n *pcmd, int cmds)
 {
 	if (index < cmds - 1)
@@ -243,8 +301,8 @@ void	exec_pchild(int *pipes, int index, t_ast_n *pcmd, int cmds)
 	close(pipes[1]);
 	if (pcmd->state == _CMD)
 		exec_pcmd(pcmd);
-	// else if (pcmd->state == _SUBSH);
-	// 	exec_psubsh(pcmd);
+	else if (pcmd->state == _SUBSH)
+		execute_shcommand(pcmd->left);
 }
 
 int	end_pline(pid_t last_pid, t_ast_n **pline)
@@ -268,25 +326,26 @@ int	exec_pline(t_ast_n **pline)
 	int		i;
 	pid_t	pid;
 	pid_t	last_pid;
-	int		pipes[2];
+	// int		pipes[2];
 
 	i = -1;
 	while (pline[++i])
 	{
-		pipe(pipes);
+		ft_fprintf(2, "test\n");
+		pipe(pline[i]->fds);
 		pid = fork();
 		if (pid == 0)
-			exec_pchild(pipes, i, pline[i], count_cmds(pline));
+			exec_pchild(pline[i]->fds, i, pline[i], count_cmds(pline));
 		else if (pid > 0)
 		{
-			dup2(pipes[0], STDIN_FILENO);
-			close(pipes[0]);
-			close(pipes[1]);
+			dup2(pline[i]->fds[0], STDIN_FILENO);
+			close(pline[i]->fds[0]);
+			close(pline[i]->fds[1]);
 			if(i == count_cmds(pline) - 1)
 				last_pid = pid;
 		}
 		else if (pid < 0)
-			return (err_fork_pline(pipes));		
+			return (err_fork_pline(pline[i]->fds));		
 	}
 	return (end_pline(last_pid, pline));
 }
@@ -327,16 +386,16 @@ int	execute_shcommand(t_ast_n *node)
 		return (exec_shcmd(node));
 	else if (node->state == _AND)
 	{
-		status = execute_command(node->left);
+		status = execute_shcommand(node->left);
 		if (status == 0)
-			return (execute_command(node->right));
+			return (execute_shcommand(node->right));
 		return (status);
 	}
 	else if (node->state == _OR)
 	{
-		status = execute_command(node->left);
+		status = execute_shcommand(node->left);
 		if (status != 0)
-			return (execute_command(node->right));
+			return (execute_shcommand(node->right));
 		return (status);
 	}
 	else if (node->state == _PLINE)
@@ -354,7 +413,7 @@ int	exec_subsh(t_ast_n *node)
 	pid = fork();
 	if (pid == 0)
 	{
-		handle_redir(node);
+		// handle_redir(node);
 		return (execute_shcommand(node));
 	}
 	else if (pid > 0)
