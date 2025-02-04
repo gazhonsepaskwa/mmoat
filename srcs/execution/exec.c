@@ -6,7 +6,7 @@
 /*   By: lderidde <lderidde@student.s19.be>        +#+  +:+       +#+         */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 11:22:33 by lderidde          #+#    #+#             */
-/*   Updated: 2025/02/03 15:44:14 by lderidde         ###   ########.fr       */
+/*   Updated: 2025/02/04 10:50:43 by lderidde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,16 +14,16 @@
 #include <fcntl.h>
 #include <unistd.h>
 
-void	handle_file(t_ast_n *node, int check)
+void	handle_file(t_ast_n *node, int check, int i)
 {
 	int	fd;
 
 	if (check == 1)
-		fd = open(node->infile, O_RDONLY);
+		fd = open(node->files[i], O_RDONLY);
 	else if (check == 2)
-		fd = open(node->outfile, O_WRONLY | O_CREAT | O_TRUNC, 0666);
+		fd = open(node->files[i], O_WRONLY | O_CREAT | O_TRUNC, 0666);
 	else if (check == 3)
-		fd = open(node->outfile, O_WRONLY | O_CREAT | O_APPEND, 0666);
+		fd = open(node->files[i], O_WRONLY | O_CREAT | O_APPEND, 0666);
 	if (fd == -1)
 	{
 		perror("open");
@@ -37,23 +37,29 @@ void	handle_file(t_ast_n *node, int check)
 
 void	handle_redir(t_ast_n *node)
 {
-	if (node->redir == _NR)
-		return ;
-	else if (node->redir == _RED_L)
-		handle_file(node, 1);
-	else if (node->redir == _RED_R)
-		handle_file(node, 2);
-	else if (node->redir == _RED_DR)
-		handle_file(node, 3);
-	if (node->redir == _RED_L)
+	int	i;
+
+	i = -1;
+	while (node->redir[++i])
 	{
-		dup2(node->_stdin, STDIN_FILENO);
-		close(node->_stdin);
-	}
-	else if (node->redir == _RED_R || node->redir == _RED_DR)
-	{
-		dup2(node->_stdout, STDOUT_FILENO);
-		close(node->_stdout);
+		if (node->redir == _NR)
+			return ;
+		else if (node->redir[i] == _RED_L)
+			handle_file(node, 1, i);
+		else if (node->redir[i] == _RED_R)
+			handle_file(node, 2, i);
+		else if (node->redir[i] == _RED_DR)
+			handle_file(node, 3, i);
+		if (node->redir[i] == _RED_L)
+		{
+			dup2(node->_stdin, STDIN_FILENO);
+			close(node->_stdin);
+		}
+		else if (node->redir[i] == _RED_R || node->redir[i] == _RED_DR)
+		{
+			dup2(node->_stdout, STDOUT_FILENO);
+			close(node->_stdout);
+		}
 	}
 }
 
@@ -78,16 +84,21 @@ int	is_builtin(char *str)
 		return (0);
 }
 
-void	reset_redir(t_ast_n *node)
+void	reset_redir(void)
 {
-	int	fd;
+	int		fd;
+	char	*tty;
 
-	fd = open("/dev/pts/1", O_WRONLY);
-	(void)node;
-	if (dup2(fd, 1) == -1)
+	tty = ttyname(STDERR_FILENO);
+	fd = open(tty, O_WRONLY);
+	if (dup2(fd, STDOUT_FILENO) == -1)
 		printf("error\n");
 	close(fd);
-	// close(node->save_std);
+	tty = ttyname(STDERR_FILENO);
+	fd = open(tty, O_RDONLY);
+	if (dup2(fd, STDIN_FILENO) == -1)
+		printf("error\n");
+	close(fd);
 }
 
 int	exec_builtin(t_ast_n *node)
@@ -109,7 +120,7 @@ int	exec_builtin(t_ast_n *node)
 		ret = builtin_cd(node->args, node);
 	else 
 		ret = builtin_export(node->args, node);
-	reset_redir(node);
+	reset_redir();
 	return (ret);
 }
 
@@ -203,38 +214,6 @@ int	exec_scmd(t_ast_n *node)
 	}
 }
 
-// int	*create_pipes(t_ast_n **pline)
-// {
-// 	int	i;
-// 	int	arg;
-// 	int	*pipes;
-//
-// 	arg = count_cmds(pline);
-// 	pipes = malloc(2 * (arg - 1) * sizeof(int));
-// 	if (!pipes)
-// 		return (NULL);
-// 	i = -1;
-// 	while (++i < arg - 1)
-// 	{
-// 		pipe(&pipes[2 * i]);
-// 	}
-// 	return (pipes);
-// }
-//
-// void	close_pipes(int *pipes, int count, bool flag)
-// {
-// 	int	i;
-//
-// 	i = -1;
-// 	while (++i < count)
-// 	{
-// 		close(pipes[2 * i]);
-// 		close(pipes[(2 * i) + 1]);
-// 	}
-// 	if (flag)
-// 		free(pipes);
-// }
-
 int	err_fork_pline(int *pipes)
 {
 	close(pipes[0]);
@@ -277,6 +256,7 @@ int	end_pline(pid_t last_pid, t_ast_n **pline)
 	waitpid(last_pid, &status, 0);
 	while (++i < count_cmds(pline) - 1)
 		wait(NULL);
+	reset_redir();	
 	if (WIFEXITED(status))
 		return (WEXITSTATUS(status));
 	else
@@ -311,31 +291,86 @@ int	exec_pline(t_ast_n **pline)
 	return (end_pline(last_pid, pline));
 }
 
-// int	exec_subsh(t_ast_n *node)
-// {
-// 	int		status;
-// 	pid_t	pid;
-//
-// 	pid = fork();
-// 	if (pid == 0)
-// 	{
-// 		handle_redir(node);
-// 		return (execute_command(t_node));
-// 	}
-// 	else if (pid > 0)
-// 	{
-// 		waitpid(pid, &status, 0);
-// 		if (WIFEXITED(status))
-// 			return (WEXITSTATUS(status));
-// 		else
-// 			return (1);
-// 	}
-// 	else
-// 	{
-// 		perror("fork");
-// 		return (1);
-// 	}
-// }
+int	exec_shcmd(t_ast_n *node)
+{
+	pid_t	pid;
+	int		status;
+
+	if (is_builtin(node->cmd))
+		exit (exec_builtin(node));
+	else
+	{
+		pid = fork();
+		if (pid == 0)
+			exec(node);
+		else if (pid > 0)
+		{
+			waitpid(pid, &status, 0);
+			if (WIFEXITED(status))
+				exit (WEXITSTATUS(status));
+			else
+				exit (1);
+		}
+		else
+			perror("fork");
+		exit (1);
+	}
+}
+
+int	exec_subsh(t_ast_n *node);
+
+int	execute_shcommand(t_ast_n *node)
+{
+	int	status;
+
+	if (node->state == _CMD)
+		return (exec_shcmd(node));
+	else if (node->state == _AND)
+	{
+		status = execute_command(node->left);
+		if (status == 0)
+			return (execute_command(node->right));
+		return (status);
+	}
+	else if (node->state == _OR)
+	{
+		status = execute_command(node->left);
+		if (status != 0)
+			return (execute_command(node->right));
+		return (status);
+	}
+	else if (node->state == _PLINE)
+		return (exec_pline(node->pline));
+	else if (node->state == _SUBSH)
+		return (exec_subsh(node->left));
+	return (0);
+}
+
+int	exec_subsh(t_ast_n *node)
+{
+	int		status;
+	pid_t	pid;
+
+	pid = fork();
+	if (pid == 0)
+	{
+		handle_redir(node);
+		return (execute_shcommand(node));
+	}
+	else if (pid > 0)
+	{
+		waitpid(pid, &status, 0);
+		if (WIFEXITED(status))
+			return (WEXITSTATUS(status));
+		else
+			return (1);
+	}
+	else
+	{
+		perror("fork");
+		return (1);
+	}
+}
 
 int	execute_command(t_ast_n *node)
 {
@@ -359,7 +394,7 @@ int	execute_command(t_ast_n *node)
 	}
 	else if (node->state == _PLINE)
 		return (exec_pline(node->pline));
-	// else if (node->state == _SUBSH)
-	// 	return (exec_subsh(node->subsh));
+	else if (node->state == _SUBSH)
+		return (exec_subsh(node->left));
 	return (0);
 }

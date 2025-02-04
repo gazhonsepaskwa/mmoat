@@ -6,7 +6,7 @@
 /*   By: lderidde <lderidde@student.s19.be>        +#+  +:+       +#+         */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/28 10:08:49 by lderidde          #+#    #+#             */
-/*   Updated: 2025/02/03 13:10:32 by lderidde         ###   ########.fr       */
+/*   Updated: 2025/02/04 10:37:20 by lderidde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -154,6 +154,7 @@ void	set_var_env(char *key, char *value, t_msh *msh)
 	int		i;
 	char	*tmp;
 
+	tmp = "";
 	i = get_var_index(key, msh);
 	if (value)
 		tmp = ft_strjoin(key, "=");
@@ -172,7 +173,8 @@ void	set_var_env(char *key, char *value, t_msh *msh)
 			return ;
 		msh->env[i] = ft_strjoin(tmp, value);
 	}
-	free_null_ptr(tmp);
+	if (tmp && tmp[0])
+		free_null_ptr(tmp);
 	return ;
 }
 
