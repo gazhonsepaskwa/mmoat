@@ -79,6 +79,7 @@ char 	**lltotab(t_node *lst, t_node *limiter)
 //
 // void	add_redir(t_redir redir, t_redir *redir_list)
 // {
+// 	int	i;
 // }
 
 void	create_redir(t_node *cpy, t_ast_n *self)
@@ -88,16 +89,8 @@ void	create_redir(t_node *cpy, t_ast_n *self)
 	while (cpy)
 	{
 		redir = get_redir(cpy);
-		if (redir == _RED_R || redir == _RED_DR)
-		{
-			// add_redir(redir, self->outredir);
-			add_to_tab(&self->outfile, cpy->next->val);
-		}
-		else if (redir == _RED_L || redir == _RED_DL)
-			{
-			// add_redir(redir, self->inredir);
-			add_to_tab(&self->infile, cpy->next->val);
-		}
+		// add_redir(redir, self->redir);
+		add_to_tab(&self->files, cpy->next->val);
 		cpy = cpy->next;
 		while (cpy && get_redir(cpy) == _NR)
 			cpy = cpy->next;
@@ -109,10 +102,8 @@ void	create_cmd(t_ast_n *self, t_node *lst)
 	t_node	*cpy;
 
 	self->state = _CMD;
-	self->infile = NULL;
-	self->outfile = NULL;
-	self->inredir = NULL;
-	self->outredir = NULL;
+	self->files = NULL;
+	self->redir = NULL;
 	cpy = lst;
 	create_redir(cpy, self);
 }

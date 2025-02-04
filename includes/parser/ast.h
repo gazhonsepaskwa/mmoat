@@ -49,10 +49,8 @@ typedef struct s_ast_n
 	int				_stdout;
 	int				_stdin;
 	int				save_std;
-	t_redir			*inredir;
-	t_redir			*outredir;
-	char			**infile;
-	char			**outfile;
+	t_redir			*redir;
+	char			**files;
 	bool			sh;
 }					t_ast_n;
 
