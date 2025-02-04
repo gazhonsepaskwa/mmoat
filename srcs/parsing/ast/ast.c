@@ -115,13 +115,26 @@ void	create_redir(t_node *cpy, t_ast_n *self)
 
 t_node	*get_cmd(t_node *lst)
 {
-	while (lst)
+	t_node *cpy;
+
+	cpy = lst;
+	while (cpy)
 	{
-		if (get_redir(lst) != _NR && lst->next && lst->next->next && get_redir(lst->next->next) == _NR)
-			return (lst);
-		lst = lst->next;
+		if (get_redir(cpy) != _NR && cpy->next && cpy->next->next && get_redir(cpy->next->next) == _NR)
+			return (cpy->next->next);
+		cpy = cpy->next;
 	}
 	return (lst);
+}
+
+char **get_args(t_node *cmd)
+{
+	t_node *cpy;
+
+	cpy = cmd;
+	while (cpy && !get_redir(cpy))
+		cpy = cpy->next;
+	return (lltotab(cmd, cpy));
 }
 
 void	create_cmd(t_ast_n *self, t_node *lst)
@@ -134,8 +147,8 @@ void	create_cmd(t_ast_n *self, t_node *lst)
 	self->redir = ft_calloc(1, sizeof(t_redir));
 	self->redir[0] = _NR; 
 	cmd_node = get_cmd(lst);
-	self->cmd = cmd_node->val;
-	self->args = ft_split("NOT SET", " ");
+		self->cmd = ft_strdup(cmd_node->val);
+	self->args = get_args(cmd_node);
 	cpy = lst;
 	create_redir(cpy, self);
 }

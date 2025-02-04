@@ -82,12 +82,8 @@ int	main(int ac, char **av, char **envp)
 	{
 		while (!input || !input[0])
 			input = powerline();
-		ft_debug("input: %s\n", input);
-		ft_debug("powerline\n");
 		msh->head = parser(input, msh);
-		ft_debug("parsed\n");
 		msh->ex_code = execute_command(msh->head);
-		ft_debug("executed\n");
 		free(input);
 		input = NULL;
 	}
