@@ -71,7 +71,7 @@ void	create_cmd(t_ast_n *self, t_node *lst)
 	self->redir[0] = _NR; 
 	cmd_args = get_args(lst);
 	self->args = cmd_args;
-	self->cmd = cmd_args[0];
+	self->cmd = ft_strdup(cmd_args[0]);
 	create_redir(lst, self);
 	// debug
 	int i = -1;
