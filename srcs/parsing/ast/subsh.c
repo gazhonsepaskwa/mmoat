@@ -12,46 +12,28 @@
 
 #include "../../../includes/minishell.h"
 
-static void	remove_parentheses(t_node **lst)
+t_node	*remove_parentheses(t_node *lst)
 {
-    t_node *tmp;
-    t_node *cpy;
+	t_node	*it;
+	t_node	*out;
 
-    if (!lst || !*lst || !(*lst)->next)
-        return;
-
-    tmp = *lst;
-    *lst = (*lst)->next;
-    free(tmp->val);
-    free(tmp);
-    cpy = *lst;
-    while (cpy->next && cpy->next->next)
-        cpy = cpy->next;
-    if (cpy->next)
-    {
-        free(cpy->next->val);
-        free(cpy->next);
-        cpy->next = NULL;
-    }
+	out = NULL;
+	it = lst;
+	if (it->pressision == SUBSH_S)
+		it = it->next;
+	while (it->pressision != SUBSH_E)
+	{
+		add_node_back(&out, ft_strdup(it->val), it->token, it->pressision);
+		it = it->next;
+	}
+	return (out);
 }
 
 void create_subsh(t_ast_n *parent, t_node *lst, t_msh *msh)
 {
-	t_node *cpy;
+	t_node	*cpy;
+	t_node	*cutted;
 
-	cpy = lst;
-	while (cpy)
-	{
-		ft_printf("%s\n", cpy->val);
-		cpy = cpy->next;
-	}
-	remove_parentheses(&lst);
-	ft_printf("\n\n");
-	cpy = lst;
-	while (cpy)
-	{
-		ft_printf("%s\n", cpy->val);
-		cpy = cpy->next;
-	}
-	parent->left = create_ast_n(lst, parent, msh);
+	cutted = remove_parentheses(lst);
+	parent->left = create_ast_n(cutted, parent, msh);
 }
