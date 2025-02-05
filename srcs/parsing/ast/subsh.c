@@ -16,24 +16,34 @@ t_node	*remove_parentheses(t_node *lst)
 {
 	t_node	*it;
 	t_node	*out;
+	int		deepness;
 
 	out = NULL;
 	it = lst;
-	if (it->pressision == SUBSH_S)
-		it = it->next;
-	while (it->pressision != SUBSH_E)
+	it = it->next;
+	deepness = 1;
+	while (1)
 	{
+		if (it->pressision == SUBSH_S)
+			deepness += 1;
+		if (it->pressision == SUBSH_E)
+			deepness -= 1;
+		if (deepness == 0)
+			break;
 		add_node_back(&out, ft_strdup(it->val), it->token, it->pressision);
 		it = it->next;
 	}
 	return (out);
 }
 
-void create_subsh(t_ast_n *parent, t_node *lst, t_msh *msh)
+void create_subsh(t_ast_n *self, t_node *lst, t_msh *msh)
 {
-	t_node	*cpy;
 	t_node	*cutted;
 
 	cutted = remove_parentheses(lst);
-	parent->left = create_ast_n(cutted, parent, msh);
+	self->left = create_ast_n(cutted, self, msh);
+	self->files = NULL;
+	self->redir = ft_calloc(1, sizeof(t_redir));
+	self->redir[0] = _NR; 
+	create_redir_subsh(lst, self);
 }

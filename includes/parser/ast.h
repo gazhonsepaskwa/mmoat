@@ -70,6 +70,7 @@ t_ast_n	*create_ast_n(t_node *lst, t_ast_n *parent, t_msh *msh);
 // redir
 t_redir		get_redir(t_node *node);
 void		create_redir(t_node *cpy, t_ast_n *self);
+void		create_redir_subsh(t_node *head, t_ast_n *self);
 // cmd
 void		create_cmd(t_ast_n *self, t_node *lst);
 // subsh

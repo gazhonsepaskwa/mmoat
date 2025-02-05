@@ -16,7 +16,10 @@ static int	last_tok_subsh(t_node *lst)
 {
 	while (lst)
 	{
-		if (lst->next == NULL && !ft_strncmp(lst->val, ")", 1))
+		if ((lst->next == NULL
+			|| lst->next->pressision == D_RED_R
+			|| lst->next->pressision == RED_R)
+			&& !ft_strncmp(lst->val, ")", 1))
 			return (1);
 		lst = lst->next;
 	}
