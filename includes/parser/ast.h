@@ -80,4 +80,7 @@ void		create_pline(t_ast_n *self, t_node *lst, t_node *token, t_msh *msh);
 // and_or
 void		create_and_or(t_ast_n *parrent, t_node *lst, t_node *token, t_msh *msh);
 
+// free
+void		free_ast(t_ast_n *node);
+
 #endif

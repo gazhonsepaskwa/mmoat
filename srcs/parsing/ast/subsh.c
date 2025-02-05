@@ -46,4 +46,5 @@ void create_subsh(t_ast_n *self, t_node *lst, t_msh *msh)
 	self->redir = ft_calloc(1, sizeof(t_redir));
 	self->redir[0] = _NR; 
 	create_redir_subsh(lst, self);
+	// free(cutted);
 }

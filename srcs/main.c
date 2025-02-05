@@ -73,6 +73,8 @@ void	interpret_cmd(char **input, t_msh *msh)
 {
 	msh->head = parser(*input, msh);
 	msh->ex_code = execute_command(msh->head);
+	free_ast(msh->head);
+	msh->head = NULL;
 	free(*input);
 	*input = NULL;
 }
