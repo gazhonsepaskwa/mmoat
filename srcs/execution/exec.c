@@ -6,7 +6,7 @@
 /*   By: lderidde <lderidde@student.s19.be>        +#+  +:+       +#+         */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 11:22:33 by lderidde          #+#    #+#             */
-/*   Updated: 2025/02/04 15:34:39 by lderidde         ###   ########.fr       */
+/*   Updated: 2025/02/05 09:09:56 by lderidde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ void	read_input(t_ast_n *node, int j)
 
 	r = 0;
 	i = 0;
+	ft_fprintf(2, "heredoc> ");
 	r = read(0, &c, 1);
 	while (r && c != '\n' && c != '\0')
 	{
@@ -55,7 +56,7 @@ void	read_input(t_ast_n *node, int j)
 		r = read(0, &c, 1);
 	}
 	buf[i] = '\0';
-	if (ft_strnstr(buf, node->files[j], ft_strlen(node->files[j])) == 0)
+	if (ft_strncmp(buf, node->files[j], ft_strlen(node->files[j])) == 0)
 	{
 		close(node->fds[1]);
 		exit(EXIT_SUCCESS);
@@ -103,8 +104,8 @@ void	handle_redir(t_ast_n *node)
 			handle_file(node, 3, i);
 		else if (node->redir[i] == _RED_DL)
 			here_doc(node, i);
-		if (node->redir[i] != _RED_DL && node->input != NULL)
-			free_null_ptr(node->input);
+		// if (node->redir[i] != _RED_DL)
+		// 	free_null_ptr(node->input);
 		if (node->redir[i] == _RED_L)
 		{
 			dup2(node->_stdin, STDIN_FILENO);
@@ -220,6 +221,7 @@ char	*find_path(char *cmd, char **env)
 void	return_error(char *arg, char *msg, int code)
 {
 	ft_fprintf(2, "%s: %s\n", arg, msg);
+	free(arg);
 	exit(code);
 }
 
@@ -232,10 +234,7 @@ int	exec(t_ast_n *node)
 	if (!path)
 		return_error(node->cmd, "command not found", 127);
 	if (access(path, X_OK) != 0)
-	{
-		free(path);
 		return_error(path, "Permission denied", 126);
-	}
 	execve(path, node->args, NULL);
 	free(path);
 	perror("execve");
