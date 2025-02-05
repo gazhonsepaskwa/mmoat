@@ -65,7 +65,18 @@ t_ast_n		*get_ast(t_msh *msh, t_node *lst);
 t_nodell	*cutll(t_node *lst, t_node *expected, size_t limiter);
 t_node 		*get_top_token(t_node *lst, t_state *state);
 
-// env TMP
-char	**init_env(char **envp);
+// recurce
+t_ast_n	*create_ast_n(t_node *lst, t_ast_n *parent, t_msh *msh);
+// redir
+t_redir		get_redir(t_node *node);
+void		create_redir(t_node *cpy, t_ast_n *self);
+// cmd
+void		create_cmd(t_ast_n *self, t_node *lst);
+// subsh
+void 		create_subsh(t_ast_n *parent, t_node *lst, t_msh *msh);
+// pipeline
+void		create_pline(t_ast_n *self, t_node *lst, t_node *token, t_msh *msh);
+// and_or
+void		create_and_or(t_ast_n *parrent, t_node *lst, t_node *token, t_msh *msh);
 
 #endif
