@@ -6,7 +6,7 @@
 /*   By: lderidde <lderidde@student.s19.be>        +#+  +:+       +#+         */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/24 08:23:27 by lderidde          #+#    #+#             */
-/*   Updated: 2025/02/04 15:55:59 by lderidde         ###   ########.fr       */
+/*   Updated: 2025/02/05 13:45:47 by lderidde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,8 @@ typedef struct s_ast_n
 	int				fds[2];
 	int				_stdout;
 	int				_stdin;
-	int				save_std;
+	int				save_stdo;
+	int				save_stdi;
 	t_redir			*redir;
 	char			*input;
 	char			**files;

@@ -6,7 +6,7 @@
 /*   By: lderidde <lderidde@student.s19.be>        +#+  +:+       +#+         */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/24 14:31:56 by lderidde          #+#    #+#             */
-/*   Updated: 2025/02/03 13:13:38 by lderidde         ###   ########.fr       */
+/*   Updated: 2025/02/05 12:00:26 by lderidde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,44 +64,56 @@ int	extractenv(char *str, char **envp)
 	return (i);
 }
 
-static void	echo_print(char **arg, int j, char **envp)
+int	print_exit(char *arg, t_ast_n *node)
+{
+	if (arg && ft_strncmp(arg, "$?", 2) == 0)
+	{
+		ft_fprintf(1, "%d", node->msh->ex_code);
+		return (1);
+	}
+	return (0);
+}
+
+static void	echo_print(t_ast_n *node, int j, char **envp)
 {
 	int	i;
 
-	while (arg[j])
+	while (node->args[j])
 	{
 		i = 0;
-		while (arg[j][i])
+		while (node->args[j][i])
 		{
-			if (arg[j][i] == '$')
+			if (print_exit(node->args[j], node))
+				break ;
+			if (node->args[j][i] == '$')
 			{
-				if (!arg[j][i + 1] || arg[j][i + 1] == ' ')
-					ft_put_c(arg[j][i++]);
+				if (!node->args[j][i + 1] || node->args[j][i + 1] == ' ')
+					ft_put_c(node->args[j][i++]);
 				else
-					i += extractenv(&arg[j][i], envp);
+					i += extractenv(&node->args[j][i], envp);
 			}
 			else
-				ft_put_c(arg[j][i++]);
+				ft_put_c(node->args[j][i++]);
 		}
 		j++;
-		if (arg[j])
+		if (node->args[j])
 			ft_put_c(' ');
 	}
 }
 
-int	builtin_echo(char **arg, char **envp)
+int	builtin_echo(t_ast_n *node, char **envp)
 {
 	int		i;
 	bool	flag;
 
 	flag = false;
 	i = 1;
-	while (arg[i] && is_silent(arg[i]))
+	while (node->args[i] && is_silent(node->args[i]))
 	{
 		flag = true;
 		i++;
 	}
-	echo_print(arg, i, envp);
+	echo_print(node, i, envp);
 	if (!flag)
 		ft_printf("\n");
 	return (0);

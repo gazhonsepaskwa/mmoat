@@ -6,16 +6,17 @@
 /*   By: lderidde <lderidde@student.s19.be>        +#+  +:+       +#+         */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 11:22:33 by lderidde          #+#    #+#             */
-/*   Updated: 2025/02/05 09:09:56 by lderidde         ###   ########.fr       */
+/*   Updated: 2025/02/05 15:39:07 by lderidde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
-#include <stdlib.h>
-#include <fcntl.h>
-#include <sys/wait.h>
-#include <time.h>
 #include <unistd.h>
+// #include <stdlib.h>
+// #include <fcntl.h>
+// #include <sys/wait.h>
+// #include <time.h>
+// #include <unistd.h>
 
 void	handle_file(t_ast_n *node, int check, int i)
 {
@@ -89,12 +90,21 @@ void	here_doc(t_ast_n *node, int i)
 		perror("fork");
 }
 
+void	save_stds(t_ast_n *node)
+{
+	ft_fprintf(2, "save fds\nstate: %d", node->state);
+	node->save_stdo = dup(STDOUT_FILENO);
+	node->save_stdi = dup(STDIN_FILENO);
+}
+
 void	handle_redir(t_ast_n *node)
 {
 	int	i;
 
 	i = -1;
-	while (node->redir[++i] && node->redir[i] != _NR)
+	if (node->state == _PLINE || node->redir[0] != _NR)
+		save_stds(node);
+	while (node->state != _PLINE && node->redir[++i] && node->redir[i] != _NR)
 	{
 		if (node->redir[i] == _RED_L)
 			handle_file(node, 1, i);
@@ -104,8 +114,6 @@ void	handle_redir(t_ast_n *node)
 			handle_file(node, 3, i);
 		else if (node->redir[i] == _RED_DL)
 			here_doc(node, i);
-		// if (node->redir[i] != _RED_DL)
-		// 	free_null_ptr(node->input);
 		if (node->redir[i] == _RED_L)
 		{
 			dup2(node->_stdin, STDIN_FILENO);
@@ -140,34 +148,27 @@ int	is_builtin(char *str)
 		return (0);
 }
 
-void	reset_redir(void)
+void	reset_redir(t_ast_n *node)
 {
-	int		fd;
-	char	*tty;
-
-	tty = ttyname(STDERR_FILENO);
-	fd = open(tty, O_WRONLY);
-	if (dup2(fd, STDOUT_FILENO) == -1)
-		printf("error\n");
-	close(fd);
-	tty = ttyname(STDERR_FILENO);
-	fd = open(tty, O_RDONLY);
-	if (dup2(fd, STDIN_FILENO) == -1)
-		printf("error\n");
-	close(fd);
+	if (node->state == _PLINE || node->redir[0] != _NR)
+	{
+		dup2(node->save_stdo, STDOUT_FILENO);
+		close(node->save_stdo);
+		dup2(node->save_stdi, STDIN_FILENO);
+		close(node->save_stdi);
+	}
 }
 
 int	exec_builtin(t_ast_n *node)
 {
 	int ret;
 
-	handle_redir(node);
 	if (ft_strncmp(node->cmd, "exit", 4) == 0)
 		ret = builtin_exit(node->args, false, node);
 	else if (ft_strncmp(node->cmd, "pwd", 3) == 0)
 		ret = builtin_pwd(node->args);
 	else if (ft_strncmp(node->cmd, "echo", 4) == 0)
-		ret = builtin_echo(node->args, node->msh->env);
+		ret = builtin_echo(node, node->msh->env);
 	else if (ft_strncmp(node->cmd, "env", 3) == 0)
 		ret = builtin_env(node->args, node->msh->env);
 	else if (ft_strncmp(node->cmd, "unset", 5) == 0)
@@ -229,7 +230,6 @@ int	exec(t_ast_n *node)
 {
 	char	*path;
 
-	handle_redir(node);
 	path = find_path(node->cmd, node->msh->env);
 	if (!path)
 		return_error(node->cmd, "command not found", 127);
@@ -246,6 +246,7 @@ int	exec_scmd(t_ast_n *node)
 	pid_t	pid;
 	int		status;
 
+	// handle_redir(node);
 	if (is_builtin(node->cmd))
 		return (exec_builtin(node));
 	else
@@ -279,6 +280,7 @@ void	exec_pcmd(t_ast_n *pcmd)
 {
 	int ret;
 
+	handle_redir(pcmd);
 	if (is_builtin(pcmd->cmd))
 	{
 		ret = exec_builtin(pcmd);
@@ -297,6 +299,8 @@ void	exec_pchild(int *pipes, int index, t_ast_n *pcmd, int cmds)
 		dup2(pipes[1], STDOUT_FILENO);
 	close(pipes[0]);
 	close(pipes[1]);
+	// if (pcmd->state == _CMD)
+	// 	handle_redir(pcmd);
 	if (pcmd->state == _CMD)
 		exec_pcmd(pcmd);
 	else if (pcmd->state == _SUBSH)
@@ -312,7 +316,7 @@ int	end_pline(pid_t last_pid, t_ast_n **pline)
 	waitpid(last_pid, &status, 0);
 	while (++i < count_cmds(pline) - 1)
 		wait(NULL);
-	reset_redir();	
+	reset_redir(pline[0]->parent);	
 	if (WIFEXITED(status))
 		return (WEXITSTATUS(status));
 	else
@@ -329,7 +333,8 @@ int	exec_pline(t_ast_n **pline)
 	i = -1;
 	while (pline[++i])
 	{
-		/*ft_fprintf(2, "test\n");*/
+		if (i == 0)
+			handle_redir(pline[0]->parent);
 		pipe(pline[i]->fds);
 		pid = fork();
 		if (pid == 0)
@@ -353,6 +358,7 @@ int	exec_shcmd(t_ast_n *node)
 	pid_t	pid;
 	int		status;
 
+	// handle_redir(node);
 	if (is_builtin(node->cmd))
 		return (exec_builtin(node));
 	else
@@ -378,50 +384,56 @@ int	exec_subsh(t_ast_n *node);
 
 int	execute_shcommand(t_ast_n *node)
 {
-	int	status;
+	// int	status;
 
 	if (node->state == _CMD)
-		return (exec_shcmd(node));
+		handle_redir(node);
+	if (node->state == _CMD)
+		node->msh->ex_code =  exec_shcmd(node);
 	else if (node->state == _AND)
 	{
-		status = execute_shcommand(node->left);
-		if (status == 0)
-			return (execute_shcommand(node->right));
-		return (status);
+		node->msh->ex_code = execute_shcommand(node->left);
+		if (node->msh->ex_code == 0)
+			node->msh->ex_code = execute_shcommand(node->right);
+		// return (node->msh->ex_code);
 	}
 	else if (node->state == _OR)
 	{
-		status = execute_shcommand(node->left);
-		if (status != 0)
-			return (execute_shcommand(node->right));
-		return (status);
+		node->msh->ex_code = execute_shcommand(node->left);
+		if (node->msh->ex_code != 0)
+			node->msh->ex_code = execute_shcommand(node->right);
+		// return (node->msh->ex_code);
 	}
 	else if (node->state == _PLINE)
-		return (exec_pline(node->pline));
+		node->msh->ex_code = exec_pline(node->pline);
 	else if (node->state == _SUBSH)
-		return (exec_subsh(node->left));
-	return (0);
+		node->msh->ex_code = exec_subsh(node->left);
+	if (node->state == _CMD)
+		reset_redir(node);
+	return (node->msh->ex_code);
 }
 
 int	exec_subsh(t_ast_n *node)
 {
 	int		status;
 	pid_t	pid;
+	int		ret;
 
 	pid = fork();
 	if (pid == 0)
 	{
-		// handle_redir(node);
-		exit (execute_shcommand(node));
+		handle_redir(node->parent);
+		// node->save_std = dup(STDOUT_FILENO);
+		ret = execute_shcommand(node);
+		reset_redir(node->parent);
+		exit(ret);
 	}
 	else if (pid > 0)
 	{
+		// reset_redir(node->parent);
 		waitpid(pid, &status, 0);
-		reset_redir();
 		if (WIFEXITED(status) && node->parent->state != _PLINE)
 			return (WEXITSTATUS(status));
-		else if (WIFEXITED(status) && node->parent->state == _PLINE)
-			exit (WEXITSTATUS(status));
 		else
 			return (1);
 	}
@@ -434,28 +446,31 @@ int	exec_subsh(t_ast_n *node)
 
 int	execute_command(t_ast_n *node)
 {
-	int	status;
+	// int	status;
 
 	if (node->state == _CMD)
-		status = exec_scmd(node);
+		handle_redir(node);
+	if (node->state == _CMD)
+		node->msh->ex_code = exec_scmd(node);
 	else if (node->state == _AND)
 	{
-		status = execute_command(node->left);
-		if (status == 0)
-			status = execute_command(node->right);
-		/*return (status);*/
+		node->msh->ex_code = execute_command(node->left);
+		if (node->msh->ex_code == 0)
+			node->msh->ex_code = execute_command(node->right);
+		// return (node->msh->ex_code);
 	}
 	else if (node->state == _OR)
 	{
-		status = execute_command(node->left);
-		if (status != 0)
-			status = execute_command(node->right);
-		/*return (status);*/
+		node->msh->ex_code = execute_command(node->left);
+		if (node->msh->ex_code != 0)
+			node->msh->ex_code = execute_command(node->right);
+		// return (node->msh->ex_code);
 	}
 	else if (node->state == _PLINE)
-		status = exec_pline(node->pline);
+		node->msh->ex_code = exec_pline(node->pline);
 	else if (node->state == _SUBSH)
-		status = exec_subsh(node->left);
-	reset_redir();
-	return (status);
+		node->msh->ex_code = exec_subsh(node->left);
+	if (node->state == _CMD)
+		reset_redir(node);
+	return (node->msh->ex_code);
 }
