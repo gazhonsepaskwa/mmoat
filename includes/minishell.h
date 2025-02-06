@@ -13,7 +13,7 @@
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
-# define DEBUG 0
+# define DEBUG 1
 
 typedef struct s_ast_n t_ast_n;
 typedef struct s_node t_node;
@@ -41,6 +41,8 @@ typedef struct s_msh
 # include "exec/env.h"
 # include "exec/exec.h"
 
+t_msh *init_msh(char **envp);
+void  free_msh(t_msh *msh);
 
 # define POW1 "\033[1;38;2;21;22;26;48;2;92;106;178m"
 # define POW2 "\033[1;38;2;92;106;178;48;2;54;54;54m"

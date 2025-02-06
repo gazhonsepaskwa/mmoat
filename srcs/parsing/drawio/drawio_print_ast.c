@@ -73,5 +73,6 @@ int	print_ast(t_ast_n *node, t_elems *e, int fd)
 		draw_bin_part(node, e, fd, node_id);
 	else
 		draw_pline_part(node, e, fd, node_id);
+  ft_free(&e->rect.text);
 	return (node_id);
 }

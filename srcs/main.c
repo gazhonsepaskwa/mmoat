@@ -12,7 +12,7 @@
 
 #include "../includes/minishell.h" 
 
-char	*powerline(void)
+static char	*powerline(void)
 {
 	char	*pwd;
 	char	*tilt;
@@ -40,36 +40,7 @@ char	*powerline(void)
 	return (input);
 }
 
-char	**ft_setnewenv(void)
-{
-	char **envp;
-
-	envp = malloc(sizeof(char *) * 2);
-	if (!envp)
-		return (NULL);
-	envp[0] = ft_strjoin("PWD=", getcwd(NULL, 0));
-	envp[1] = ft_strdup("SHLVL=1");
-	if (!envp[0] || !envp[1])
-		return (ft_free(&envp[0]), ft_free(&envp[1]), NULL);
-	return (envp);
-}
-
-t_msh *init_msh(char **envp)
-{
-	t_msh	*msh;
-
-	msh = malloc(sizeof(t_msh) * 1);
-	msh->ex_code = 0;
-	if (!msh)
-		return (NULL);
-	if (!envp[0])
-		msh->env = ft_setnewenv();
-	else
-		msh->env = init_env(envp);
-	return (msh);
-}
-
-void	interpret_cmd(char **input, t_msh *msh)
+static void	interpret_cmd(char **input, t_msh *msh)
 {
 	msh->head = parser(*input, msh);
 	msh->ex_code = execute_command(msh->head);
@@ -102,4 +73,5 @@ int	main(int ac, char **av, char **envp)
 		input = ft_strdup(av[1]);
 		interpret_cmd(&input, msh);
 	}
+  free_msh(msh);
 }
