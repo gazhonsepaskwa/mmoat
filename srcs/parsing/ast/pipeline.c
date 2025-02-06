@@ -32,7 +32,7 @@ void	create_pline(t_ast_n *self, t_node *lst, t_node *token, t_msh *msh)
 	i = 0;
 	while (cpy)
 	{
-		self->pline[i] = create_ast_n(cpy->node, self, msh);
+		self->pline[i] = create_ast_n(cpy->node, self, msh, self->sh);
 		cpy = cpy->next;
 		i++;
 	}

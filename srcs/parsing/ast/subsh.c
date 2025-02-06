@@ -40,8 +40,9 @@ void create_subsh(t_ast_n *self, t_node *lst, t_msh *msh)
 {
 	t_node	*cutted;
 
+  self->sh = true;
 	cutted = remove_parentheses(lst);
-	self->left = create_ast_n(cutted, self, msh);
+	self->left = create_ast_n(cutted, self, msh, self->sh);
 	self->files = NULL;
 	self->redir = ft_calloc(1, sizeof(t_redir));
 	self->redir[0] = _NR; 

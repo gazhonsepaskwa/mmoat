@@ -62,17 +62,13 @@ t_dio_node	get_cmd_txt(t_ast_n *node)
 		// txt.redir = translate_redir(node->redir);
 		// txt.inf = ft_sprintf("Infile : %s%s", node->infile, NL);
 		// txt.outf = ft_sprintf("Outfile : %s", node->outfile);
-		txt.redir = "";
-		txt.inf = ft_sprintf("Infile : UNCHECKED");
-		txt.outf = ft_sprintf("Outfile : UNCHECKED");
+		txt.files = ft_sprintf("redir: UNCHECKED\n");
 	}
 	else
 	{
 		txt.cmd = ft_calloc(1, 1);
 		txt.args = ft_calloc(1, 1);
-		txt.redir = "";
-		txt.inf = ft_calloc(1, 1);
-		txt.outf = ft_calloc(1, 1);
+		txt.files = ft_calloc(1, 1);
 	}
 	return (txt);
 }

@@ -13,7 +13,7 @@
 #include "../../../includes/minishell.h"
 #include <unistd.h>
 
-t_ast_n	*create_ast_n(t_node *lst, t_ast_n *parent, t_msh *msh)
+t_ast_n	*create_ast_n(t_node *lst, t_ast_n *parent, t_msh *msh, bool subsh)
 {
 	t_ast_n *node;
 	t_node	*token;
@@ -29,6 +29,7 @@ t_ast_n	*create_ast_n(t_node *lst, t_ast_n *parent, t_msh *msh)
 	node->_stdin = 0;
 	node->save_stdo = 1;
 	node->save_stdi = 0;
+  node->sh = subsh;
 	if (node->state == _AND || node->state == _OR)
 		create_and_or(node, lst, token, msh);
 	else if (node->state == _SUBSH)
@@ -44,6 +45,6 @@ t_ast_n	*get_ast(t_msh *msh, t_node *lst)
 {
 	t_ast_n *head;
 
-	head = create_ast_n(lst, NULL, msh);
+	head = create_ast_n(lst, NULL, msh, false);
 	return (head);
 }

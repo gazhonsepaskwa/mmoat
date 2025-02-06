@@ -15,15 +15,19 @@
 char	*get_node_txt(t_ast_n *node)
 {
 	t_dio_node	txt;
-	char		*out;
+  static char *subsh;
+	char		    *out;
 
 	txt = get_cmd_txt(node);
-	out = ft_sprintf("%s%s%s%s%s%s%s", txt.st, txt.cmd, txt.args,
-			NL, txt.redir, txt.inf, txt.outf);
+  if (node->sh == true)
+    subsh = " (subsh) ";
+  else
+    subsh = "";
+	out = ft_sprintf("%s%s%s%s%s", txt.st, txt.cmd, txt.args,
+	      subsh, txt.files);
 	free(txt.cmd);
 	free(txt.args);
-	free(txt.inf);
-	free(txt.outf);
+	free(txt.files);
 	return (out);
 }
 

@@ -12,12 +12,12 @@
 
 #include "../../../includes/minishell.h"
 
-void	create_and_or(t_ast_n *parrent, t_node *lst, t_node *token, t_msh *msh)
+void	create_and_or(t_ast_n *self, t_node *lst, t_node *token, t_msh *msh)
 {
 	t_nodell *nodell;
 
 	nodell = cutll(lst, token, 1);
-	parrent->left = create_ast_n(nodell->node, parrent, msh);
-	parrent->right = create_ast_n(nodell->next->node, parrent, msh);
+	self->left = create_ast_n(nodell->node, self, msh, self->sh);
+	self->right = create_ast_n(nodell->next->node, self, msh, self->sh);
 	// free_lltab(sublsts);
 }

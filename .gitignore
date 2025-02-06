@@ -1,6 +1,7 @@
 minishell
 .objs/*
 ast.xml
+.$ast.xml.bkp
 .TEST_objs
 
 file

@@ -50,7 +50,7 @@ typedef struct s_ast_n
 	int				_stdin;
 	int				save_stdo;
 	int				save_stdi;
-	t_redir			*redir;
+	t_redir		*redir;
 	char			*input;
 	char			**files;
 	bool			sh;
@@ -67,7 +67,7 @@ t_nodell	*cutll(t_node *lst, t_node *expected, size_t limiter);
 t_node 		*get_top_token(t_node *lst, t_state *state);
 
 // recurce
-t_ast_n	*create_ast_n(t_node *lst, t_ast_n *parent, t_msh *msh);
+t_ast_n	*create_ast_n(t_node *lst, t_ast_n *parent, t_msh *msh, bool subsh);
 // redir
 t_redir		get_redir(t_node *node);
 void		create_redir(t_node *cpy, t_ast_n *self);
