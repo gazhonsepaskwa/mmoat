@@ -72,3 +72,12 @@ t_nodell	*cutll(t_node *lst, t_node *expected, size_t limiter)
 	}
 	return (out);
 }
+
+void free_lltab(t_nodell *nodell)
+{
+  while (nodell)
+  {
+    free_linked_list(nodell->node);
+    nodell = nodell->next;
+  }
+}

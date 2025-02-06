@@ -83,5 +83,6 @@ void		create_and_or(t_ast_n *parrent, t_node *lst, t_node *token, t_msh *msh);
 
 // free
 void		free_ast(t_ast_n *node);
+void    free_lltab(t_nodell *nodell);
 
 #endif

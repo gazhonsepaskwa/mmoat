@@ -37,5 +37,5 @@ void	create_pline(t_ast_n *self, t_node *lst, t_node *token, t_msh *msh)
 		i++;
 	}
 	cpy = NULL;
-	// free_lltab(sublsts);
+	free_lltab(nodell);
 }

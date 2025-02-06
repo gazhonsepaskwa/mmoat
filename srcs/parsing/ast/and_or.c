@@ -19,5 +19,5 @@ void	create_and_or(t_ast_n *self, t_node *lst, t_node *token, t_msh *msh)
 	nodell = cutll(lst, token, 1);
 	self->left = create_ast_n(nodell->node, self, msh, self->sh);
 	self->right = create_ast_n(nodell->next->node, self, msh, self->sh);
-	// free_lltab(sublsts);
+	free_lltab(nodell);
 }
