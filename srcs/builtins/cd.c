@@ -49,6 +49,8 @@ int	builtin_cd(char **arg, t_ast_n *head)
 	if (ft_strncmp(arg[1], "-", 1) == 0)
 	{
 		path = get_var_value("OLDPWD", head->msh->env);
+		if (path)
+			ft_printf("%s\n", path);
 		if (!path)
 			return (err_msg_cmd("cd", NULL, "OLDPWD not set\n", EXIT_FAILURE));
 		return (exec_cd(path, head));

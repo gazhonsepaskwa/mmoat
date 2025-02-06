@@ -37,6 +37,7 @@ static char	*powerline(void)
 	if (ft_strlen(input) > 0)
 		add_history(input);
 	free(prompt);
+	free(pwd);
 	return (input);
 }
 
