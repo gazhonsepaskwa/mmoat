@@ -75,10 +75,12 @@ void	create_cmd(t_ast_n *self, t_node *lst)
 	create_redir(lst, self);
 	// debug
 	int i = -1;
+	ft_debug("==== CMD REDIR\n");
 	while (self->files && self->files[++i])
-		ft_debug("redir : [%d]%s\n",self->redir[i], self->files[i]);
-	ft_debug("====\n");
+		ft_debug("redi : [%d]%s\n",self->redir[i], self->files[i]);
+	ft_debug("==== CMD ARGS\n");
 	i = -1;
 	while (self->args && self->args[++i])
 		ft_debug("args : %s\n",self->args[i], self->args[i]);
+	ft_debug("==== CMD DONE\n\n");
 }

@@ -16,6 +16,17 @@ static int	last_tok_subsh(t_node *lst)
 {
 	while (lst)
 	{
+		if ((lst->next == NULL) && !ft_strncmp(lst->val, ")", 1))
+			return (1);
+		lst = lst->next;
+	}
+	return (0);
+}
+
+static int	last_tok_redir(t_node *lst)
+{
+	while (lst)
+	{
 		if ((lst->next == NULL
 			|| lst->next->pressision == D_RED_R
 			|| lst->next->pressision == RED_R)
@@ -56,7 +67,7 @@ t_node *get_top_token(t_node *lst, t_state *state)
 	*state = _SUBSH;
 	if (!ft_strncmp(lst->val, "(", 1) && last_tok_subsh(lst))
 		return (lst);
-	else if (find_token("&&", lst))
+	if (find_token("&&", lst))
 	{
 		*state = _AND;
 		return (find_token("&&", lst));
@@ -71,6 +82,8 @@ t_node *get_top_token(t_node *lst, t_state *state)
 		*state = _PLINE;
 		return (find_token("|", lst));
 	}
+  else if (!ft_strncmp(lst->val, "(", 1) && last_tok_redir(lst))
+		return (lst);
 	else
 	{
 		*state = UNDEF;
