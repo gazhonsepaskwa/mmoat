@@ -6,12 +6,13 @@
 /*   By: lderidde <lderidde@student.s19.be>        +#+  +:+       +#+         */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 11:22:33 by lderidde          #+#    #+#             */
-/*   Updated: 2025/02/05 15:39:07 by lderidde         ###   ########.fr       */
+/*   Updated: 2025/02/06 10:51:20 by lderidde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
-#include <unistd.h>
+// #include <fcntl.h>
+// #include <unistd.h>
 // #include <stdlib.h>
 // #include <fcntl.h>
 // #include <sys/wait.h>
@@ -54,7 +55,7 @@ void	read_input(t_ast_n *node, int j)
 	{
 		if (c != '\n' && c != '\0')
 			buf[i++] = c;
-		r = read(0, &c, 1);
+		r = read(STDIN_FILENO, &c, 1);
 	}
 	buf[i] = '\0';
 	if (ft_strncmp(buf, node->files[j], ft_strlen(node->files[j])) == 0)
@@ -70,11 +71,15 @@ void	read_input(t_ast_n *node, int j)
 void	here_doc(t_ast_n *node, int i)
 {
 	pid_t	pid;
+	int		fd;
 
 	pipe(node->fds);
 	pid = fork();
 	if (pid == 0)
 	{
+		fd = open("/dev/tty", O_RDONLY);
+		dup2(fd, STDIN_FILENO);
+		close(fd);
 		close(node->fds[0]);
 		while (1)
 			read_input(node, i);
@@ -92,7 +97,6 @@ void	here_doc(t_ast_n *node, int i)
 
 void	save_stds(t_ast_n *node)
 {
-	ft_fprintf(2, "save fds\nstate: %d", node->state);
 	node->save_stdo = dup(STDOUT_FILENO);
 	node->save_stdi = dup(STDIN_FILENO);
 }
@@ -127,7 +131,6 @@ void	handle_redir(t_ast_n *node)
 	}
 }
 
-
 int	is_builtin(char *str)
 {
 	if (ft_strncmp(str, "exit", 4) == 0)
@@ -161,7 +164,7 @@ void	reset_redir(t_ast_n *node)
 
 int	exec_builtin(t_ast_n *node)
 {
-	int ret;
+	int	ret;
 
 	if (ft_strncmp(node->cmd, "exit", 4) == 0)
 		ret = builtin_exit(node->args, false, node);
@@ -175,7 +178,7 @@ int	exec_builtin(t_ast_n *node)
 		ret = builtin_unset(node->args, node);
 	else if (ft_strncmp(node->cmd, "cd", 2) == 0)
 		ret = builtin_cd(node->args, node);
-	else 
+	else
 		ret = builtin_export(node->args, node);
 	return (ret);
 }
@@ -199,7 +202,7 @@ char	*find_path(char *cmd, char **env)
 	char	**paths;
 	int		i;
 
-	if (access(cmd, F_OK) == 0)
+	if (access(cmd, F_OK) == 0 && access(cmd, X_OK) == 0)
 		return (cmd);
 	i = 0;
 	while (ft_strnstr(env[i], "PATH=", 5) == NULL)
@@ -246,7 +249,6 @@ int	exec_scmd(t_ast_n *node)
 	pid_t	pid;
 	int		status;
 
-	// handle_redir(node);
 	if (is_builtin(node->cmd))
 		return (exec_builtin(node));
 	else
@@ -278,9 +280,8 @@ int	err_fork_pline(int *pipes)
 
 void	exec_pcmd(t_ast_n *pcmd)
 {
-	int ret;
+	int	ret;
 
-	handle_redir(pcmd);
 	if (is_builtin(pcmd->cmd))
 	{
 		ret = exec_builtin(pcmd);
@@ -299,8 +300,7 @@ void	exec_pchild(int *pipes, int index, t_ast_n *pcmd, int cmds)
 		dup2(pipes[1], STDOUT_FILENO);
 	close(pipes[0]);
 	close(pipes[1]);
-	// if (pcmd->state == _CMD)
-	// 	handle_redir(pcmd);
+	handle_redir(pcmd);
 	if (pcmd->state == _CMD)
 		exec_pcmd(pcmd);
 	else if (pcmd->state == _SUBSH)
@@ -316,7 +316,7 @@ int	end_pline(pid_t last_pid, t_ast_n **pline)
 	waitpid(last_pid, &status, 0);
 	while (++i < count_cmds(pline) - 1)
 		wait(NULL);
-	reset_redir(pline[0]->parent);	
+	reset_redir(pline[0]->parent);
 	if (WIFEXITED(status))
 		return (WEXITSTATUS(status));
 	else
@@ -328,7 +328,6 @@ int	exec_pline(t_ast_n **pline)
 	int		i;
 	pid_t	pid;
 	pid_t	last_pid;
-	// int		pipes[2];
 
 	i = -1;
 	while (pline[++i])
@@ -344,11 +343,11 @@ int	exec_pline(t_ast_n **pline)
 			dup2(pline[i]->fds[0], STDIN_FILENO);
 			close(pline[i]->fds[0]);
 			close(pline[i]->fds[1]);
-			if(i == count_cmds(pline) - 1)
+			if (i == count_cmds(pline) - 1)
 				last_pid = pid;
 		}
 		else if (pid < 0)
-			return (err_fork_pline(pline[i]->fds));		
+			return (err_fork_pline(pline[i]->fds));
 	}
 	return (end_pline(last_pid, pline));
 }
@@ -358,7 +357,6 @@ int	exec_shcmd(t_ast_n *node)
 	pid_t	pid;
 	int		status;
 
-	// handle_redir(node);
 	if (is_builtin(node->cmd))
 		return (exec_builtin(node));
 	else
@@ -384,25 +382,21 @@ int	exec_subsh(t_ast_n *node);
 
 int	execute_shcommand(t_ast_n *node)
 {
-	// int	status;
-
 	if (node->state == _CMD)
 		handle_redir(node);
 	if (node->state == _CMD)
-		node->msh->ex_code =  exec_shcmd(node);
+		node->msh->ex_code = exec_shcmd(node);
 	else if (node->state == _AND)
 	{
 		node->msh->ex_code = execute_shcommand(node->left);
 		if (node->msh->ex_code == 0)
 			node->msh->ex_code = execute_shcommand(node->right);
-		// return (node->msh->ex_code);
 	}
 	else if (node->state == _OR)
 	{
 		node->msh->ex_code = execute_shcommand(node->left);
 		if (node->msh->ex_code != 0)
 			node->msh->ex_code = execute_shcommand(node->right);
-		// return (node->msh->ex_code);
 	}
 	else if (node->state == _PLINE)
 		node->msh->ex_code = exec_pline(node->pline);
@@ -423,14 +417,12 @@ int	exec_subsh(t_ast_n *node)
 	if (pid == 0)
 	{
 		handle_redir(node->parent);
-		// node->save_std = dup(STDOUT_FILENO);
 		ret = execute_shcommand(node);
 		reset_redir(node->parent);
 		exit(ret);
 	}
 	else if (pid > 0)
 	{
-		// reset_redir(node->parent);
 		waitpid(pid, &status, 0);
 		if (WIFEXITED(status) && node->parent->state != _PLINE)
 			return (WEXITSTATUS(status));
@@ -446,8 +438,6 @@ int	exec_subsh(t_ast_n *node)
 
 int	execute_command(t_ast_n *node)
 {
-	// int	status;
-
 	if (node->state == _CMD)
 		handle_redir(node);
 	if (node->state == _CMD)
@@ -457,14 +447,12 @@ int	execute_command(t_ast_n *node)
 		node->msh->ex_code = execute_command(node->left);
 		if (node->msh->ex_code == 0)
 			node->msh->ex_code = execute_command(node->right);
-		// return (node->msh->ex_code);
 	}
 	else if (node->state == _OR)
 	{
 		node->msh->ex_code = execute_command(node->left);
 		if (node->msh->ex_code != 0)
 			node->msh->ex_code = execute_command(node->right);
-		// return (node->msh->ex_code);
 	}
 	else if (node->state == _PLINE)
 		node->msh->ex_code = exec_pline(node->pline);
