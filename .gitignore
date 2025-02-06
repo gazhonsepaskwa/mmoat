@@ -2,3 +2,9 @@ minishell
 .objs/*
 ast.xml
 .TEST_objs
+
+file
+file2
+file3
+file4
+file5

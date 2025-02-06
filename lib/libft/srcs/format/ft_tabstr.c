@@ -24,7 +24,7 @@ char	*ft_tabstr(char **tab)
 	while (tab[++i])
 		alloc_count += ft_strlen(tab[i]) + 1;
 	i = 0;
-	out = tab[0];
+	out = ft_strdup(tab[0]);
 	while (tab[++i])
 	{
 		tmp = out;

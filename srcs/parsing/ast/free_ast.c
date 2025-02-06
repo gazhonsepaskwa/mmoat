@@ -17,34 +17,39 @@ static void	free_redirs(t_ast_n *node)
 	free(node->redir);
 	if (node->files)
 		free_tab(node->files);
-	free_tab(node->args);
+}
+
+static void free_cmd(t_ast_n *node)
+{
+	free(node->cmd);
+	free_redirs(node);
+  free_tab(node->args);
+}
+
+static void free_pline(t_ast_n *node)
+{
+  int i;
+
+  i = -1;
+  while (node->pline[++i])
+    free_ast(node->pline[i]);
 }
 
 void	free_ast(t_ast_n *node)
 {
-	int i;
-
 	if (node->state == _AND || node->state == _OR)
 	{
 		free_ast(node->left);
 		free_ast(node->right);
-	}
-	else if (node->state == _PLINE)
-	{
-		i = -1;
-		while (node->pline[++i])
-			free_ast(node->pline[i]);
 	}
 	else if (node->state == _SUBSH)
 	{
 		free_ast(node->left);
 		free_redirs(node);
 	}
+	else if (node->state == _PLINE)
+    free_pline(node);
 	else
-	{
-		free(node->cmd);
-		free_redirs(node);
-	}
-
+    free_cmd(node);
 	free(node);
 }
