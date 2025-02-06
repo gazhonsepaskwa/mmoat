@@ -6,7 +6,7 @@
 /*   By: lderidde <lderidde@student.s19.be>        +#+  +:+       +#+         */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/24 14:32:13 by lderidde          #+#    #+#             */
-/*   Updated: 2025/02/03 14:17:14 by lderidde         ###   ########.fr       */
+/*   Updated: 2025/02/06 13:27:33 by lderidde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,8 +61,8 @@ int	builtin_exit(char **arg, bool depth, t_ast_n *node)
 		if (count_args(arg) > 2 && ft_isnumeric(arg[1]))
 			return (err_msg_cmd("exit", NULL, "too many arguments", 1));
 		else if (arg[1] && (!ft_isnumeric(arg[1]) || errno == ERANGE))
-			return (err_msg_cmd("exit", arg[1], "numeric argument required", 2));
-		return (res % 256);
+			exit (err_msg_cmd("exit", arg[1], "numeric argument required", 2));
+		exit (res % 256);
 	}
 	if (count_args(arg) > 2 && ft_isnumeric(arg[1]))
 		return (bash_exiterrorcount());

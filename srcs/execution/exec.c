@@ -6,7 +6,7 @@
 /*   By: lderidde <lderidde@student.s19.be>        +#+  +:+       +#+         */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 11:22:33 by lderidde          #+#    #+#             */
-/*   Updated: 2025/02/06 10:51:20 by lderidde         ###   ########.fr       */
+/*   Updated: 2025/02/06 14:08:10 by lderidde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -167,7 +167,7 @@ int	exec_builtin(t_ast_n *node)
 	int	ret;
 
 	if (ft_strncmp(node->cmd, "exit", 4) == 0)
-		ret = builtin_exit(node->args, false, node);
+		ret = builtin_exit(node->args, node->sh, node);
 	else if (ft_strncmp(node->cmd, "pwd", 3) == 0)
 		ret = builtin_pwd(node->args);
 	else if (ft_strncmp(node->cmd, "echo", 4) == 0)
