@@ -25,17 +25,31 @@ int syntax_err_mess(char *token)
 	return (1);
 }
 
+int unexpected_token(t_node *node)
+{
+	if (!ft_strncmp(node->val, "%", 1)
+		|| (!ft_strncmp(node->val, "&", 1) && ft_strncmp(node->val, "&&", 2))
+		|| !ft_strncmp(node->val, ";", 1)
+		|| !ft_strncmp(node->val, "[", 1) || !ft_strncmp(node->val, "]", 1)
+		|| !ft_strncmp(node->val, "{", 1) || !ft_strncmp(node->val, "}", 1)
+		)
+		return (1);
+	return (0);
+}
+
 int syntax_error(t_node *head)
 {
-	// t_node *cpy;
+	t_node *cpy;
 
 	if (only_operator(head))
 		return(syntax_err_mess(head->val));
-	// cpy = node;
-	// while (cpy)
-	// {
-	// 	cpy = cpy->next;
-	// }
+	cpy = head;
+	while (cpy)
+	{
+		if (unexpected_token(cpy))
+			return (syntax_err_mess(cpy->val));
+		cpy = cpy->next;
+	}
 	
 	return (0);
 }
