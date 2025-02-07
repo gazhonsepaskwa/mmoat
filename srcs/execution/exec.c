@@ -6,7 +6,7 @@
 /*   By: lderidde <lderidde@student.s19.be>        +#+  +:+       +#+         */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 11:22:33 by lderidde          #+#    #+#             */
-/*   Updated: 2025/02/06 14:08:10 by lderidde         ###   ########.fr       */
+/*   Updated: 2025/02/07 09:28:49 by lderidde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -285,6 +285,7 @@ void	exec_pcmd(t_ast_n *pcmd)
 	if (is_builtin(pcmd->cmd))
 	{
 		ret = exec_builtin(pcmd);
+		free_child(pcmd->msh);
 		exit(ret);
 	}
 	else
@@ -296,6 +297,9 @@ int	execute_shcommand(t_ast_n *node);
 
 void	exec_pchild(int *pipes, int index, t_ast_n *pcmd, int cmds)
 {
+	int	ret;
+
+	ret = 0;
 	if (index < cmds - 1)
 		dup2(pipes[1], STDOUT_FILENO);
 	close(pipes[0]);
@@ -304,7 +308,11 @@ void	exec_pchild(int *pipes, int index, t_ast_n *pcmd, int cmds)
 	if (pcmd->state == _CMD)
 		exec_pcmd(pcmd);
 	else if (pcmd->state == _SUBSH)
-		exit (execute_shcommand(pcmd->left));
+	{
+		ret = execute_shcommand(pcmd->left);
+		free_child(pcmd->msh);
+		exit(ret);
+	}
 }
 
 int	end_pline(pid_t last_pid, t_ast_n **pline)
@@ -418,7 +426,8 @@ int	exec_subsh(t_ast_n *node)
 	{
 		handle_redir(node->parent);
 		ret = execute_shcommand(node);
-		reset_redir(node->parent);
+		// reset_redir(node->parent);
+		free_child(node->msh);
 		exit(ret);
 	}
 	else if (pid > 0)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free_ast.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nalebrun <nalebrun@student.s19.be>        +#+  +:+       +#+         */
+/*   By: lderidde <lderidde@student.s19.be>        +#+  +:+       +#+         */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/05 14:39:28 by nalebrun          #+#    #+#             */
-/*   Updated: 2025/02/05 14:39:28 by nalebrun         ###   ########.fr       */
+/*   Created: 2025/02/05 14:39:28 by lderidde          #+#    #+#             */
+/*   Updated: 2025/02/07 09:20:16 by lderidde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,4 +52,10 @@ void	free_ast(t_ast_n *node)
 	else
     free_cmd(node);
 	free(node);
+}
+
+void	free_child(t_msh *msh)
+{
+	free_ast(msh->head);
+	free_msh(msh);
 }

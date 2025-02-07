@@ -6,7 +6,7 @@
 /*   By: lderidde <lderidde@student.s19.be>        +#+  +:+       +#+         */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 14:16:52 by lderidde          #+#    #+#             */
-/*   Updated: 2025/02/05 13:27:18 by lderidde         ###   ########.fr       */
+/*   Updated: 2025/02/07 09:24:34 by lderidde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,6 @@ static void	interpret_cmd(char **input, t_msh *msh)
 
 int	main(int ac, char **av, char **envp)
 {
-	char	*input;
 	t_msh	*msh;
 
 	(void)ac;
@@ -60,18 +59,17 @@ int	main(int ac, char **av, char **envp)
 	msh = init_msh(envp);
 	if (!msh)
 		return (1);
-	input = NULL;
 	if (ac == 1)
 		while (1)
 		{
-			while (!input || !input[0])
-				input = powerline();
-			interpret_cmd(&input, msh);
+			while (!msh->input || !msh->input[0])
+				msh->input = powerline();
+			interpret_cmd(&msh->input, msh);
 		}
 	else
 	{
-		input = ft_strdup(av[1]);
-		interpret_cmd(&input, msh);
+		msh->input = ft_strdup(av[1]);
+		interpret_cmd(&msh->input, msh);
 	}
   free_msh(msh);
 }

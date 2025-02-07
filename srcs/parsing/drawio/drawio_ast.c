@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   drawio_ast.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nalebrun <nalebrun@student.s19.be>        +#+  +:+       +#+         */
+/*   By: lderidde <lderidde@student.s19.be>        +#+  +:+       +#+         */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/27 17:15:39 by nalebrun          #+#    #+#             */
-/*   Updated: 2025/01/27 17:15:39 by nalebrun         ###   ########.fr       */
+/*   Created: 2025/01/27 17:15:39 by lderidde          #+#    #+#             */
+/*   Updated: 2025/02/07 09:14:08 by lderidde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,12 +24,15 @@ void	set_ast_rect(t_dio_elem *rect)
 
 void	gen_dio_ast(t_ast_n *head, int fd)
 {
-	t_elems	e;
+	t_elems	*e;
 
-	set_ast_rect(&e.rect);
-	e.arrow.type = ARROW;
-	e.arrow.id_src = 0;
-	e.arrow.id_dst = 0;
-	print_ast(head, &e, fd);
+	e = ft_calloc(sizeof(t_elems), 1);
+	set_ast_rect(&e->rect);
+	e->arrow.type = ARROW;
+	e->arrow.id_src = 0;
+	e->arrow.id_dst = 0;
+	print_ast(head, e, fd);
+	free(e->rect.text);
+	free(e);
 	return ;
 }

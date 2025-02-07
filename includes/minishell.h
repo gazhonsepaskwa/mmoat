@@ -6,7 +6,7 @@
 /*   By: lderidde <lderidde@student.s19.be>        +#+  +:+       +#+         */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 11:25:25 by lderidde          #+#    #+#             */
-/*   Updated: 2025/02/05 09:55:28 by lderidde         ###   ########.fr       */
+/*   Updated: 2025/02/07 09:22:29 by lderidde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ typedef struct s_msh
 {
 	int		ex_code;
 	t_ast_n	*head;
+	char	*input;
 	char	**env;
 }			t_msh;
 
@@ -43,6 +44,7 @@ typedef struct s_msh
 
 t_msh *init_msh(char **envp);
 void  free_msh(t_msh *msh);
+void	free_child(t_msh *msh);
 
 # define POW1 "\033[1;38;2;21;22;26;48;2;92;106;178m"
 # define POW2 "\033[1;38;2;92;106;178;48;2;54;54;54m"

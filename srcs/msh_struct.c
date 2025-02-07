@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   msh_struct.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nalebrun <nalebrun@student.s19.be>         +#+  +:+       +#+        */
+/*   By: lderidde <lderidde@student.s19.be>        +#+  +:+       +#+         */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/06 15:32:03 by nalebrun          #+#    #+#             */
-/*   Updated: 2025/02/06 15:32:03 by nalebrun         ###   ########.fr       */
+/*   Created: 2025/02/06 15:32:03 by lderidde          #+#    #+#             */
+/*   Updated: 2025/02/07 09:24:52 by lderidde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ t_msh *init_msh(char **envp)
 
 	msh = malloc(sizeof(t_msh) * 1);
 	msh->ex_code = 0;
+	msh->input = NULL;
 	if (!msh)
 		return (NULL);
 	if (!envp[0])
@@ -43,6 +44,7 @@ t_msh *init_msh(char **envp)
 
 void free_msh(t_msh *msh)
 {
-  free_tab(msh->env);
-  free(msh);
+	free_tab(msh->env);
+	free(msh->input);
+	free(msh);
 }

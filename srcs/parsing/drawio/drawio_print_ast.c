@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   drawio_print_ast.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nalebrun <nalebrun@student.s19.be>        +#+  +:+       +#+         */
+/*   By: lderidde <lderidde@student.s19.be>        +#+  +:+       +#+         */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/29 09:54:31 by nalebrun          #+#    #+#             */
-/*   Updated: 2025/01/29 09:54:31 by nalebrun         ###   ########.fr       */
+/*   Created: 2025/01/29 09:54:31 by lderidde          #+#    #+#             */
+/*   Updated: 2025/02/07 09:09:01 by lderidde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,14 +20,15 @@ char	*get_node_txt(t_ast_n *node)
 
 	txt = get_cmd_txt(node);
   if (node->sh == true)
-    subsh = " (subsh) ";
+    subsh = ft_strdup(" (subsh) ");
   else
-    subsh = "";
+    subsh = ft_strdup("");
 	out = ft_sprintf("%s%s%s%s%s", txt.st, txt.cmd, txt.args,
 	      subsh, txt.files);
 	free(txt.cmd);
 	free(txt.args);
 	free(txt.files);
+	free(subsh);
 	return (out);
 }
 
@@ -67,12 +68,12 @@ int	print_ast(t_ast_n *node, t_elems *e, int fd)
 
 	if (!node)
 		return (-1);
+	ft_free(&e->rect.text);
 	e->rect.text = get_node_txt(node);
 	node_id = drawio_create_elem(fd, &e->rect);
 	if (node->state != _PLINE)
 		draw_bin_part(node, e, fd, node_id);
 	else
 		draw_pline_part(node, e, fd, node_id);
-  ft_free(&e->rect.text);
 	return (node_id);
 }
