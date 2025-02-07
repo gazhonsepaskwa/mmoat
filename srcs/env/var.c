@@ -6,7 +6,7 @@
 /*   By: lderidde <lderidde@student.s19.be>        +#+  +:+       +#+         */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/28 10:08:49 by lderidde          #+#    #+#             */
-/*   Updated: 2025/02/04 10:37:20 by lderidde         ###   ########.fr       */
+/*   Updated: 2025/02/07 11:59:55 by lderidde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -154,16 +154,16 @@ void	set_var_env(char *key, char *value, t_msh *msh)
 	int		i;
 	char	*tmp;
 
-	tmp = "";
+	tmp = NULL;
 	i = get_var_index(key, msh);
 	if (value)
-		tmp = ft_strjoin(key, "=");
-	if (!tmp)
+		tmp = ft_strjoin("=", value);
+	if (value && !tmp)
 		return ;
 	if (i != -1 && msh->env[i])
 	{
 		free_null_ptr(msh->env[i]);
-		msh->env[i] = ft_strjoin(tmp, value);
+		msh->env[i] = ft_strjoin(key, tmp);
 	}
 	else
 	{
@@ -171,7 +171,7 @@ void	set_var_env(char *key, char *value, t_msh *msh)
 		msh->env = copy_env_var(msh->env, i + 1);
 		if (!msh->env)
 			return ;
-		msh->env[i] = ft_strjoin(tmp, value);
+		msh->env[i] = ft_strjoin(key, tmp);
 	}
 	if (tmp && tmp[0])
 		free_null_ptr(tmp);

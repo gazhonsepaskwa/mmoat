@@ -6,7 +6,7 @@
 /*   By: lderidde <lderidde@student.s19.be>        +#+  +:+       +#+         */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 11:25:25 by lderidde          #+#    #+#             */
-/*   Updated: 2025/02/07 09:22:29 by lderidde         ###   ########.fr       */
+/*   Updated: 2025/02/07 10:22:28 by lderidde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ typedef struct s_msh
 # include "exec/builtins.h"
 # include "exec/env.h"
 # include "exec/exec.h"
+# include "exec/expander.h"
 
 t_msh *init_msh(char **envp);
 void  free_msh(t_msh *msh);

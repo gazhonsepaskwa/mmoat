@@ -6,7 +6,7 @@
 /*   By: lderidde <lderidde@student.s19.be>        +#+  +:+       +#+         */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 11:22:33 by lderidde          #+#    #+#             */
-/*   Updated: 2025/02/07 09:28:49 by lderidde         ###   ########.fr       */
+/*   Updated: 2025/02/07 12:31:44 by lderidde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -166,6 +166,7 @@ int	exec_builtin(t_ast_n *node)
 {
 	int	ret;
 
+	expand_node(node);
 	if (ft_strncmp(node->cmd, "exit", 4) == 0)
 		ret = builtin_exit(node->args, node->sh, node);
 	else if (ft_strncmp(node->cmd, "pwd", 3) == 0)
@@ -238,7 +239,7 @@ int	exec(t_ast_n *node)
 		return_error(node->cmd, "command not found", 127);
 	if (access(path, X_OK) != 0)
 		return_error(path, "Permission denied", 126);
-	execve(path, node->args, NULL);
+	execve(path, node->args, node->msh->env);
 	free(path);
 	perror("execve");
 	exit(1);
