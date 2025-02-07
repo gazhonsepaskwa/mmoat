@@ -18,36 +18,41 @@ static char	*powerline(void)
 	char	*tilt;
 	char	*input;
 	char	*prompt;
+	char	*line;
 
 	pwd = getcwd(NULL, 0);
+	tilt = " ";
 	if (ft_strncmp(pwd, "/home/", 6) == 0)
 	{
-		pwd = pwd + 6;
+		pwd += 6;
 		while (*pwd && (*pwd) != '/')
-			pwd = pwd + 1;
+			pwd ++;
 		tilt = " ~";
 	}
-	else
-		tilt = " ";
-// 	printf("%s----------------------------------------------
-// ----------------------------------%s", POW5, RESET);
-	prompt = ft_sprintf("\n%s   MMOAT %s%s%s%s%s %s%s%s ",
-		POW1, POW2, POW3, POW4, tilt, pwd, RESET, POW5, RESET);
+	line = ft_sprintf("%s----------------------------------------------\
+----------------------------------%s", POW5, RESET);
+	prompt = ft_sprintf("%s\n%s   MMOAT %s%s%s%s%s %s%s%s ",
+		line, POW1, POW2, POW3, POW4, tilt, pwd, RESET, POW5, RESET);
 	input = readline(prompt);
 	if (ft_strlen(input) > 0)
 		add_history(input);
 	free(prompt);
+	free(line);
 	return (input);
 }
 
 static void	interpret_cmd(char **input, t_msh *msh)
 {
 	msh->head = parser(*input, msh);
+	if (!msh->head)
+	{
+		ft_free(input);
+		return ;
+	}
 	msh->ex_code = execute_command(msh->head);
 	free_ast(msh->head);
 	msh->head = NULL;
-	free(*input);
-	*input = NULL;
+	ft_free(input);
 }
 
 int	main(int ac, char **av, char **envp)
@@ -60,12 +65,14 @@ int	main(int ac, char **av, char **envp)
 	if (!msh)
 		return (1);
 	if (ac == 1)
+	{
 		while (1)
 		{
-			while (!msh->input || !msh->input[0])
+			while (!msh->input || !msh->input[0] || is_only_space(msh->input))
 				msh->input = powerline();
 			interpret_cmd(&msh->input, msh);
 		}
+	}
 	else
 	{
 		msh->input = ft_strdup(av[1]);

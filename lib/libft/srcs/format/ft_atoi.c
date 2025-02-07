@@ -21,6 +21,17 @@ static int	ft_isspace(char c)
 		return (0);
 }
 
+int	is_only_space(char *str)
+{
+	int i;
+
+	i = -1;
+	while (str[++i])
+		if (!ft_isspace(str[i]))
+			return (0);
+	return (1);
+}
+
 static int	ft_signer(char c, int *i)
 {
 	int	sign;

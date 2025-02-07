@@ -62,5 +62,6 @@ int					is_sticked(char *val);
 int					trim_nodes(t_node *head);
 void				debug_linked_list(t_node *head, char *msg);
 int					find_quote_node(t_node *head, char q);
+int					syntax_error(t_node *head);
 
 #endif

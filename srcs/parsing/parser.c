@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   test.c                                             :+:      :+:    :+:   */
+/*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nalebrun <nalebrun@student.s19.be>        +#+  +:+       +#+         */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 08:23:41 by nalebrun          #+#    #+#             */
-/*   Updated: 2025/02/03 11:49:21 by nalebrun         ###   ########.fr       */
+/*   Updated: 2025/02/07 12:08:40 by nalebrun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,8 @@ t_ast_n *parser(char *input, t_msh *msh)
 	truncate_comment(input);
 	lst = tokenize(input);
 	if (!lst)
+		return (NULL);
+	if (syntax_error(lst))
 		return (NULL);
 	if (DEBUG)
 	{
