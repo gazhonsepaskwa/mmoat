@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cutll.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lderidde <lderidde@student.s19.be>        +#+  +:+       +#+         */
+/*   By: nalebrun <nalebrun@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/31 09:56:34 by lderidde          #+#    #+#             */
-/*   Updated: 2025/01/31 14:05:12 by lderidde         ###   ########.fr       */
+/*   Updated: 2025/02/07 17:56:37 by nalebrun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ static void	add_nodell(t_nodell **nodell, t_node *node)
 	tmp->next->next = NULL;
 }
 
-static t_node *get_node(t_node **lst, t_node *expected, int limiter)
+static t_node	*get_node(t_node **lst, t_node *expected, int limiter)
 {
 	t_node	*node;
 
@@ -41,7 +41,8 @@ static t_node *get_node(t_node **lst, t_node *expected, int limiter)
 		add_node_back(&node, (*lst)->val, (*lst)->token, (*lst)->pressision);
 		(*lst) = (*lst)->next;
 	}
-	while (limiter == -1 && (*lst) && ft_strncmp((*lst)->val, expected->val, ft_strlen((*lst)->val)))
+	while (limiter == -1 && (*lst) && ft_strncmp((*lst)->val, expected->val,
+			ft_strlen((*lst)->val)))
 	{
 		add_node_back(&node, (*lst)->val, (*lst)->token, (*lst)->pressision);
 		(*lst) = (*lst)->next;
@@ -54,34 +55,35 @@ t_nodell	*cutll(t_node *lst, t_node *expected, size_t limiter)
 	t_nodell	*out;
 	t_node		*node;
 	size_t		i;
-	
+	t_nodell	*tmp;
+
 	i = 0;
 	out = NULL;
 	while (i <= limiter)
 	{
 		node = get_node(&lst, expected, limiter);
 		if (!node)
-			break;
+			break ;
 		add_nodell(&out, node);
-		t_nodell *tmp = out;
+		tmp = out;
 		while (tmp)
 			tmp = tmp->next;
-		if(lst && lst->next)
+		if (lst && lst->next)
 			lst = lst->next;
 		i++;
 	}
 	return (out);
 }
 
-void free_lltab(t_nodell *nodell)
+void	free_lltab(t_nodell *nodell)
 {
-  t_nodell *tmp;
+	t_nodell	*tmp;
 
-  while (nodell)
-  {
-    free_linked_list(nodell->node);
-    tmp = nodell->next;
-    free(nodell);
-    nodell = tmp;
-  }
+	while (nodell)
+	{
+		free_linked_list(nodell->node);
+		tmp = nodell->next;
+		free(nodell);
+		nodell = tmp;
+	}
 }

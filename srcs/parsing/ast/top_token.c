@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   top_token.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nalebrun <nalebrun@student.s19.be>        +#+  +:+       +#+         */
+/*   By: nalebrun <nalebrun@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/31 17:14:26 by nalebrun          #+#    #+#             */
-/*   Updated: 2025/01/31 17:14:26 by nalebrun         ###   ########.fr       */
+/*   Updated: 2025/02/07 17:56:02 by nalebrun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,10 +27,9 @@ static int	last_tok_redir(t_node *lst)
 {
 	while (lst)
 	{
-		if ((lst->next == NULL
-			|| lst->next->pressision == D_RED_R
-			|| lst->next->pressision == RED_R)
-			&& !ft_strncmp(lst->val, ")", 1))
+		if ((lst->next == NULL || lst->next->pressision == D_RED_R
+				|| lst->next->pressision == RED_R) && !ft_strncmp(lst->val, ")",
+				1))
 			return (1);
 		lst = lst->next;
 	}
@@ -62,7 +61,7 @@ static t_node	*find_token(char *tok, t_node *lst)
 	return (NULL);
 }
 
-t_node *get_top_token(t_node *lst, t_state *state)
+t_node	*get_top_token(t_node *lst, t_state *state)
 {
 	*state = _SUBSH;
 	if (!ft_strncmp(lst->val, "(", 1) && last_tok_subsh(lst))
@@ -82,7 +81,7 @@ t_node *get_top_token(t_node *lst, t_state *state)
 		*state = _PLINE;
 		return (find_token("|", lst));
 	}
-  else if (!ft_strncmp(lst->val, "(", 1) && last_tok_redir(lst))
+	else if (!ft_strncmp(lst->val, "(", 1) && last_tok_redir(lst))
 		return (lst);
 	else
 	{

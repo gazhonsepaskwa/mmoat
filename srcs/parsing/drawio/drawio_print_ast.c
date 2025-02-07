@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   drawio_print_ast.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lderidde <lderidde@student.s19.be>        +#+  +:+       +#+         */
+/*   By: nalebrun <nalebrun@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/29 09:54:31 by lderidde          #+#    #+#             */
-/*   Updated: 2025/02/07 09:09:01 by lderidde         ###   ########.fr       */
+/*   Updated: 2025/02/07 17:27:47 by nalebrun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,16 +15,15 @@
 char	*get_node_txt(t_ast_n *node)
 {
 	t_dio_node	txt;
-  static char *subsh;
-	char		    *out;
+	static char	*subsh;
+	char		*out;
 
 	txt = get_cmd_txt(node);
-  if (node->sh == true)
-    subsh = ft_strdup(" (subsh) ");
-  else
-    subsh = ft_strdup("");
-	out = ft_sprintf("%s%s%s%s%s", txt.st, txt.cmd, txt.args,
-	      subsh, txt.files);
+	if (node->sh == true)
+		subsh = ft_strdup(" (subsh) ");
+	else
+		subsh = ft_strdup("");
+	out = ft_sprintf("%s%s%s%s%s", txt.st, txt.cmd, txt.args, subsh, txt.files);
 	free(txt.cmd);
 	free(txt.args);
 	free(txt.files);

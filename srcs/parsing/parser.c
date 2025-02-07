@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nalebrun <nalebrun@student.s19.be>        +#+  +:+       +#+         */
+/*   By: nalebrun <nalebrun@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 08:23:41 by nalebrun          #+#    #+#             */
-/*   Updated: 2025/02/07 12:08:40 by nalebrun         ###   ########.fr       */
+/*   Updated: 2025/02/07 17:59:43 by nalebrun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,11 +36,11 @@ void	truncate_comment(char *str)
 	}
 }
 
-t_ast_n *parser(char *input, t_msh *msh)
+t_ast_n	*parser(char *input, t_msh *msh)
 {
 	t_node	*lst;
 	t_ast_n	*ast;
-	int 	dio;
+	int		dio;
 
 	truncate_comment(input);
 	lst = tokenize(input);
@@ -60,7 +60,6 @@ t_ast_n *parser(char *input, t_msh *msh)
 	{
 		gen_dio_ast(ast, dio);
 		drawio_end_file(dio);
-		ft_debug(" draw.io file generated !\n");
 	}
 	free_linked_list(lst);
 	return (ast);

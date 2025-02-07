@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer_utils.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nalebrun <nalebrun@student.s19.be>        +#+  +:+       +#+         */
+/*   By: nalebrun <nalebrun@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/22 14:24:05 by nalebrun          #+#    #+#             */
-/*   Updated: 2025/01/22 14:24:05 by nalebrun         ###   ########.fr       */
+/*   Updated: 2025/02/07 18:04:31 by nalebrun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,8 +76,6 @@ int	trim_nodes(t_node *head)
 		if (!in_quote)
 		{
 			tmp = ft_strtrim(it->val, " \t\n");
-			if (!tmp)
-				return (0);
 			free(it->val);
 			it->val = tmp;
 		}

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   linked_list.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lderidde <lderidde@student.s19.be>        +#+  +:+       +#+         */
+/*   By: nalebrun <nalebrun@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 13:38:49 by lderidde          #+#    #+#             */
-/*   Updated: 2025/01/31 13:20:13 by lderidde         ###   ########.fr       */
+/*   Updated: 2025/02/07 17:27:00 by nalebrun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ t_node	*create_node(char *val, t_token token)
 
 int	add_node_back(t_node **head, char *val, t_token token, t_pres pres)
 {
-	t_node *tmp;
+	t_node	*tmp;
 
 	tmp = *head;
 	if (!val)

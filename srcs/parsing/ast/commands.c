@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   commands.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nalebrun <nalebrun@student.s19.be>        +#+  +:+       +#+         */
+/*   By: nalebrun <nalebrun@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/05 07:48:37 by nalebrun          #+#    #+#             */
-/*   Updated: 2025/02/05 07:48:37 by nalebrun         ###   ########.fr       */
+/*   Updated: 2025/02/07 18:00:41 by nalebrun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "../../../includes/minishell.h"
+#include "../../../includes/minishell.h"
 
-char 	**lltotab(t_node *lst, t_node *limiter)
+char	**lltotab(t_node *lst, t_node *limiter)
 {
 	char	**out;
 	int		count;
@@ -40,11 +40,11 @@ char 	**lltotab(t_node *lst, t_node *limiter)
 	return (out);
 }
 
-char **get_args(t_node *start)
+char	**get_args(t_node *start)
 {
 	t_node	*cpy;
 	char	**out;
-	
+
 	cpy = NULL;
 	while (start)
 	{
@@ -64,23 +64,26 @@ char **get_args(t_node *start)
 void	create_cmd(t_ast_n *self, t_node *lst)
 {
 	char	**cmd_args;
+	int		i;
 
 	self->state = _CMD;
 	self->files = NULL;
 	self->redir = ft_calloc(1, sizeof(t_redir));
-	self->redir[0] = _NR; 
+	self->redir[0] = _NR;
 	cmd_args = get_args(lst);
 	self->args = cmd_args;
 	self->cmd = ft_strdup(cmd_args[0]);
 	create_redir(lst, self);
-	// debug
-	int i = -1;
-	ft_debug("==== CMD REDIR\n");
-	while (self->files && self->files[++i])
-		ft_debug("redi : [%d]%s\n",self->redir[i], self->files[i]);
-	ft_debug("==== CMD ARGS\n");
-	i = -1;
-	while (self->args && self->args[++i])
-		ft_debug("args : %s\n",self->args[i], self->args[i]);
-	ft_debug("==== CMD DONE\n\n");
+	if (DEBUG)
+	{
+		i = -1;
+		ft_debug("==== CMD REDIR\n");
+		while (self->files && self->files[++i])
+			ft_debug("redi : [%d]%s\n", self->redir[i], self->files[i]);
+		ft_debug("==== CMD ARGS\n");
+		i = -1;
+		while (self->args && self->args[++i])
+			ft_debug("args : %s\n", self->args[i], self->args[i]);
+		ft_debug("==== CMD DONE\n\n");
+	}
 }

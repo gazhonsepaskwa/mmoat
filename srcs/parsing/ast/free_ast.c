@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free_ast.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lderidde <lderidde@student.s19.be>        +#+  +:+       +#+         */
+/*   By: nalebrun <nalebrun@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/05 14:39:28 by lderidde          #+#    #+#             */
-/*   Updated: 2025/02/07 09:20:16 by lderidde         ###   ########.fr       */
+/*   Updated: 2025/02/07 17:57:21 by nalebrun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,20 +19,20 @@ static void	free_redirs(t_ast_n *node)
 		free_tab(node->files);
 }
 
-static void free_cmd(t_ast_n *node)
+static void	free_cmd(t_ast_n *node)
 {
 	free(node->cmd);
 	free_redirs(node);
-  free_tab(node->args);
+	free_tab(node->args);
 }
 
-static void free_pline(t_ast_n *node)
+static void	free_pline(t_ast_n *node)
 {
-  int i;
+	int	i;
 
-  i = -1;
-  while (node->pline[++i])
-    free_ast(node->pline[i]);
+	i = -1;
+	while (node->pline[++i])
+		free_ast(node->pline[i]);
 }
 
 void	free_ast(t_ast_n *node)
@@ -48,9 +48,9 @@ void	free_ast(t_ast_n *node)
 		free_redirs(node);
 	}
 	else if (node->state == _PLINE)
-    free_pline(node);
+		free_pline(node);
 	else
-    free_cmd(node);
+		free_cmd(node);
 	free(node);
 }
 

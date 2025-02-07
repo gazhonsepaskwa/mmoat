@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirections.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nalebrun <nalebrun@student.s19.be>        +#+  +:+       +#+         */
+/*   By: nalebrun <nalebrun@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/05 07:38:26 by nalebrun          #+#    #+#             */
-/*   Updated: 2025/02/05 11:41:23 by nalebrun         ###   ########.fr       */
+/*   Updated: 2025/02/07 17:57:42 by nalebrun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,33 +29,33 @@ t_redir	get_redir(t_node *node)
 
 static void	add_redir(t_redir redir, t_redir **redir_list)
 {
-    int     i;
-    int     j;
-    t_redir *tmp;
+	int		i;
+	int		j;
+	t_redir	*tmp;
 
-    i = 0;
-    while ((*redir_list)[i] != _NR)
-        i++;
-    tmp = ft_calloc(i + 2, sizeof(t_redir));
-    j = -1;
-    while ((*redir_list)[++j] != _NR)
-        tmp[j] = (*redir_list)[j];
-    tmp[j++] = redir;
-    tmp[j] = _NR;
-    free(*redir_list);
-    *redir_list = tmp;
+	i = 0;
+	while ((*redir_list)[i] != _NR)
+		i++;
+	tmp = ft_calloc(i + 2, sizeof(t_redir));
+	j = -1;
+	while ((*redir_list)[++j] != _NR)
+		tmp[j] = (*redir_list)[j];
+	tmp[j++] = redir;
+	tmp[j] = _NR;
+	free(*redir_list);
+	*redir_list = tmp;
 }
 
 void	create_redir(t_node *head, t_ast_n *self)
 {
-	t_redir redir;
+	t_redir	redir;
 
 	while (head)
 	{
 		while (head && get_redir(head) == _NR)
 			head = head->next;
 		if (!head)
-			break;
+			break ;
 		redir = get_redir(head);
 		add_redir(redir, &self->redir);
 		add_to_tab(&self->files, head->next->val);
@@ -65,7 +65,7 @@ void	create_redir(t_node *head, t_ast_n *self)
 	}
 }
 
-int in_parenthesis(t_node *head)
+int	in_parenthesis(t_node *head)
 {
 	int	count;
 
@@ -85,14 +85,14 @@ int in_parenthesis(t_node *head)
 
 void	create_redir_subsh(t_node *head, t_ast_n *self)
 {
-	t_redir redir;
+	t_redir	redir;
 
 	while (head)
 	{
 		while (head && (get_redir(head) == _NR || in_parenthesis(head)))
 			head = head->next;
 		if (!head)
-			break;
+			break ;
 		redir = get_redir(head);
 		add_redir(redir, &self->redir);
 		add_to_tab(&self->files, head->next->val);

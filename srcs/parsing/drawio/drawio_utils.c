@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   drawio_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nalebrun <nalebrun@student.s19.be>        +#+  +:+       +#+         */
+/*   By: nalebrun <nalebrun@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 15:09:16 by nalebrun          #+#    #+#             */
-/*   Updated: 2025/01/27 15:09:16 by nalebrun         ###   ########.fr       */
+/*   Updated: 2025/02/07 17:36:08 by nalebrun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,15 @@ static int	get_char_count(char *str, char c)
 	return (count);
 }
 
+void	write_ampercent(char *out)
+{
+	out[0] = '&';
+	out[1] = 'a';
+	out[2] = 'm';
+	out[3] = 'p';
+	out[4] = ';';
+}
+
 char	*replace_ampercent(char *src)
 {
 	int		i;
@@ -43,11 +52,7 @@ char	*replace_ampercent(char *src)
 	{
 		if (src[i] == '&')
 		{
-			out[j] = '&';
-			out[j + 1] = 'a';
-			out[j + 2] = 'm';
-			out[j + 3] = 'p';
-			out[j + 4] = ';';
+			write_ampercent(&out[j]);
 			j += 5;
 		}
 		else
@@ -56,6 +61,18 @@ char	*replace_ampercent(char *src)
 	out[j] = 0;
 	free(src);
 	return (out);
+}
+
+void	write_left_redi(char *out)
+{
+	out[0] = '&';
+	out[1] = 'a';
+	out[2] = 'm';
+	out[3] = 'p';
+	out[4] = ';';
+	out[5] = 'l';
+	out[6] = 't';
+	out[7] = ';';
 }
 
 char	*replace_left_red(char *src)
@@ -73,14 +90,7 @@ char	*replace_left_red(char *src)
 	{
 		if (src[i] == '<')
 		{
-			out[j] = '&';
-			out[j + 1] = 'a';
-			out[j + 2] = 'm';
-			out[j + 3] = 'p';
-			out[j + 4] = ';';
-			out[j + 5] = 'l';
-			out[j + 6] = 't';
-			out[j + 7] = ';';
+			write_left_redi(&out[j]);
 			j += 8;
 		}
 		else

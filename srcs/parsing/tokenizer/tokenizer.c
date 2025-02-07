@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lderidde <lderidde@student.s19.be>        +#+  +:+       +#+         */
+/*   By: nalebrun <nalebrun@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 13:27:57 by lderidde          #+#    #+#             */
-/*   Updated: 2025/01/31 13:24:28 by lderidde         ###   ########.fr       */
+/*   Updated: 2025/02/07 17:26:04 by nalebrun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,8 @@ static void	set_token(t_node *head)
 	while (it != NULL)
 	{
 		it->token = get_token(it->val);
-		it->pressision = get_pressision(it->val, it->token, last_token, last_pres);
+		it->pressision = get_pressision(it->val, it->token, last_token,
+				last_pres);
 		last_token = it->token;
 		last_pres = it->pressision;
 		it = it->next;
