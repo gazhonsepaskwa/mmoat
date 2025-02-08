@@ -89,13 +89,12 @@ static int	stick_quote_node(t_node *head, char q)
 	it = head;
 	while (it != NULL)
 	{
-		if (it->val[0] == q && !ft_strchr(&it->val[1], q)
-			&& find_quote_node(it->next, q))
+		if (ft_strchr(it->val, q))
 		{
-			while (it->next->val[0] != q)
+			while (it->next && !ft_strchr(it->next->val, q))
 				if (!merge_with_next_node(it))
 					return (0);
-			if (!merge_with_next_node(it))
+			if (it->next && !merge_with_next_node(it))
 				return (0);
 		}
 		it = it->next;
@@ -120,6 +119,32 @@ void debug_token_list(t_node* lst, char *msg)
 	}
 }
 
+void	del_void_nodes(t_node **head)
+{
+	t_node *cpy;
+	t_node *tmp;
+
+	cpy = *head;
+	if (ft_strlen((*head)->val) == 0)
+	{
+		cpy = (*head)->next;
+		free ((*head)->val);
+		free (*head);
+	}
+	*head = cpy; 
+	while (cpy)
+	{
+		if (cpy->next && ft_strlen(cpy->next->val) == 0)
+		{
+			tmp = cpy->next->next;
+			free(cpy->next->val);
+			free(cpy->next);
+			cpy->next = tmp;
+		}
+		cpy = cpy->next;
+	}
+}
+
 t_node	*tokenize(char *str)
 {
 	t_node	*head;
@@ -127,17 +152,19 @@ t_node	*tokenize(char *str)
 	head = tokenize_base(str);
 	if (!head)
 		return (NULL);
-	// debug_token_list(head, "tokenize_base");
-	if (!trim_nodes(head))
-		return (NULL);
-	// debug_token_list(head, "trim_nodes");
+	debug_token_list(head, "tokenize_base");
 	if (!unstick_nodes(head))
 		return (NULL);
-	// debug_token_list(head, "unstick_nodes");
+	debug_token_list(head, "unstick_nodes");
 	stick_quote_node(head, 39);
 	stick_quote_node(head, '"');
-	debug_token_list(head, "tokenizer");
+	debug_token_list(head, "stick quote node");
+	if (!trim_nodes(head))
+		return (NULL);
+	debug_token_list(head, "trim_nodes");
 	set_token(head);
+	del_void_nodes(&head);
+	debug_token_list(head, "del_void_nodes");
 	if (syntax_error(head))
 		return (NULL);
 	return (head);
