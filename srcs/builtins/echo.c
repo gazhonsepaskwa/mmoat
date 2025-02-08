@@ -6,7 +6,7 @@
 /*   By: lderidde <lderidde@student.s19.be>        +#+  +:+       +#+         */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/24 14:31:56 by lderidde          #+#    #+#             */
-/*   Updated: 2025/02/05 12:00:26 by lderidde         ###   ########.fr       */
+/*   Updated: 2025/02/08 11:02:58 by lderidde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,7 @@ static void	echo_print(t_ast_n *node, int j, char **envp)
 {
 	int	i;
 
+	(void)envp;
 	while (node->args[j])
 	{
 		i = 0;
@@ -85,13 +86,13 @@ static void	echo_print(t_ast_n *node, int j, char **envp)
 		{
 			if (print_exit(node->args[j], node))
 				break ;
-			if (node->args[j][i] == '$')
-			{
-				if (!node->args[j][i + 1] || node->args[j][i + 1] == ' ')
-					ft_put_c(node->args[j][i++]);
-				else
-					i += extractenv(&node->args[j][i], envp);
-			}
+			// if (node->args[j][i] == '$')
+			// {
+			// 	if (!node->args[j][i + 1] || node->args[j][i + 1] == ' ')
+			// 		ft_put_c(node->args[j][i++]);
+			// 	else
+			// 		i += extractenv(&node->args[j][i], envp);
+			// }
 			else
 				ft_put_c(node->args[j][i++]);
 		}
