@@ -6,11 +6,14 @@
 /*   By: lderidde <lderidde@student.s19.be>        +#+  +:+       +#+         */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 11:22:33 by lderidde          #+#    #+#             */
-/*   Updated: 2025/02/07 12:31:44 by lderidde         ###   ########.fr       */
+/*   Updated: 2025/02/08 14:09:45 by lderidde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
+#include <stdlib.h>
+#include <time.h>
+#include <unistd.h>
 // #include <fcntl.h>
 // #include <unistd.h>
 // #include <stdlib.h>
@@ -68,6 +71,61 @@ void	read_input(t_ast_n *node, int j)
 	ft_fprintf(node->fds[1], "%s", buf);
 }
 
+void	read_hereinput(char *limiter)
+{
+	char	buf[100000];
+	char	c;
+	int		r;
+	int		i;
+
+	r = 0;
+	i = 0;
+	ft_fprintf(2, "heredoc> ");
+	r = read(0, &c, 1);
+	while (r && c != '\n' && c != '\0')
+	{
+		if (c != '\n' && c != '\0')
+			buf[i++] = c;
+		r = read(0, &c, 1);
+	}
+	buf[i] = '\0';
+	if (ft_strncmp(buf, limiter, ft_strlen(limiter)) == 0)
+	{
+		ft_fprintf(1, "%s", buf);
+		exit(EXIT_SUCCESS);
+	}
+	buf[i++] = '\n';
+	buf[i] = '\0';
+	ft_fprintf(1, "%s", buf);
+}
+
+void	parse_heredoc(char *limiter)
+{
+	int	fd;
+	pid_t	pid;
+
+	fd = open(".heredoc", O_WRONLY | O_CREAT | O_APPEND, 0666);
+	pid = fork();
+	if (pid == 0)
+	{
+		dup2(fd, STDOUT_FILENO);
+		close (fd);
+		while (1)
+			read_hereinput(limiter);
+	}
+	else if (pid > 0)
+	{
+		waitpid(pid, NULL, 0);
+		close (fd);
+	}
+	else
+	{
+		close (fd);
+		perror("fork");
+		exit (EXIT_FAILURE);
+	}
+}
+
 void	here_doc(t_ast_n *node, int i)
 {
 	pid_t	pid;
@@ -92,7 +150,7 @@ void	here_doc(t_ast_n *node, int i)
 		waitpid(pid, NULL, 0);
 	}
 	else if (pid < 0)
-		perror("fork");
+		exit (err_msg_cmd("fork", NULL, "failed to fork", 1));
 }
 
 void	save_stds(t_ast_n *node)
@@ -234,6 +292,7 @@ int	exec(t_ast_n *node)
 {
 	char	*path;
 
+	expand_node(node);
 	path = find_path(node->cmd, node->msh->env);
 	if (!path)
 		return_error(node->cmd, "command not found", 127);

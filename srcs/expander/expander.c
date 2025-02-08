@@ -6,66 +6,85 @@
 /*   By: lderidde <lderidde@student.s19.be>        +#+  +:+       +#+         */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/07 10:23:02 by lderidde          #+#    #+#             */
-/*   Updated: 2025/02/07 12:31:57 by lderidde         ###   ########.fr       */
+/*   Updated: 2025/02/08 14:10:50 by lderidde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/minishell.h"
+#include "../../includes/exec/expander.h"
 
-int	get_new_len(t_ast_n *node, int j)
+int remove_quote(t_ast_n *node, int j)
 {
-	int	i;
-	int len;
-
-	i = 0;
-	len = ft_strlen(node->args[j]);
-	while (node->args[j][++i])
-	{
-		if (node->args[j][i] == '~')
-		{
-			len += ft_strlen(get_var_value("HOME", node->msh->env)) - 1;
-		}
-	}
-	return (len);
-}
-
-void	expand_tilde(t_ast_n *node, int j)
-{
-	int i;
-	int	len;
-	int	save;
 	char	*new;
+	int	ret;
 
-	i = -1;
-	len = get_new_len(node, j);
-	new = ft_calloc(len + 1, sizeof(char));
-	if (!new)
-		return ;
-	save = len;
-	len = 0;
-	while (++i < save)
+	ret = 0;
+	if (node->args[j][0])
 	{
-		if (node->args[j][len] != '~')
-			new[i] = node->args[j][len++];
-		else
-		{
-			ft_strlcat(new, get_var_value("HOME", node->msh->env), -1);
-			i = ft_strlen(new) - 1;
-			len++;
-		}
+		if (node->args[j][0] == '\'' || node->args[j][0] == '\"')
+			ret = 1;
 	}
+	new = ft_strtrim(node->args[j], "'\"");
 	ft_free(&node->args[j]);
 	node->args[j] = new;
+	return (ret);
+}
+
+char	**arrange_tabs(t_ast_n *node, char **tab, int j)
+{
+	int	save;
+	int	i;
+	int	k;
+	int	len;
+	char	**new_arg;
+
+	i = 0;
+	k = 0;
+	len = 0;
+	save = count_var(node->args) + count_var(tab);
+	new_arg = ft_calloc(sizeof(char *), save);
+	while (i < save - 1)
+	{
+		if (i == j)
+		{
+			while (tab[k])
+				new_arg[i++] = ft_strdup(tab[k++]);
+			len++;
+		}
+		else
+			new_arg[i++] = ft_strdup(node->args[len++]);
+	}
+	return (new_arg);
+}
+
+void	split_tab(t_ast_n *node, int j)
+{
+	char	**tab;
+	char	**new_arg;
+
+
+	tab =ft_split(node->args[j], " ");
+	new_arg = arrange_tabs(node, tab, j);
+	free_tab(tab);
+	free_tab(node->args);
+	node->args = new_arg;
 }
 
 t_ast_n	*expand_node(t_ast_n *node)
 {
 	int	i;
+	int	check;
 
 	i = -1;
 	while (node->args[++i])
 	{
-		expand_tilde(node, i);
+		check = 0;
+		if (expand_tilde(node, i))
+			check = 1;
+		if (expand_var(node, i))
+			check = 1;
+		if (check && !remove_quote(node, i))
+			split_tab(node, i);
+		(void)check;
 	}
 	return (node);
 }

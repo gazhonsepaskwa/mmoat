@@ -6,7 +6,7 @@
 /*   By: lderidde <lderidde@student.s19.be>        +#+  +:+       +#+         */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/07 10:21:00 by lderidde          #+#    #+#             */
-/*   Updated: 2025/02/07 10:22:10 by lderidde         ###   ########.fr       */
+/*   Updated: 2025/02/08 10:52:24 by lderidde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,8 @@
 
 # include "../minishell.h"
 
+int	expand_var(t_ast_n *node, int j);
+int	expand_tilde(t_ast_n *node, int j);
 t_ast_n *expand_node(t_ast_n *node);
 
 #endif
