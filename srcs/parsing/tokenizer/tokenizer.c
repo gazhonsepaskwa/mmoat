@@ -66,9 +66,9 @@ static int	unstick_nodes(t_node *head)
 		if (is_sticked(it->val))
 		{
 			if (is_meta(it->val[0]))
-				first_str = copy_meta_xor(it->val, &copied, 0);
+				first_str = copy_meta(it->val, &copied);
 			else
-				first_str = copy_meta_xor(it->val, &copied, 1);
+				first_str = copy_unmeta(it->val, &copied);
 			second_str = ft_substr(it->val, copied, ft_strlen(it->val)
 					- copied);
 			ft_free(&it->val);
@@ -153,6 +153,9 @@ t_node	*tokenize(char *str)
 	if (!head)
 		return (NULL);
 	debug_token_list(head, "tokenize_base");
+	if (!trim_nodes(head))
+		return (NULL);
+	debug_token_list(head, "trim_nodes");
 	if (!unstick_nodes(head))
 		return (NULL);
 	debug_token_list(head, "unstick_nodes");
@@ -164,7 +167,7 @@ t_node	*tokenize(char *str)
 	debug_token_list(head, "trim_nodes");
 	set_token(head);
 	del_void_nodes(&head);
-	debug_token_list(head, "del_void_nodes");
+	debug_token_list(head, "tokenizer");
 	if (syntax_error(head))
 		return (NULL);
 	return (head);

@@ -12,7 +12,7 @@
 
 #include "../../../includes/minishell.h"
 
-char	*copy_meta_xor(char *val, int *copied, int rev)
+char	*copy_meta(char *val, int *copied)
 {
 	int		i;
 	int		j;
@@ -21,7 +21,25 @@ char	*copy_meta_xor(char *val, int *copied, int rev)
 
 	i = 0;
 	ref = val[0];
-	while ((is_meta(val[i]) && val[i] == ref) ^ rev)
+	while (val[i] && ((is_meta(val[i]) && val[i] == ref)))
+		i++;
+	*copied = i;
+	out = malloc(i + 1);
+	j = -1;
+	while (++j < i)
+		out[j] = val[j];
+	out[i] = 0;
+	return (out);
+}
+
+char	*copy_unmeta(char *val, int *copied)
+{
+	int		i;
+	int		j;
+	char	*out;
+
+	i = 0;
+	while (val[i] && !is_meta(val[i]))
 		i++;
 	*copied = i;
 	out = malloc(i + 1);
