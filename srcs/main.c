@@ -11,8 +11,20 @@
 /* ************************************************************************** */
 
 #include "../includes/minishell.h" 
+#include <readline/history.h>
 
-static char	*powerline(void)
+static	void	handle_input(char *in, char *li, char *pr, t_msh *msh)
+{
+	if (ft_strlen(in) > 0 && !is_only_space(in))
+	{
+		add_history(in);
+		ft_fprintf(msh->hist, "%s\n", in);
+	}
+	free(pr);
+	free(li);
+}
+
+static char	*powerline(t_msh *msh)
 {
 	char	*pwd;
 	char	*tilt;
@@ -34,11 +46,24 @@ static char	*powerline(void)
 	prompt = ft_sprintf("%s\n%s   MMOAT %s%s%s%s%s %s%s%s ",
 		line, POW1, POW2, POW3, POW4, tilt, pwd, RESET, POW5, RESET);
 	input = readline(prompt);
-	if (ft_strlen(input) > 0)
-		add_history(input);
-	free(prompt);
-	free(line);
+	handle_input(input, line, prompt, msh);
 	return (input);
+}
+
+static void	add_prevhistory(t_msh *msh)
+{
+	char	*str;
+	char	*tmp;
+
+	str = get_next_line(msh->hist);
+	while (str)
+	{
+		tmp = ft_substr(str, 0, ft_strlen(str) - 1);
+		add_history(tmp);
+		free(tmp);
+		free(str);
+		str = get_next_line(msh->hist);
+	}
 }
 
 static void	interpret_cmd(char **input, t_msh *msh)
@@ -62,6 +87,7 @@ int	main(int ac, char **av, char **envp)
 	(void)ac;
 	(void)av;
 	msh = init_msh(envp);
+	add_prevhistory(msh);
 	if (!msh)
 		return (1);
 	if (ac == 1)
@@ -69,7 +95,7 @@ int	main(int ac, char **av, char **envp)
 		while (1)
 		{
 			while (!msh->input || !msh->input[0] || is_only_space(msh->input))
-				msh->input = powerline();
+				msh->input = powerline(msh);
 			interpret_cmd(&msh->input, msh);
 		}
 	}

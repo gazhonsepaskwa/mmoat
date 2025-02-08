@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
+#include <fcntl.h>
 
 static char	**ft_setnewenv(void)
 {
@@ -31,6 +32,7 @@ t_msh *init_msh(char **envp)
 	t_msh	*msh;
 
 	msh = malloc(sizeof(t_msh) * 1);
+	msh->hist = open(".mmoat_hisotry", O_RDWR | O_CREAT | O_APPEND, 0666);
 	msh->ex_code = 0;
 	msh->input = NULL;
 	if (!msh)
@@ -45,6 +47,7 @@ t_msh *init_msh(char **envp)
 void free_msh(t_msh *msh)
 {
 	free_tab(msh->env);
+	close(msh->hist);
 	free(msh->input);
 	free(msh);
 }

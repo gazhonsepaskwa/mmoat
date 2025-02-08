@@ -23,6 +23,7 @@ typedef struct s_msh
 	int		ex_code;
 	t_ast_n	*head;
 	char	*input;
+	int		hist;
 	char	**env;
 }			t_msh;
 
