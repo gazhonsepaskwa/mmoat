@@ -106,6 +106,30 @@ void	expander_var(t_ast_n *node, int j)
 	node->args[j] = new;
 }
 
+int	in_squote(char *str, char *ch)
+{
+	if (!ft_strchr(str, '\'') && !ft_strchr(str, '\"'))
+		return (0);
+	else if (ft_strchr(str, '\'') && !ft_strchr(str, '\"'))
+	{
+		if ((ch > ft_strchr(str, '\'')) && ch < ft_strrchr(str, '\''))
+			return (1);
+		return (0);
+	}
+	else if (!ft_strchr(str, '\'') && ft_strchr(str, '\"'))
+		return (0);
+	else
+	{
+		if (ft_strchr(str, '\'') < ft_strchr(str, '\"'))
+		{
+			if ((ch > ft_strchr(str, '\'')) && ch < ft_strrchr(str, '\''))
+				return (1);
+			return (0);
+		}
+		return (0);
+	}
+}
+
 int	expand_var(t_ast_n *node, int j)
 {
 	int	i;
@@ -113,7 +137,7 @@ int	expand_var(t_ast_n *node, int j)
 	i = 0;
 	while (node->args[j][i])
 	{
-		if (node->args[j][i] == '$')
+		if (node->args[j][i] == '$' && !in_squote(node->args[j], &node->args[j][i]))
 			return (expander_var(node, j), 1);
 		i++;
 	}

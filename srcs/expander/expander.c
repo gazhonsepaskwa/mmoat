@@ -53,7 +53,7 @@ int ifremove_quote(t_ast_n *node, int j)
 		c = '\'';
 	else
 		c = '\"';
-	if (c && (ft_strchr(node->args[j], c) && ft_strrchr(node->args[j], c)))
+	if (c && (ft_strchr(node->args[j], c) != ft_strrchr(node->args[j], c)))
 		remove_quote(node, j, c);
 	if (c)
 		ret = 1;
