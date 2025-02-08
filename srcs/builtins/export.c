@@ -6,7 +6,7 @@
 /*   By: lderidde <lderidde@student.s19.be>        +#+  +:+       +#+         */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/24 14:32:20 by lderidde          #+#    #+#             */
-/*   Updated: 2025/02/03 13:11:35 by lderidde         ###   ########.fr       */
+/*   Updated: 2025/02/08 14:57:34 by lderidde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ int	is_export_valid(char *str)
 char	**key_value(char *str)
 {
 	char	**tmp;
+	char	*save;
 	char 	*equal;
 
 	tmp = malloc(sizeof(char *) * (2 + 1));
@@ -52,7 +53,11 @@ char	**key_value(char *str)
 	if (equal - str == 0)
 		tmp[1] = ft_strdup("");
 	else
-		tmp[1] = ft_substr(equal, 1, ft_strlen(equal));
+	{
+		save = ft_substr(equal, 1, ft_strlen(equal) - 1);
+		tmp[1] = ft_strtrim(save, "\"");
+		free(save);
+	}
 	tmp[2] = NULL;
 	return (tmp);
 }
