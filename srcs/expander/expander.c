@@ -6,26 +6,57 @@
 /*   By: lderidde <lderidde@student.s19.be>        +#+  +:+       +#+         */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/07 10:23:02 by lderidde          #+#    #+#             */
-/*   Updated: 2025/02/08 14:10:50 by lderidde         ###   ########.fr       */
+/*   Updated: 2025/02/08 15:56:26 by lderidde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/exec/expander.h"
 
-int remove_quote(t_ast_n *node, int j)
+void	remove_quote(t_ast_n *node, int j, char c)
 {
 	char	*new;
-	int	ret;
+	int		i;
+	int		k;
+	int		len;
 
-	ret = 0;
-	if (node->args[j][0])
+	i = 0;
+	k = 0;
+	len = ft_strlen(node->args[j]);
+	new = ft_calloc(len - 1, sizeof(char));
+	while (i < len - 2)
 	{
-		if (node->args[j][0] == '\'' || node->args[j][0] == '\"')
-			ret = 1;
+		if ((&(node->args[j][k]) == ft_strchr(node->args[j], c)) ||
+	  		(&(node->args[j][k]) == ft_strrchr(node->args[j], c)))
+		{
+			k++;
+		}
+		else
+			new[i++] = node->args[j][k++];
 	}
-	new = ft_strtrim(node->args[j], "'\"");
 	ft_free(&node->args[j]);
 	node->args[j] = new;
+}
+
+int ifremove_quote(t_ast_n *node, int j)
+{
+	char	c;
+	int		ret;
+	
+	ret = 0;
+	if (!ft_strchr(node->args[j], '\'') && !ft_strchr(node->args[j], '\"'))
+		c = 0;
+	else if (!ft_strchr(node->args[j], '\"'))
+		c = '\'';
+	else if (!ft_strchr(node->args[j], '\''))
+		c = '\"';
+	else if (ft_strchr(node->args[j], '\'') < ft_strchr(node->args[j], '\"'))
+		c = '\'';
+	else
+		c = '\"';
+	if (c && (ft_strchr(node->args[j], c) && ft_strrchr(node->args[j], c)))
+		remove_quote(node, j, c);
+	if (c)
+		ret = 1;
 	return (ret);
 }
 
@@ -82,9 +113,10 @@ t_ast_n	*expand_node(t_ast_n *node)
 			check = 1;
 		if (expand_var(node, i))
 			check = 1;
-		if (check && !remove_quote(node, i))
+		if (!ifremove_quote(node, i) && check)
 			split_tab(node, i);
-		(void)check;
+		ft_free(&node->cmd);
+		node->cmd = ft_strdup(node->args[0]);
 	}
 	return (node);
 }
