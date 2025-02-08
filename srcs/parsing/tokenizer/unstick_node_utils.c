@@ -17,9 +17,11 @@ char	*copy_meta_xor(char *val, int *copied, int rev)
 	int		i;
 	int		j;
 	char	*out;
+	char	ref;
 
 	i = 0;
-	while (is_meta(val[i]) ^ rev)
+	ref = val[0];
+	while ((is_meta(val[i]) && val[i] == ref) ^ rev)
 		i++;
 	*copied = i;
 	out = malloc(i + 1);

@@ -46,8 +46,6 @@ t_ast_n	*parser(char *input, t_msh *msh)
 	lst = tokenize(input);
 	if (!lst)
 		return (NULL);
-	if (syntax_error(lst))
-		return (NULL);
 	if (DEBUG)
 	{
 		dio = drawio_init("ast.xml");

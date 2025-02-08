@@ -103,6 +103,23 @@ static int	stick_quote_node(t_node *head, char q)
 	return (1);
 }
 
+void debug_token_list(t_node* lst, char *msg)
+{
+	t_node *cpy;
+
+	cpy = lst;
+	if (DEBUG)
+	{
+		ft_debug("========================={%s}\n", msg);
+		while (cpy)
+		{
+			ft_debug("|%s|\n", cpy->val);
+			cpy = cpy->next;
+		}
+		ft_debug("=========================\n\n");
+	}
+}
+
 t_node	*tokenize(char *str)
 {
 	t_node	*head;
@@ -110,12 +127,18 @@ t_node	*tokenize(char *str)
 	head = tokenize_base(str);
 	if (!head)
 		return (NULL);
+	// debug_token_list(head, "tokenize_base");
 	if (!trim_nodes(head))
 		return (NULL);
+	// debug_token_list(head, "trim_nodes");
 	if (!unstick_nodes(head))
 		return (NULL);
+	// debug_token_list(head, "unstick_nodes");
 	stick_quote_node(head, 39);
 	stick_quote_node(head, '"');
+	debug_token_list(head, "tokenizer");
 	set_token(head);
+	if (syntax_error(head))
+		return (NULL);
 	return (head);
 }

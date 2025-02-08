@@ -39,9 +39,9 @@ t_token	get_token(char *str)
 {
 	t_token	token;
 
-	if (!ft_strncmp(str, "&", 1) || !ft_strncmp(str, "|", 1) || !ft_strncmp(str,
-			"(", 1) || !ft_strncmp(str, ")", 1) || !ft_strncmp(str, "<", 1)
-		|| !ft_strncmp(str, ">", 1))
+	if (!ft_strncmp(str, "&", 1) || !ft_strncmp(str, "|", 1)
+		|| !ft_strncmp(str, "(", 1) || !ft_strncmp(str, ")", 1)
+		|| !ft_strncmp(str, "<", 1) || !ft_strncmp(str, ">", 1))
 		token = OPERATOR;
 	else
 		token = WORD;

@@ -15,29 +15,49 @@
 int	is_meta(char c)
 {
 	if (c == '&' || c == '|' || c == '<' || c == '>' || c == '(' || c == ')'
-		|| c == '"' || c == 39)
+		|| c == '"' || c == 39 || c == ';' || c == '{' || c == '}' || c == '['
+		|| c == ']')
 		return (1);
 	return (0);
+}
+
+int unic(int *meta)
+{
+	int i;
+	int ref_meta;
+
+	i = -1;
+	ref_meta = meta[0];
+	while (meta[++i] != -1)
+		if (meta[i] != ref_meta)
+			return (0);
+	return (1);
 }
 
 int	is_sticked(char *val)
 {
 	int	i;
-	int	meta;
+	int	meta[100];
+	int meta_it;
 	int	unmeta;
 
 	i = 0;
-	meta = 0;
+	meta_it = 0;
+	meta[0] = -1;
 	unmeta = 0;
 	while (val[i])
 	{
 		if (is_meta(val[i]))
-			meta = 1;
+		{
+			meta[meta_it] = val[i];
+			meta_it++;
+		}
 		if (!is_meta(val[i]))
 			unmeta = 1;
 		i++;
 	}
-	if (meta && unmeta)
+	meta[meta_it] = -1;
+	if ((meta[0] != -1 && unmeta) || !unic(meta))
 		return (1);
 	return (0);
 }
