@@ -87,6 +87,7 @@ int		ft_printf(const char *fstr, ...);
 int		ft_fprintf(int fd, const char *str, ...);
 char	*ft_sprintf(const char *str, ...);
 int		ft_debug(const char *fstr, ...);
+char 	*rep_c(char c, int count);
 
 char	*get_next_line(int fd);
 

@@ -4,6 +4,7 @@ ast.xml
 .$ast.xml.bkp
 .TEST_objs
 .mmoat_history
+.heredoc
 
 file
 file2

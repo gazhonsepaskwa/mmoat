@@ -71,61 +71,6 @@ void	read_input(t_ast_n *node, int j)
 	ft_fprintf(node->fds[1], "%s", buf);
 }
 
-void	read_hereinput(char *limiter)
-{
-	char	buf[100000];
-	char	c;
-	int		r;
-	int		i;
-
-	r = 0;
-	i = 0;
-	ft_fprintf(2, "heredoc> ");
-	r = read(0, &c, 1);
-	while (r && c != '\n' && c != '\0')
-	{
-		if (c != '\n' && c != '\0')
-			buf[i++] = c;
-		r = read(0, &c, 1);
-	}
-	buf[i] = '\0';
-	if (ft_strncmp(buf, limiter, ft_strlen(limiter)) == 0)
-	{
-		ft_fprintf(1, "%s", buf);
-		exit(EXIT_SUCCESS);
-	}
-	buf[i++] = '\n';
-	buf[i] = '\0';
-	ft_fprintf(1, "%s", buf);
-}
-
-void	parse_heredoc(char *limiter)
-{
-	int	fd;
-	pid_t	pid;
-
-	fd = open(".heredoc", O_WRONLY | O_CREAT | O_APPEND, 0666);
-	pid = fork();
-	if (pid == 0)
-	{
-		dup2(fd, STDOUT_FILENO);
-		close (fd);
-		while (1)
-			read_hereinput(limiter);
-	}
-	else if (pid > 0)
-	{
-		waitpid(pid, NULL, 0);
-		close (fd);
-	}
-	else
-	{
-		close (fd);
-		perror("fork");
-		exit (EXIT_FAILURE);
-	}
-}
-
 void	here_doc(t_ast_n *node, int i)
 {
 	pid_t	pid;
@@ -174,8 +119,8 @@ void	handle_redir(t_ast_n *node)
 			handle_file(node, 2, i);
 		else if (node->redir[i] == _RED_DR)
 			handle_file(node, 3, i);
-		else if (node->redir[i] == _RED_DL)
-			here_doc(node, i);
+		// else if (node->redir[i] == _RED_DL)
+		// 	here_doc(node, i);
 		if (node->redir[i] == _RED_L)
 		{
 			dup2(node->_stdin, STDIN_FILENO);
@@ -191,7 +136,7 @@ void	handle_redir(t_ast_n *node)
 
 int	is_builtin(char *str)
 {
-	if (ft_strncmp(str, "exit", -1) == 0)
+	if (ft_strncmp(str, "exit", 4) == 0)
 		return (1);
 	else if (ft_strncmp(str, "pwd", 3) == 0)
 		return (1);
@@ -342,6 +287,8 @@ void	exec_pcmd(t_ast_n *pcmd)
 {
 	int	ret;
 
+	if (!pcmd->cmd)
+		exit(0);
 	if (is_builtin(pcmd->cmd))
 	{
 		ret = exec_builtin(pcmd);

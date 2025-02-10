@@ -3,51 +3,33 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lderidde <lderidde@student.s19.be>        +#+  +:+       +#+         */
+/*   By: nalebrun <nalebrun@student.s19.be>        +#+  +:+       +#+         */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/27 14:16:52 by lderidde          #+#    #+#             */
-/*   Updated: 2025/02/08 14:46:35 by lderidde         ###   ########.fr       */
+/*   Created: 2025/01/27 14:16:52 by nalebrun          #+#    #+#             */
+/*   Updated: 2025/02/10 12:31:46 by nalebrun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h" 
 #include <readline/history.h>
+#include <readline/readline.h>
 
-static	void	handle_input(char *in, char *li, char *pr, t_msh *msh)
+int g_sig = 0;
+
+void handle_sigint(int sig)
 {
-	if (ft_strlen(in) > 0 && !is_only_space(in))
-	{
-		add_history(in);
-		ft_fprintf(msh->hist, "%s\n", in);
-	}
-	free(pr);
-	free(li);
+	(void)sig;
+	g_sig = SIGINT;
+	rl_replace_line("", 0);
+	// rl_on_new_line();
+    rl_done = 1;
+	rl_redisplay();
 }
 
-static char	*powerline(t_msh *msh)
+void handle_sigquit(int sig)
 {
-	char	*pwd;
-	char	*tilt;
-	char	*input;
-	char	*prompt;
-	char	*line;
-
-	pwd = getcwd(NULL, 0);
-	tilt = " ";
-	if (ft_strncmp(pwd, "/home/", 6) == 0)
-	{
-		pwd += 6;
-		while (*pwd && (*pwd) != '/')
-			pwd ++;
-		tilt = " ~";
-	}
-	line = ft_sprintf("%s----------------------------------------------\
-----------------------------------%s", POW5, RESET);
-	prompt = ft_sprintf("%s\n%s   MMOAT %s%s%s%s%s %s%s%s ",
-		line, POW1, POW2, POW3, POW4, tilt, pwd, RESET, POW5, RESET);
-	input = readline(prompt);
-	handle_input(input, line, prompt, msh);
-	return (input);
+	(void)sig;
+	// ft_printf("\b\b");
 }
 
 static void	add_prevhistory(t_msh *msh)
@@ -75,6 +57,7 @@ static void	interpret_cmd(char **input, t_msh *msh)
 		return ;
 	}
 	msh->ex_code = execute_command(msh->head);
+	unlink(".heredoc");
 	free_ast(msh->head);
 	msh->head = NULL;
 	ft_free(input);
@@ -84,9 +67,8 @@ int	main(int ac, char **av, char **envp)
 {
 	t_msh	*msh;
 
-	(void)ac;
-	(void)av;
 	msh = init_msh(envp);
+	init_sig();
 	add_prevhistory(msh);
 	if (!msh)
 		return (1);
@@ -94,9 +76,19 @@ int	main(int ac, char **av, char **envp)
 	{
 		while (1)
 		{
-			while (!msh->input || !msh->input[0] || is_only_space(msh->input))
+			msh->input = malloc (1);
+			msh->input[0] = 0;
+			while (!msh->input[0] || is_only_space(msh->input) || g_sig == SIGINT)
+			{
+				g_sig = 0;
 				msh->input = powerline(msh);
-			interpret_cmd(&msh->input, msh);
+				if (!msh->input)
+					break;
+			}
+			if (!msh->input)
+				break;
+			if (g_sig != SIGINT)
+				interpret_cmd(&msh->input, msh);
 		}
 	}
 	else
@@ -104,5 +96,5 @@ int	main(int ac, char **av, char **envp)
 		msh->input = ft_strdup(av[1]);
 		interpret_cmd(&msh->input, msh);
 	}
-  free_msh(msh);
+	free_msh(msh);
 }

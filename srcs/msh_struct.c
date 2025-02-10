@@ -30,8 +30,11 @@ static char	**ft_setnewenv(void)
 t_msh *init_msh(char **envp)
 {
 	t_msh	*msh;
+	int		fd;
 
 	msh = malloc(sizeof(t_msh) * 1);
+	fd = open(".heredoc", O_WRONLY | O_CREAT | O_TRUNC, 0666);
+	close(fd);
 	msh->hist = open(".mmoat_history", O_RDWR | O_CREAT | O_APPEND, 0666);
 	msh->ex_code = 0;
 	msh->input = NULL;

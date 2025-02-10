@@ -109,13 +109,13 @@ void debug_token_list(t_node* lst, char *msg)
 	cpy = lst;
 	if (DEBUG)
 	{
-		ft_debug("========================={%s}\n", msg);
+		ft_debug("==================================================================={%s}\n", msg);
 		while (cpy)
 		{
-			ft_debug("|%s|\n", cpy->val);
+			ft_fprintf(2, "| %10s | TOKEN : %3d | PRESSISION : %3d |\n", cpy->val, cpy->token, cpy->pressision);
 			cpy = cpy->next;
 		}
-		ft_debug("=========================\n\n");
+		ft_debug("===================================================================\n\n");
 	}
 }
 
