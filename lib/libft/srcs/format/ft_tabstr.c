@@ -19,6 +19,8 @@ char	*ft_tabstr(char **tab)
 	char	*out;
 	char	*tmp;
 
+	if (!tab)
+		return (NULL);
 	i = -1;
 	alloc_count = 0;
 	while (tab[++i])

@@ -13,7 +13,7 @@ void	read_hereinput(char *limiter)
 	r = read(0, &c, 1);
 	if (r == 0)
 	{
-		ft_fprintf (2, "etdsttdt\n");
+		ft_fprintf (2, "\n");
 		exit(EXIT_SUCCESS);
 	}
 	while (r && c != '\n' && c != '\0')

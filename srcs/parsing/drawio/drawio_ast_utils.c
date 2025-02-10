@@ -41,7 +41,10 @@ t_dio_node	get_cmd_txt(t_ast_n *node)
 	{
 		txt.cmd = ft_sprintf("%s%s", NL, node->cmd);
 		txt.cmd = replace_left_red(txt.cmd);
-		args = ft_tabstr(node->args);
+		if (node->args && node->args[0])
+			args = ft_tabstr(node->args);
+		else
+			args = ft_strdup("");
 		txt.args = ft_sprintf("%s%s%s", NL, args, NL);
 		free(args);
 		txt.files = ft_sprintf("redir: UNCHECKED\n");
