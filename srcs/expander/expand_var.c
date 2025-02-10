@@ -6,7 +6,7 @@
 /*   By: lderidde <lderidde@student.s19.be>        +#+  +:+       +#+         */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/07 12:58:25 by lderidde          #+#    #+#             */
-/*   Updated: 2025/02/08 10:53:48 by lderidde         ###   ########.fr       */
+/*   Updated: 2025/02/10 09:12:39 by lderidde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,6 +130,29 @@ int	in_squote(char *str, char *ch)
 	}
 }
 
+int	in_dquote(char *str, char *ch)
+{
+	if (!ft_strchr(str, '\'') && !ft_strchr(str, '\"'))
+		return (0);
+	else if (ft_strchr(str, '\"') && !ft_strchr(str, '\''))
+	{
+		if ((ch > ft_strchr(str, '\"')) && ch < ft_strrchr(str, '\"'))
+			return (1);
+		return (0);
+	}
+	else if (!ft_strchr(str, '\"') && ft_strchr(str, '\''))
+		return (0);
+	else
+	{
+		if (ft_strchr(str, '\"') < ft_strchr(str, '\''))
+		{
+			if ((ch > ft_strchr(str, '\"')) && ch < ft_strrchr(str, '\"'))
+				return (1);
+			return (0);
+		}
+		return (0);
+	}
+}
 int	expand_var(t_ast_n *node, int j)
 {
 	int	i;

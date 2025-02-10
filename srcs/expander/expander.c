@@ -6,7 +6,7 @@
 /*   By: lderidde <lderidde@student.s19.be>        +#+  +:+       +#+         */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/07 10:23:02 by lderidde          #+#    #+#             */
-/*   Updated: 2025/02/08 15:56:26 by lderidde         ###   ########.fr       */
+/*   Updated: 2025/02/10 10:40:34 by lderidde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,6 +114,12 @@ t_ast_n	*expand_node(t_ast_n *node)
 		if (expand_var(node, i))
 			check = 1;
 		if (!ifremove_quote(node, i) && check)
+		{
+			split_tab(node, i);
+			check = 0;
+		}
+		check = expand_star(node, i);
+		if (check)
 			split_tab(node, i);
 		ft_free(&node->cmd);
 		node->cmd = ft_strdup(node->args[0]);

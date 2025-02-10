@@ -6,7 +6,7 @@
 /*   By: lderidde <lderidde@student.s19.be>        +#+  +:+       +#+         */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 11:22:33 by lderidde          #+#    #+#             */
-/*   Updated: 2025/02/08 14:09:45 by lderidde         ###   ########.fr       */
+/*   Updated: 2025/02/10 10:31:33 by lderidde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -191,7 +191,7 @@ void	handle_redir(t_ast_n *node)
 
 int	is_builtin(char *str)
 {
-	if (ft_strncmp(str, "exit", 4) == 0)
+	if (ft_strncmp(str, "exit", -1) == 0)
 		return (1);
 	else if (ft_strncmp(str, "pwd", 3) == 0)
 		return (1);

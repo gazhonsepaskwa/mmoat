@@ -6,7 +6,7 @@
 /*   By: lderidde <lderidde@student.s19.be>        +#+  +:+       +#+         */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/06 15:32:03 by lderidde          #+#    #+#             */
-/*   Updated: 2025/02/07 09:24:52 by lderidde         ###   ########.fr       */
+/*   Updated: 2025/02/10 13:31:17 by lderidde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ t_msh *init_msh(char **envp)
 	t_msh	*msh;
 
 	msh = malloc(sizeof(t_msh) * 1);
-	msh->hist = open(".mmoat_hisotry", O_RDWR | O_CREAT | O_APPEND, 0666);
+	msh->hist = open(".mmoat_history", O_RDWR | O_CREAT | O_APPEND, 0666);
 	msh->ex_code = 0;
 	msh->input = NULL;
 	if (!msh)

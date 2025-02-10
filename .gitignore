@@ -3,6 +3,7 @@ minishell
 ast.xml
 .$ast.xml.bkp
 .TEST_objs
+.mmoat_history
 
 file
 file2
