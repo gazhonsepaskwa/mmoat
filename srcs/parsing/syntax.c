@@ -104,15 +104,15 @@ int	syntax_error(t_node *head)
 	cpy = head;
 	if (cpy->token == OPERATOR && cpy->next && cpy->next->token == OPERATOR)
 		return (syntax_err_mess(cpy->next->val, 0));
-	if (cpy->token == OPERATOR)
+	if (cpy->token == OPERATOR && cpy->pressision != SUBSH_S)
 		return (syntax_err_mess(cpy->val, 0));
 	while (cpy)
 	{
 		if (unexpected_token(cpy))
 			return (syntax_err_mess(cpy->val, 0));
-		if (cpy->token == OPERATOR && cpy->next == NULL)
+		if (cpy->token == OPERATOR && cpy->next == NULL && cpy->pressision != SUBSH_E)
 			return (syntax_err_mess(cpy->val, 3));
-		if (cpy->token == OPERATOR && cpy->next->token == OPERATOR)
+		if (cpy->token == OPERATOR && cpy->pressision != SUBSH_E && cpy->next && cpy->next->token == OPERATOR)
 			return (syntax_err_mess(cpy->next->val, 0));
 		if (cpy->token == OPERATOR && ft_strlen(cpy->val) > 2)
 			return (syntax_err_mess(cpy->val, 0));
