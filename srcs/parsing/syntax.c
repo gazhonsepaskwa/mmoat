@@ -12,13 +12,6 @@
 
 #include "../../includes/parser/parsing.h"
 
-int	only_operator(t_node *head)
-{
-	if (!head->next && head->token == OPERATOR)
-		return (1);
-	return (0);
-}
-
 int	syntax_err_mess(char *token_base, int selected)
 {
 	char *token;
@@ -34,6 +27,8 @@ int	syntax_err_mess(char *token_base, int selected)
 	if (selected == 1)
 		ft_fprintf(2, "minishell : syntax error : unclosed token `%s'\n",
 			token);
+	if (selected == 3)
+		ft_fprintf(2, "minishell : syntax error : unexpected end of file\n");
 	free(token);
 	return (1);
 }
@@ -91,24 +86,39 @@ int check_unclosed_quote(char *c, t_node *node)
     return (count % 2);
 }
 
-int	syntax_error(t_node *head)
+int unclosed(t_node *head)
 {
-	t_node	*cpy;
-
-	if (only_operator(head))
-		return (syntax_err_mess(head->val, 0));
-	cpy = head;
-	while (cpy)
-	{
-		if (unexpected_token(cpy))
-			return (syntax_err_mess(cpy->val, 0));
-		cpy = cpy->next;
-	}
 	if (check_unclosed("()", head) != 0)
 		return (syntax_err_mess("()", check_unclosed("()", head)));
 	if (check_unclosed_quote("\"", head) != 0)
 		return (syntax_err_mess("\"\"", 1));
 	if (check_unclosed_quote("'", head) != 0)
-		return (syntax_err_mess("'", 1)); 
+		return (syntax_err_mess("'", 1));
+	return (0);
+}
+
+int	syntax_error(t_node *head)
+{
+	t_node	*cpy;
+
+	cpy = head;
+	if (cpy->token == OPERATOR && cpy->next && cpy->next->token == OPERATOR)
+		return (syntax_err_mess(cpy->next->val, 0));
+	if (cpy->token == OPERATOR)
+		return (syntax_err_mess(cpy->val, 0));
+	while (cpy)
+	{
+		if (unexpected_token(cpy))
+			return (syntax_err_mess(cpy->val, 0));
+		if (cpy->token == OPERATOR && cpy->next == NULL)
+			return (syntax_err_mess(cpy->val, 3));
+		if (cpy->token == OPERATOR && cpy->next->token == OPERATOR)
+			return (syntax_err_mess(cpy->next->val, 0));
+		if (cpy->token == OPERATOR && ft_strlen(cpy->val) > 2)
+			return (syntax_err_mess(cpy->val, 0));
+		cpy = cpy->next;
+	}
+	if (unclosed(head))
+		return (1);
 	return (0);
 }
