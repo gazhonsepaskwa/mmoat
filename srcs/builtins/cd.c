@@ -41,18 +41,18 @@ int	builtin_cd(char **arg, t_ast_n *head)
 	{
 		path = get_var_value("HOME", head->msh->env);
 		if (!path)
-			return (err_msg_cmd("cd", NULL, "HOME not set\n", EXIT_FAILURE));
+			return (err_msg_cmd("cd", NULL, "HOME not set", EXIT_FAILURE));
 		return (exec_cd(path, head));
 	}
 	if (count_var(arg) > 2)
-		return (err_msg_cmd("cd", NULL, "too many arguments\n", EXIT_FAILURE));
+		return (err_msg_cmd("cd", NULL, "too many arguments", EXIT_FAILURE));
 	if (ft_strncmp(arg[1], "-", 1) == 0)
 	{
 		path = get_var_value("OLDPWD", head->msh->env);
 		if (path)
 			ft_printf("%s\n", path);
 		if (!path)
-			return (err_msg_cmd("cd", NULL, "OLDPWD not set\n", EXIT_FAILURE));
+			return (err_msg_cmd("cd", NULL, "OLDPWD not set", EXIT_FAILURE));
 		return (exec_cd(path, head));
 	}
 	return (exec_cd(arg[1], head));
