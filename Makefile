@@ -26,10 +26,10 @@ $(LIBFT):
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.c
 	@mkdir -p $(dir $@)
-	@$(CC) $(WFLAGS) -MMD -MP -I$(INCDIR) -c $< -o $@ $(LINK)
+	@$(CC) $(WFLAGS) -MMD -MP -I$(INCDIR) -D DIO_PATH="\"$(HOME)/ast.xml\"" -c $< -o $@ $(LINK)
 
 $(NAME): $(LIBFT) $(OBJS)
-	@$(CC) $(WFLAGS) $(OBJS) $(LIBFT) -o $(NAME) $(LINK)
+	@$(CC) $(WFLAGS) $(OBJS) $(LIBFT) -D DIO_PATH="\"$(HOME)/ast.xml\"" -o $(NAME) $(LINK)
 	@echo "$(CYAN)Build completed: $(NAME)$(RESET)"
 
 clean:

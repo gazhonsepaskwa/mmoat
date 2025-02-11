@@ -33,7 +33,7 @@ char *get_pwd()
 		return (ft_strdup(""));
 	pwd_base = pwd;
 	cpy = pwd;
-	if (ft_strncmp(pwd, "/home", 5) == 0)
+	if (ft_strncmp(pwd, "/home/", 6) == 0)
 	{
 		pwd += 6;
 		while (pwd && *pwd && (*pwd) != '/')
