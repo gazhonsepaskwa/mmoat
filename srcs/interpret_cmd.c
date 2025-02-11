@@ -1,32 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   sig.c                                              :+:      :+:    :+:   */
+/*   interpret_cmd.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nalebrun <nalebrun@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/10 08:32:20 by nalebrun          #+#    #+#             */
-/*   Updated: 2025/02/11 16:34:59 by nalebrun         ###   ########.fr       */
+/*   Created: 2025/02/11 16:42:53 by nalebrun          #+#    #+#             */
+/*   Updated: 2025/02/11 16:45:31 by nalebrun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
-#include <readline/chardefs.h>
 
-void	init_sig(void)
+void	interpret_cmd(char **input, t_msh *msh)
 {
-	int					i;
-	struct sigaction	sa[2];
-
-	i = -1;
-	while (++i < 2)
+	msh->head = parser(*input, msh);
+	if (!msh->head)
 	{
-		ft_memset(&(sa[i]), 0, sizeof(sa[i]));
-		(sa[i]).sa_flags = SA_RESTART;
-		sigemptyset(&((sa[i]).sa_mask));
+		ft_free(input);
+		return ;
 	}
-	(sa[0]).sa_handler = handle_sigint;
-	sigaction(SIGINT, &(sa[0]), NULL);
-	(sa[1]).sa_handler = handle_sigquit;
-	sigaction(SIGQUIT, &(sa[1]), NULL);
+	msh->here_fd = open(".heredoc", O_RDONLY);
+	msh->ex_code = execute_command(msh->head);
+	get_next_line(msh->here_fd, 1);
+	if (msh->here_fd != -1)
+		close(msh->here_fd);
+	unlink(".heredoc");
+	free_ast(msh->head);
+	msh->head = NULL;
+	ft_free(input);
 }

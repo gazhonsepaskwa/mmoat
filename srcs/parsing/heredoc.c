@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lderidde <lderidde@student.s19.be>        +#+  +:+       +#+         */
+/*   By: nalebrun <nalebrun@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/11 09:01:14 by lderidde          #+#    #+#             */
-/*   Updated: 2025/02/11 10:45:08 by lderidde         ###   ########.fr       */
+/*   Updated: 2025/02/11 16:31:50 by nalebrun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,8 @@ static void	remove_quote(char **str, char c)
 	new = ft_calloc(len - 1, sizeof(char));
 	while (i < len - 2)
 	{
-		if ((&((*str)[k]) == ft_strchr(*str, c)) ||
-	  		(&((*str)[k]) == ft_strrchr(*str, c)))
+		if ((&((*str)[k]) == ft_strchr(*str, c))
+			|| (&((*str)[k]) == ft_strrchr(*str, c)))
 		{
 			k++;
 		}
@@ -37,11 +37,11 @@ static void	remove_quote(char **str, char c)
 	*str = new;
 }
 
-static int ifremove_quote(char **str)
+static int	ifremove_quote(char **str)
 {
 	char	c;
 	int		ret;
-	
+
 	ret = 0;
 	if (!ft_strchr(*str, '\'') && !ft_strchr(*str, '\"'))
 		c = 0;
@@ -73,8 +73,8 @@ void	read_hereinput(char *limiter)
 	r = read(0, &c, 1);
 	if (r == 0)
 	{
-		ft_fprintf (2, "\n");
-		ft_fprintf (1, "%s\n", limiter);
+		ft_fprintf(2, "\n");
+		ft_fprintf(1, "%s\n", limiter);
 		exit(EXIT_SUCCESS);
 	}
 	while (r && c != '\n' && c != '\0')
@@ -96,7 +96,7 @@ void	read_hereinput(char *limiter)
 
 void	parse_heredoc(char *limiter)
 {
-	int	fd;
+	int		fd;
 	pid_t	pid;
 
 	fd = open(".heredoc", O_WRONLY | O_CREAT | O_APPEND, 0666);
@@ -105,20 +105,20 @@ void	parse_heredoc(char *limiter)
 	{
 		ifremove_quote(&limiter);
 		dup2(fd, STDOUT_FILENO);
-		close (fd);
+		close(fd);
 		while (1)
 			read_hereinput(limiter);
 	}
 	else if (pid > 0)
 	{
 		waitpid(pid, NULL, 0);
-		close (fd);
+		close(fd);
 	}
 	else
 	{
-		close (fd);
+		close(fd);
 		perror("fork");
-		exit (EXIT_FAILURE);
+		exit(EXIT_FAILURE);
 	}
 }
 

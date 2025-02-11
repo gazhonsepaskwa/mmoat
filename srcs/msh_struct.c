@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   msh_struct.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lderidde <lderidde@student.s19.be>        +#+  +:+       +#+         */
+/*   By: nalebrun <nalebrun@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/06 15:32:03 by lderidde          #+#    #+#             */
-/*   Updated: 2025/02/11 13:18:58 by lderidde         ###   ########.fr       */
+/*   Updated: 2025/02/11 16:34:46 by nalebrun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 static char	**ft_setnewenv(void)
 {
-	char **envp;
+	char	**envp;
 
 	envp = malloc(sizeof(char *) * 2);
 	if (!envp)
@@ -27,7 +27,7 @@ static char	**ft_setnewenv(void)
 	return (envp);
 }
 
-t_msh *init_msh(char **envp)
+t_msh	*init_msh(char **envp)
 {
 	t_msh	*msh;
 	int		fd;
@@ -47,7 +47,7 @@ t_msh *init_msh(char **envp)
 	return (msh);
 }
 
-void free_msh(t_msh *msh)
+void	free_msh(t_msh *msh)
 {
 	free_tab(msh->env);
 	if (msh->hist != -1)

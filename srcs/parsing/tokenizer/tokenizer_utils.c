@@ -6,7 +6,7 @@
 /*   By: nalebrun <nalebrun@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/22 14:24:05 by nalebrun          #+#    #+#             */
-/*   Updated: 2025/02/07 18:04:31 by nalebrun         ###   ########.fr       */
+/*   Updated: 2025/02/11 16:33:45 by nalebrun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,16 +15,15 @@
 int	is_meta(char c)
 {
 	if (c == '&' || c == '|' || c == '<' || c == '>' || c == '(' || c == ')'
-		|| c == ';' || c == '{' || c == '}' || c == '['
-		|| c == ']')
+		|| c == ';' || c == '{' || c == '}' || c == '[' || c == ']')
 		return (1);
 	return (0);
 }
 
-int unic(int *meta)
+int	unic(int *meta)
 {
-	int i;
-	int ref_meta;
+	int	i;
+	int	ref_meta;
 
 	i = -1;
 	ref_meta = meta[0];
@@ -38,7 +37,7 @@ int	is_sticked(char *val)
 {
 	int	i;
 	int	meta[100];
-	int meta_it;
+	int	meta_it;
 	int	unmeta;
 
 	i = 0;
@@ -85,8 +84,7 @@ int	trim_nodes(t_node *head)
 	in_quote = 0;
 	while (it != NULL)
 	{
-		if (ft_str_count(it->val, 39) == 1
-			|| ft_str_count(it->val, '"') == 1)
+		if (ft_str_count(it->val, 39) == 1 || ft_str_count(it->val, '"') == 1)
 		{
 			if (!in_quote)
 				in_quote = it->val[0];
@@ -102,18 +100,4 @@ int	trim_nodes(t_node *head)
 		it = it->next;
 	}
 	return (1);
-}
-
-int	find_quote_node(t_node *head, char q)
-{
-	t_node	*it;
-
-	it = head;
-	while (it != NULL)
-	{
-		if (it->val[0] == q)
-			return (1);
-		it = it->next;
-	}
-	return (0);
 }

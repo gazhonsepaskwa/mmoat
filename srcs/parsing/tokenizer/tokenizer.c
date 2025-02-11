@@ -6,7 +6,7 @@
 /*   By: nalebrun <nalebrun@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 13:27:57 by lderidde          #+#    #+#             */
-/*   Updated: 2025/02/07 17:26:04 by nalebrun         ###   ########.fr       */
+/*   Updated: 2025/02/11 16:31:30 by nalebrun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,26 +31,6 @@ static t_node	*tokenize_base(char *str)
 	}
 	free_tab(tab);
 	return (head);
-}
-
-static void	set_token(t_node *head)
-{
-	t_node	*it;
-	t_token	last_token;
-	t_pres	last_pres;
-
-	it = head;
-	last_token = UNSET;
-	last_pres = UNDEFINED;
-	while (it != NULL)
-	{
-		it->token = get_token(it->val);
-		it->pressision = get_pressision(it->val, it->token, last_token,
-				last_pres);
-		last_token = it->token;
-		last_pres = it->pressision;
-		it = it->next;
-	}
 }
 
 static int	unstick_nodes(t_node *head)
@@ -89,7 +69,8 @@ static int	stick_quote_node(t_node *head, char q)
 	it = head;
 	while (it != NULL)
 	{
-		if (ft_strchr(it->val, q) && ft_strchr(it->val, q) == ft_strrchr(it->val, q))
+		if (ft_strchr(it->val, q) && ft_strchr(it->val,
+				q) == ft_strrchr(it->val, q))
 		{
 			while (it->next && !ft_strchr(it->next->val, q))
 				if (!merge_with_next_node(it))
@@ -102,36 +83,19 @@ static int	stick_quote_node(t_node *head, char q)
 	return (1);
 }
 
-void debug_token_list(t_node* lst, char *msg)
+static void	del_void_nodes(t_node **head)
 {
-	t_node *cpy;
-
-	cpy = lst;
-	if (DEBUG)
-	{
-		ft_debug("==================================================================={%s}\n", msg);
-		while (cpy)
-		{
-			ft_fprintf(2, "| %10s | TOKEN : %3d | PRESSISION : %3d |\n", cpy->val, cpy->token, cpy->pressision);
-			cpy = cpy->next;
-		}
-		ft_debug("===================================================================\n\n");
-	}
-}
-
-void	del_void_nodes(t_node **head)
-{
-	t_node *cpy;
-	t_node *tmp;
+	t_node	*cpy;
+	t_node	*tmp;
 
 	cpy = *head;
 	if (ft_strlen((*head)->val) == 0)
 	{
 		cpy = (*head)->next;
-		free ((*head)->val);
-		free (*head);
+		free((*head)->val);
+		free(*head);
 	}
-	*head = cpy; 
+	*head = cpy;
 	while (cpy)
 	{
 		if (cpy->next && ft_strlen(cpy->next->val) == 0)
@@ -152,19 +116,12 @@ t_node	*tokenize(char *str)
 	head = tokenize_base(str);
 	if (!head)
 		return (NULL);
-	debug_token_list(head, "tokenize_base");
 	if (!trim_nodes(head))
 		return (NULL);
-	debug_token_list(head, "trim_nodes");
 	if (!unstick_nodes(head))
 		return (NULL);
-	debug_token_list(head, "unstick_nodes");
 	stick_quote_node(head, 39);
 	stick_quote_node(head, '"');
-	debug_token_list(head, "stick quote node");
-	// if (!trim_nodes(head))
-		// return (NULL);
-	// debug_token_list(head, "trim_nodes");
 	set_token(head);
 	del_void_nodes(&head);
 	debug_token_list(head, "tokenizer");
