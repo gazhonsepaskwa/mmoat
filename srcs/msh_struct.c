@@ -6,7 +6,7 @@
 /*   By: lderidde <lderidde@student.s19.be>        +#+  +:+       +#+         */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/06 15:32:03 by lderidde          #+#    #+#             */
-/*   Updated: 2025/02/10 13:31:17 by lderidde         ###   ########.fr       */
+/*   Updated: 2025/02/11 13:18:58 by lderidde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,8 @@ t_msh *init_msh(char **envp)
 void free_msh(t_msh *msh)
 {
 	free_tab(msh->env);
-	close(msh->hist);
+	if (msh->hist != -1)
+		close(msh->hist);
 	free(msh->input);
 	free(msh);
 }

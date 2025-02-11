@@ -6,7 +6,7 @@
 /*   By: lderidde <lderidde@student.s19.be>        +#+  +:+       +#+         */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/24 14:32:13 by lderidde          #+#    #+#             */
-/*   Updated: 2025/02/06 13:27:33 by lderidde         ###   ########.fr       */
+/*   Updated: 2025/02/11 13:01:12 by lderidde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,16 +29,19 @@ int	ft_isnumeric(char *str)
 	return (1);
 }
 
-void	bash_exit(int code)
+void	bash_exit(int code, int check, t_ast_n *node)
 {
-	ft_putendl_fd("exit", 2);
+	if (check)
+		ft_putendl_fd("exit", 2);
+	free_child(node->msh);
 	exit(code);
 }
 
-void	bash_exit_errornum(char *arg)
+void	bash_exit_errornum(char *arg, t_ast_n *node)
 {
 	ft_putendl_fd("exit", 2);
 	err_msg_cmd("exit", arg, "numeric argument required", 2);
+	free_child(node->msh);
 	exit(2);
 }
 
@@ -52,6 +55,7 @@ int	bash_exiterrorcount(void)
 int	builtin_exit(char **arg, bool depth, t_ast_n *node)
 {
 	long	res;
+	int		ret;
 
 	res = node->msh->ex_code;
 	if (arg[1] && ft_isnumeric(arg[1]))
@@ -61,14 +65,18 @@ int	builtin_exit(char **arg, bool depth, t_ast_n *node)
 		if (count_args(arg) > 2 && ft_isnumeric(arg[1]))
 			return (err_msg_cmd("exit", NULL, "too many arguments", 1));
 		else if (arg[1] && (!ft_isnumeric(arg[1]) || errno == ERANGE))
-			exit (err_msg_cmd("exit", arg[1], "numeric argument required", 2));
-		exit (res % 256);
+		{
+			ret = err_msg_cmd("exit", arg[1], "numeric argument required", 2);
+			free_child(node->msh);
+			exit (ret);
+		}
+		bash_exit (res % 256, 0, node);
 	}
 	if (count_args(arg) > 2 && ft_isnumeric(arg[1]))
 		return (bash_exiterrorcount());
 	else if (arg[1] && (!ft_isnumeric(arg[1]) || errno == ERANGE))
-		bash_exit_errornum(arg[1]);
+		bash_exit_errornum(arg[1], node);
 	else
-		bash_exit(res % 256);
+		bash_exit(res % 256, 1, node);
 	return (1);
 }

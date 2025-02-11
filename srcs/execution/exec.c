@@ -6,7 +6,7 @@
 /*   By: lderidde <lderidde@student.s19.be>        +#+  +:+       +#+         */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 11:22:33 by lderidde          #+#    #+#             */
-/*   Updated: 2025/02/11 11:06:48 by lderidde         ###   ########.fr       */
+/*   Updated: 2025/02/11 12:30:00 by lderidde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -186,15 +186,17 @@ void	read_input(t_ast_n *node, int j)
 
 	check = ifhere_remove_quote(node, j);
 	len = ft_strlen(node->files[j]);
-	str = get_next_line(node->msh->here_fd);
+	str = get_next_line(node->msh->here_fd, 0);
 	while (str && ft_strncmp(str, node->files[j], len) != 0)
 	{
 		if (!check)
 			expander_here(&str, node);
 		write(1, str, ft_strlen(str));
 		ft_free(&str);
-		str = get_next_line(node->msh->here_fd);
+		str = get_next_line(node->msh->here_fd, 0);
 	}
+	if (!str)
+		get_next_line(node->msh->here_fd, 1);
 	ft_free(&str);
 }
 
@@ -210,6 +212,7 @@ void	here_doc(t_ast_n *node, int i)
 		close(node->fds[0]);
 		close(node->fds[1]);
 		read_input(node, i);
+		free_child(node->msh);
 		exit(EXIT_SUCCESS);
 	}
 	else if (pid > 0)
@@ -334,8 +337,10 @@ char	*find_path(char *cmd, char **env)
 	if (access(cmd, F_OK) == 0 && access(cmd, X_OK) == 0)
 		return (cmd);
 	i = 0;
-	while (ft_strnstr(env[i], "PATH=", 5) == NULL)
+	while (env[i] && ft_strnstr(env[i], "PATH=", 5) == NULL)
 		i++;
+	if (!env[i])
+		return (NULL);
 	paths = ft_split(env[i] + 5, ":");
 	i = -1;
 	while (paths[++i])

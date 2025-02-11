@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nalebrun <nalebrun@student.s19.be>         +#+  +:+       +#+        */
+/*   By: lderidde <lderidde@student.s19.be>        +#+  +:+       +#+         */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/10 10:33:28 by nalebrun          #+#    #+#             */
-/*   Updated: 2024/11/27 12:20:56 by nalebrun         ###   ########.fr       */
+/*   Created: 2024/10/10 10:33:28 by lderidde          #+#    #+#             */
+/*   Updated: 2025/02/11 11:57:07 by lderidde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,7 @@ char	*ft_sprintf(const char *str, ...);
 int		ft_debug(const char *fstr, ...);
 char 	*rep_c(char c, int count);
 
-char	*get_next_line(int fd);
+char	*get_next_line(int fd, int del);
 
 void	ft_free(char **p);
 void	ft_free_v(void **p);

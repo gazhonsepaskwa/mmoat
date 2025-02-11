@@ -6,7 +6,7 @@
 /*   By: lderidde <lderidde@student.s19.be>        +#+  +:+       +#+         */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/10 09:09:37 by lderidde          #+#    #+#             */
-/*   Updated: 2025/02/10 13:29:09 by lderidde         ###   ########.fr       */
+/*   Updated: 2025/02/11 13:04:05 by lderidde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,7 @@ int	expand_star(t_ast_n *node, int j)
 	int	i;
 
 	i = 0;
-	while (node->args[j][i])
+	while (node->args[j] && node->args[j][i])
 	{
 		if (node->args[j][i] == '*' && !in_quote(node->args[j], &node->args[j][i]))
 			return (expander_star(node, j, node->args[j]), 1);

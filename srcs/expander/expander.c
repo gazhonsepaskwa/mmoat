@@ -6,7 +6,7 @@
 /*   By: lderidde <lderidde@student.s19.be>        +#+  +:+       +#+         */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/07 10:23:02 by lderidde          #+#    #+#             */
-/*   Updated: 2025/02/10 10:40:34 by lderidde         ###   ########.fr       */
+/*   Updated: 2025/02/11 13:10:18 by lderidde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,7 +106,7 @@ t_ast_n	*expand_node(t_ast_n *node)
 	int	check;
 
 	i = -1;
-	while (node->args[++i])
+	while (node->args && node->args[++i])
 	{
 		check = 0;
 		if (expand_tilde(node, i))
@@ -116,6 +116,8 @@ t_ast_n	*expand_node(t_ast_n *node)
 		if (!ifremove_quote(node, i) && check)
 		{
 			split_tab(node, i);
+			if (!node->args[i])
+				i--;
 			check = 0;
 		}
 		check = expand_star(node, i);

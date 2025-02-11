@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nalebrun <nalebrun@student.s19.be>        +#+  +:+       +#+         */
+/*   By: lderidde <lderidde@student.s19.be>        +#+  +:+       +#+         */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/27 14:16:52 by nalebrun          #+#    #+#             */
-/*   Updated: 2025/02/10 12:31:46 by nalebrun         ###   ########.fr       */
+/*   Created: 2025/01/27 14:16:52 by lderidde          #+#    #+#             */
+/*   Updated: 2025/02/11 13:22:49 by lderidde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,14 +37,14 @@ static void	add_prevhistory(t_msh *msh)
 	char	*str;
 	char	*tmp;
 
-	str = get_next_line(msh->hist);
+	str = get_next_line(msh->hist, 0);
 	while (str)
 	{
 		tmp = ft_substr(str, 0, ft_strlen(str) - 1);
 		add_history(tmp);
 		free(tmp);
 		free(str);
-		str = get_next_line(msh->hist);
+		str = get_next_line(msh->hist, 0);
 	}
 }
 
@@ -58,7 +58,9 @@ static void	interpret_cmd(char **input, t_msh *msh)
 	}
 	msh->here_fd = open(".heredoc", O_RDONLY);
 	msh->ex_code = execute_command(msh->head);
-	close(msh->here_fd);
+	get_next_line(msh->here_fd, 1);
+	if (msh->here_fd != -1)
+		close(msh->here_fd);
 	unlink(".heredoc");
 	free_ast(msh->head);
 	msh->head = NULL;

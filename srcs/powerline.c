@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   powerline.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nalebrun <nalebrun@student.s19.be>        +#+  +:+       +#+         */
+/*   By: lderidde <lderidde@student.s19.be>        +#+  +:+       +#+         */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/10 12:19:10 by nalebrun          #+#    #+#             */
-/*   Updated: 2025/02/10 12:19:10 by nalebrun         ###   ########.fr       */
+/*   Created: 2025/02/10 12:19:10 by lderidde          #+#    #+#             */
+/*   Updated: 2025/02/11 14:19:32 by lderidde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,12 +29,14 @@ char *get_pwd()
 	char *out;
 
 	pwd = getcwd(NULL, 0);
+	if (!pwd)
+		return (ft_strdup(""));
 	pwd_base = pwd;
 	cpy = pwd;
 	if (ft_strncmp(pwd, "/home", 5) == 0)
 	{
 		pwd += 6;
-		while (*pwd && (*pwd) != '/')
+		while (pwd && *pwd && (*pwd) != '/')
 			pwd++;
 		out = ft_strjoin("~", pwd);
 	}
