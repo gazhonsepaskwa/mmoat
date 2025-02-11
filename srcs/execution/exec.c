@@ -6,7 +6,7 @@
 /*   By: lderidde <lderidde@student.s19.be>        +#+  +:+       +#+         */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 11:22:33 by lderidde          #+#    #+#             */
-/*   Updated: 2025/02/10 10:31:33 by lderidde         ###   ########.fr       */
+/*   Updated: 2025/02/11 11:06:48 by lderidde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,6 @@
 #include <stdlib.h>
 #include <time.h>
 #include <unistd.h>
-// #include <fcntl.h>
-// #include <unistd.h>
-// #include <stdlib.h>
-// #include <fcntl.h>
-// #include <sys/wait.h>
-// #include <time.h>
-// #include <unistd.h>
 
 void	handle_file(t_ast_n *node, int check, int i)
 {
@@ -43,49 +36,181 @@ void	handle_file(t_ast_n *node, int check, int i)
 		node->_stdout = fd;
 }
 
+static int is_validchar(char c)
+{
+	if (ft_isalnum(c) || c == '_')
+		return (1);
+	return (0);
+}
+
+static int	get_var_len(char *str, t_ast_n *node, int *j)
+{
+	int	len;
+	int	ret;
+	char *var;
+
+	len = *j + 1;
+	while (str[len] && is_validchar(str[len]))
+		len++;
+	var = ft_substr(str, *j + 1, (size_t)len - (*j + 1));
+	*j = len;
+	ret = ft_strlen(get_var_value(var, node->msh->env));
+	ft_free(&var);
+	return (ret - (len - (*j + 1)));
+}
+
+int get_dup_len(char *str, t_ast_n *node)
+{
+	int	i;
+	int	len;
+
+	i = 0;
+	len = ft_strlen(str);
+	while (str[i])
+	{
+		if (str[i] == '$')
+		{
+			len += get_var_len(str, node, &i);
+			i--;
+		}
+		i++;
+	}
+	return (len);
+}
+
+static int	valid_next(char c)
+{
+	if (c != '\0' && is_validchar(c))
+		return (1);
+	return (0);
+}
+
+static char	*extract_env(char *str, char **envp)
+{
+	int		i;
+	char	*var;
+	char	*tmp;
+
+	i = 1;
+	while (str[i] && is_validchar(str[i]))
+		i++;
+	if (i > 1)
+		tmp = ft_substr(str, 1, i - 1);
+	var = get_var_value(tmp, envp);
+	ft_free(&tmp);
+	return (var);
+}
+
+void	expander_here(char **str, t_ast_n *node)
+{
+	char	*new;
+	int		i;
+	int		j;
+	int		len;
+
+	i = -1;
+	len = get_dup_len(*str, node);
+	new = ft_calloc(len + 1, sizeof(char));
+	if (!new)
+		return ;
+	j = 0;
+	while ((*str)[j] && ++i < len)
+	{
+		if ((*str)[j] != '$')
+			new[i] = (*str)[j++];
+		else if ((*str)[j] == '$' && valid_next((*str)[j + 1]))
+		{
+			ft_strlcat(new, extract_env(&((*str)[j]), node->msh->env), -1);
+			i = ft_strlen(new) - 1;
+			while ((*str)[++j] && is_validchar((*str)[j]))
+				continue ;
+		}
+	}
+	ft_free(str);
+	*str = new;
+}
+
+void	here_remove_quote(t_ast_n *node, int j, char c)
+{
+	char	*new;
+	int		i;
+	int		k;
+	int		len;
+
+	i = 0;
+	k = 0;
+	len = ft_strlen(node->files[j]);
+	new = ft_calloc(len - 1, sizeof(char));
+	while (i < len - 2)
+	{
+		if ((&(node->files[j][k]) == ft_strchr(node->files[j], c)) ||
+	  		(&(node->files[j][k]) == ft_strrchr(node->files[j], c)))
+		{
+			k++;
+		}
+		else
+			new[i++] = node->files[j][k++];
+	}
+	ft_free(&node->files[j]);
+	node->files[j] = new;
+}
+
+int ifhere_remove_quote(t_ast_n *node, int j)
+{
+	char	c;
+	int		ret;
+	
+	ret = 0;
+	if (!ft_strchr(node->files[j], '\'') && !ft_strchr(node->files[j], '\"'))
+		c = 0;
+	else if (!ft_strchr(node->files[j], '\"'))
+		c = '\'';
+	else if (!ft_strchr(node->files[j], '\''))
+		c = '\"';
+	else if (ft_strchr(node->files[j], '\'') < ft_strchr(node->files[j], '\"'))
+		c = '\'';
+	else
+		c = '\"';
+	if (c && (ft_strchr(node->files[j], c) != ft_strrchr(node->files[j], c)))
+		here_remove_quote(node, j, c);
+	if (c)
+		ret = 1;
+	return (ret);
+}
+
 void	read_input(t_ast_n *node, int j)
 {
-	char	buf[100000];
-	char	c;
-	int		r;
-	int		i;
+	char	*str;
+	int		len;
+	int		check;
 
-	r = 0;
-	i = 0;
-	ft_fprintf(2, "heredoc> ");
-	r = read(0, &c, 1);
-	while (r && c != '\n' && c != '\0')
+	check = ifhere_remove_quote(node, j);
+	len = ft_strlen(node->files[j]);
+	str = get_next_line(node->msh->here_fd);
+	while (str && ft_strncmp(str, node->files[j], len) != 0)
 	{
-		if (c != '\n' && c != '\0')
-			buf[i++] = c;
-		r = read(STDIN_FILENO, &c, 1);
+		if (!check)
+			expander_here(&str, node);
+		write(1, str, ft_strlen(str));
+		ft_free(&str);
+		str = get_next_line(node->msh->here_fd);
 	}
-	buf[i] = '\0';
-	if (ft_strncmp(buf, node->files[j], ft_strlen(node->files[j])) == 0)
-	{
-		close(node->fds[1]);
-		exit(EXIT_SUCCESS);
-	}
-	buf[i++] = '\n';
-	buf[i] = '\0';
-	ft_fprintf(node->fds[1], "%s", buf);
+	ft_free(&str);
 }
 
 void	here_doc(t_ast_n *node, int i)
 {
 	pid_t	pid;
-	int		fd;
 
 	pipe(node->fds);
 	pid = fork();
 	if (pid == 0)
 	{
-		fd = open("/dev/tty", O_RDONLY);
-		dup2(fd, STDIN_FILENO);
-		close(fd);
+		dup2(node->fds[1], STDOUT_FILENO);
 		close(node->fds[0]);
-		while (1)
-			read_input(node, i);
+		close(node->fds[1]);
+		read_input(node, i);
+		exit(EXIT_SUCCESS);
 	}
 	else if (pid > 0)
 	{
@@ -119,8 +244,8 @@ void	handle_redir(t_ast_n *node)
 			handle_file(node, 2, i);
 		else if (node->redir[i] == _RED_DR)
 			handle_file(node, 3, i);
-		// else if (node->redir[i] == _RED_DL)
-		// 	here_doc(node, i);
+		else if (node->redir[i] == _RED_DL)
+			here_doc(node, i);
 		if (node->redir[i] == _RED_L)
 		{
 			dup2(node->_stdin, STDIN_FILENO);
@@ -226,10 +351,10 @@ char	*find_path(char *cmd, char **env)
 	return (NULL);
 }
 
-void	return_error(char *arg, char *msg, int code)
+void	return_error(char *arg, char *msg, int code, t_ast_n *node)
 {
 	ft_fprintf(2, "%s: %s\n", arg, msg);
-	free(arg);
+	free_child(node->msh);
 	exit(code);
 }
 
@@ -240,13 +365,16 @@ int	exec(t_ast_n *node)
 	expand_node(node);
 	path = find_path(node->cmd, node->msh->env);
 	if (!path)
-		return_error(node->cmd, "command not found", 127);
+		return_error(node->cmd, "command not found", 127, node);
 	if (access(path, X_OK) != 0)
-		return_error(path, "Permission denied", 126);
-	execve(path, node->args, node->msh->env);
-	free(path);
-	perror("execve");
-	exit(1);
+		return_error(path, "Permission denied", 126, node);
+	if (execve(path, node->args, node->msh->env) == -1)
+	{
+		free_child(node->msh);
+		perror("execve");
+		exit(1);
+	}
+	return (0);
 }
 
 int	exec_scmd(t_ast_n *node)
@@ -433,7 +561,6 @@ int	exec_subsh(t_ast_n *node)
 	{
 		handle_redir(node->parent);
 		ret = execute_shcommand(node);
-		// reset_redir(node->parent);
 		free_child(node->msh);
 		exit(ret);
 	}

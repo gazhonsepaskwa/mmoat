@@ -56,7 +56,9 @@ static void	interpret_cmd(char **input, t_msh *msh)
 		ft_free(input);
 		return ;
 	}
+	msh->here_fd = open(".heredoc", O_RDONLY);
 	msh->ex_code = execute_command(msh->head);
+	close(msh->here_fd);
 	unlink(".heredoc");
 	free_ast(msh->head);
 	msh->head = NULL;

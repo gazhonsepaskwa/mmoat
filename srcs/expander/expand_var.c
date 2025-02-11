@@ -6,7 +6,7 @@
 /*   By: lderidde <lderidde@student.s19.be>        +#+  +:+       +#+         */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/07 12:58:25 by lderidde          #+#    #+#             */
-/*   Updated: 2025/02/10 09:12:39 by lderidde         ###   ########.fr       */
+/*   Updated: 2025/02/08 10:53:48 by lderidde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ static int	get_new_len(t_ast_n *node, int j)
 	return (len);
 }
 
-int	valid_next(char c)
+static int	valid_next(char c)
 {
 	if (c != '\0' && is_validchar(c))
 		return (1);

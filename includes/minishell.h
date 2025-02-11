@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nalebrun <nalebrun@student.s19.be>         +#+  +:+       +#+        */
+/*   By: lderidde <lderidde@student.s19.be>        +#+  +:+       +#+         */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 11:25:25 by lderidde          #+#    #+#             */
-/*   Updated: 2025/02/07 17:22:16 by nalebrun         ###   ########.fr       */
+/*   Updated: 2025/02/11 08:41:31 by lderidde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ typedef struct s_msh
 {
 	int		ex_code;
 	t_ast_n	*head;
+	int		here_fd;
 	char	*input;
 	int		hist;
 	char	**env;
