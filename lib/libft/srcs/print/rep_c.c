@@ -12,9 +12,9 @@
 
 #include "../../libft.h"
 
-char *rep_c(char c, int count)
+char	*rep_c(char c, int count)
 {
-	char *out;
+	char	*out;
 
 	out = malloc(sizeof(char) * (count + 1));
 	ft_memset(out, c, count);

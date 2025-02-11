@@ -264,19 +264,19 @@ void	handle_redir(t_ast_n *node)
 
 int	is_builtin(char *str)
 {
-	if (ft_strncmp(str, "exit", 4) == 0)
+	if (ft_strncmp(str, "exit", -1) == 0)
 		return (1);
-	else if (ft_strncmp(str, "pwd", 3) == 0)
+	else if (ft_strncmp(str, "pwd", -1) == 0)
 		return (1);
-	else if (ft_strncmp(str, "echo", 4) == 0)
+	else if (ft_strncmp(str, "echo", -1) == 0)
 		return (1);
-	else if (ft_strncmp(str, "env", 3) == 0)
+	else if (ft_strncmp(str, "env", -1) == 0)
 		return (1);
-	else if (ft_strncmp(str, "unset", 5) == 0)
+	else if (ft_strncmp(str, "unset", -1) == 0)
 		return (1);
-	else if (ft_strncmp(str, "cd", 2) == 0)
+	else if (ft_strncmp(str, "cd", -1) == 0)
 		return (1);
-	else if (ft_strncmp(str, "export", 6) == 0)
+	else if (ft_strncmp(str, "export", -1) == 0)
 		return (1);
 	else
 		return (0);
@@ -298,17 +298,17 @@ int	exec_builtin(t_ast_n *node)
 	int	ret;
 
 	expand_node(node);
-	if (ft_strncmp(node->cmd, "exit", 4) == 0)
+	if (ft_strncmp(node->cmd, "exit", -1) == 0)
 		ret = builtin_exit(node->args, node->sh, node);
-	else if (ft_strncmp(node->cmd, "pwd", 3) == 0)
+	else if (ft_strncmp(node->cmd, "pwd", -1) == 0)
 		ret = builtin_pwd(node->args);
-	else if (ft_strncmp(node->cmd, "echo", 4) == 0)
+	else if (ft_strncmp(node->cmd, "echo", -1) == 0)
 		ret = builtin_echo(node, node->msh->env);
-	else if (ft_strncmp(node->cmd, "env", 3) == 0)
+	else if (ft_strncmp(node->cmd, "env", -1) == 0)
 		ret = builtin_env(node->args, node->msh->env);
-	else if (ft_strncmp(node->cmd, "unset", 5) == 0)
+	else if (ft_strncmp(node->cmd, "unset", -1) == 0)
 		ret = builtin_unset(node->args, node);
-	else if (ft_strncmp(node->cmd, "cd", 2) == 0)
+	else if (ft_strncmp(node->cmd, "cd", -1) == 0)
 		ret = builtin_cd(node->args, node);
 	else
 		ret = builtin_export(node->args, node);

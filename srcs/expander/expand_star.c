@@ -6,7 +6,7 @@
 /*   By: lderidde <lderidde@student.s19.be>        +#+  +:+       +#+         */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/10 09:09:37 by lderidde          #+#    #+#             */
-/*   Updated: 2025/02/11 13:04:05 by lderidde         ###   ########.fr       */
+/*   Updated: 2025/02/11 15:29:43 by lderidde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,18 +40,6 @@ static char	*_strfjoin(char *s1, char *s2)
 	return (out);
 }
 
-bool	ft_fnmatch(const char *str, const char *pat)
-{
-	if (*pat == '\0' && *str == '\0')
-		return (true);
-	if (*pat == '*' && *(pat + 1) != '\0' && *str == '\0')
-		return (false);
-	if (*pat == *str)
-		return (ft_fnmatch(str + 1, pat + 1));
-	if (*pat == '*')
-		return (ft_fnmatch(str, pat + 1) || ft_fnmatch(str + 1, pat));
-	return (false);
-}
 void	handle_new(t_ast_n *node, int j, char *new)
 {
 	if (new)
@@ -78,12 +66,12 @@ void	expander_star(t_ast_n *node, int j, char *pat)
 		{
 			if (new != NULL)
 				new = _strfjoin(new, " ");
-			new = _strfjoin(new, entry->d_name);	
+			new = _strfjoin(new, entry->d_name);
 			entry = readdir(dir);
 		}
 		else
 			entry = readdir(dir);
-	}	
+	}
 	handle_new(node, j, new);
 	closedir(dir);
 }
@@ -102,7 +90,8 @@ int	expand_star(t_ast_n *node, int j)
 	i = 0;
 	while (node->args[j] && node->args[j][i])
 	{
-		if (node->args[j][i] == '*' && !in_quote(node->args[j], &node->args[j][i]))
+		if (node->args[j][i] == '*' &&
+			!in_quote(node->args[j], &node->args[j][i]))
 			return (expander_star(node, j, node->args[j]), 1);
 		i++;
 	}

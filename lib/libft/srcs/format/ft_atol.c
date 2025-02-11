@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_atol.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: lderidde <lderidde@student.s19.be>        +#+  +:+       +#+         */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/02/11 15:40:16 by lderidde          #+#    #+#             */
+/*   Updated: 2025/02/11 15:40:16 by lderidde         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../libft.h"
 
 static int	is_signed(char c, int *sign)
@@ -25,24 +37,16 @@ long	ft_atol(const char *str)
 		str++;
 	while (*str >= '0' && *str <= '9')
 	{
-		if (((sign > 0) && res >= (LONG_MAX  / 10) && 
-			(*str - '0' > LONG_MAX % 10))
-			|| (sign == -1 &&  res >= LONG_MAX / 10 && *str - '0' > LONG_MAX % 10 + 1))
+		if (((sign > 0) && res >= (LONG_MAX / 10)
+				&& (*str - '0' > LONG_MAX % 10))
+			|| (sign == -1 && res >= LONG_MAX / 10
+				&& *str - '0' > LONG_MAX % 10 + 1))
 		{
 			errno = ERANGE;
-			break;
+			break ;
 		}
 		res = (res * 10) + (*str - '0');
 		str++;
 	}
 	return (res * sign);
 }
-//
-// #include <stdio.h>
-//
-// int main(int ac, char **av)
-// {
-// 	printf("res: %ld\n", ft_atol(av[1]));
-// 	printf("errno: %d\n", errno);
-//
-// }

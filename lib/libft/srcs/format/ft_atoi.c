@@ -23,7 +23,7 @@ static int	ft_isspace(char c)
 
 int	is_only_space(char *str)
 {
-	int i;
+	int	i;
 
 	i = -1;
 	while (str[++i])

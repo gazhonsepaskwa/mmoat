@@ -26,7 +26,7 @@ void	remove_quote(t_ast_n *node, int j, char c)
 	while (i < len - 2)
 	{
 		if ((&(node->args[j][k]) == ft_strchr(node->args[j], c)) ||
-	  		(&(node->args[j][k]) == ft_strrchr(node->args[j], c)))
+			(&(node->args[j][k]) == ft_strrchr(node->args[j], c)))
 		{
 			k++;
 		}
@@ -37,11 +37,11 @@ void	remove_quote(t_ast_n *node, int j, char c)
 	node->args[j] = new;
 }
 
-int ifremove_quote(t_ast_n *node, int j)
+int	ifremove_quote(t_ast_n *node, int j)
 {
 	char	c;
 	int		ret;
-	
+
 	ret = 0;
 	if (!ft_strchr(node->args[j], '\'') && !ft_strchr(node->args[j], '\"'))
 		c = 0;
@@ -62,10 +62,10 @@ int ifremove_quote(t_ast_n *node, int j)
 
 char	**arrange_tabs(t_ast_n *node, char **tab, int j)
 {
-	int	save;
-	int	i;
-	int	k;
-	int	len;
+	int		save;
+	int		i;
+	int		k;
+	int		len;
 	char	**new_arg;
 
 	i = 0;
@@ -92,8 +92,7 @@ void	split_tab(t_ast_n *node, int j)
 	char	**tab;
 	char	**new_arg;
 
-
-	tab =ft_split(node->args[j], " ");
+	tab = ft_split(node->args[j], " ");
 	new_arg = arrange_tabs(node, tab, j);
 	free_tab(tab);
 	free_tab(node->args);

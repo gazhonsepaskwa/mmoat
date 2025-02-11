@@ -15,7 +15,7 @@
 static int	get_new_len(t_ast_n *node, int j)
 {
 	int	i;
-	int len;
+	int	len;
 
 	i = -1;
 	len = ft_strlen(node->args[j]);
@@ -50,9 +50,9 @@ size_t	ft_astrlcat(char *dst, const char *src, size_t dstsize)
 
 void	expander_tilde(t_ast_n *node, int j)
 {
-	int i;
-	int	len;
-	int	save;
+	int		i;
+	int		len;
+	int		save;
 	char	*new;
 
 	i = -1;
