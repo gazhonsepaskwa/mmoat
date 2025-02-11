@@ -162,9 +162,9 @@ t_node	*tokenize(char *str)
 	stick_quote_node(head, 39);
 	stick_quote_node(head, '"');
 	debug_token_list(head, "stick quote node");
-	if (!trim_nodes(head))
-		return (NULL);
-	debug_token_list(head, "trim_nodes");
+	// if (!trim_nodes(head))
+		// return (NULL);
+	// debug_token_list(head, "trim_nodes");
 	set_token(head);
 	del_void_nodes(&head);
 	debug_token_list(head, "tokenizer");

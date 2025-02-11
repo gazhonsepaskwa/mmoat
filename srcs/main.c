@@ -81,6 +81,7 @@ int	main(int ac, char **av, char **envp)
 			while (!msh->input[0] || is_only_space(msh->input) || g_sig == SIGINT)
 			{
 				g_sig = 0;
+				free(msh->input);
 				msh->input = powerline(msh);
 				if (!msh->input)
 					break;
