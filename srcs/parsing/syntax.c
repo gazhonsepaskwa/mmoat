@@ -97,24 +97,33 @@ int unclosed(t_node *head)
 	return (0);
 }
 
+int is_aop_operator(t_node *node)
+{
+	if (!node || node->token != OPERATOR)
+		return (0);
+	if (node->pressision == AND
+		|| node->pressision == OR
+		|| node->pressision == PIPE)
+		return (1);
+	return (0);
+}
+
 int	syntax_error(t_node *head)
 {
 	t_node	*cpy;
 
 	cpy = head;
-	if (cpy->token == OPERATOR && cpy->next && cpy->next->token == OPERATOR)
-		return (syntax_err_mess(cpy->next->val, 0));
-	if (cpy->token == OPERATOR && cpy->pressision != SUBSH_S)
+	if (is_aop_operator(cpy) && cpy->next == NULL)
 		return (syntax_err_mess(cpy->val, 0));
 	while (cpy)
 	{
 		if (unexpected_token(cpy))
 			return (syntax_err_mess(cpy->val, 0));
-		if (cpy->token == OPERATOR && cpy->next == NULL && cpy->pressision != SUBSH_E)
+		if (cpy->next == NULL && is_aop_operator(cpy))
 			return (syntax_err_mess(cpy->val, 3));
-		if (cpy->token == OPERATOR && cpy->pressision != SUBSH_E && cpy->next && cpy->next->token == OPERATOR)
+		if (is_aop_operator(cpy) && is_aop_operator(cpy->next))
 			return (syntax_err_mess(cpy->next->val, 0));
-		if (cpy->token == OPERATOR && ft_strlen(cpy->val) > 2)
+		if (is_aop_operator(cpy) && ft_strlen(cpy->val) > 2)
 			return (syntax_err_mess(cpy->val, 0));
 		cpy = cpy->next;
 	}

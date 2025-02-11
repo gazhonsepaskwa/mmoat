@@ -33,6 +33,7 @@ static void	free_pline(t_ast_n *node)
 	i = -1;
 	while (node->pline[++i])
 		free_ast(node->pline[i]);
+	free(node->pline);
 }
 
 void	free_ast(t_ast_n *node)
