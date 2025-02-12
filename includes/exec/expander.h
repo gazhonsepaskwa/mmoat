@@ -31,4 +31,12 @@ int		in_dquote(char *str, char *ch);
 int		is_exvalidchar(char c);
 int		exvalid_next(char c);
 
+//EXPANDER_VAR_UTILS
+int		expand_exit(t_ast_n *node, int j, int k);
+int		get_new_len(t_ast_n *node, int j);
+int		valid_expand(t_ast_n *node, int j, int k);
+char	*create_new(t_ast_n *node, int j, int *len);
+void	handle_copy(t_ast_n *node, int j, char **new);
+void	cat_exit(t_ast_n *node, char **new, int i, int *k);
+
 #endif

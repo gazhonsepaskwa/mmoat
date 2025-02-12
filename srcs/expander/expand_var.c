@@ -6,7 +6,7 @@
 /*   By: lderidde <lderidde@student.s19.be>        +#+  +:+       +#+         */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/07 12:58:25 by lderidde          #+#    #+#             */
-/*   Updated: 2025/02/11 15:31:05 by lderidde         ###   ########.fr       */
+/*   Updated: 2025/02/12 09:06:11 by lderidde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ static char	*extract_env(char *str, char **envp)
 	return (var);
 }
 
-static int	get_new_len(t_ast_n *node, int j)
+int	get_new_len(t_ast_n *node, int j)
 {
 	int	i;
 	int	len;
@@ -53,7 +53,14 @@ static int	get_new_len(t_ast_n *node, int j)
 	len = ft_strlen(node->args[j]);
 	while (node->args[j][i])
 	{
-		if (node->args[j][i] == '$')
+		if (node->args[j][i] == '$' && (node->args[j][i + 1]
+			&& node->args[j][i + 1] == '?')
+			&& !in_squote(node->args[j], &node->args[j][i]))
+		{
+			len -= 1;
+		}
+		else if (node->args[j][i] == '$' &&
+			!in_squote(node->args[j], &node->args[j][i]))
 		{
 			len += get_var_len(node, j, &i);
 			i--;
@@ -63,7 +70,7 @@ static int	get_new_len(t_ast_n *node, int j)
 	return (len);
 }
 
-void	expander_var(t_ast_n *node, int j)
+void	expander_var(t_ast_n *nd, int j)
 {
 	int		i;
 	int		k;
@@ -71,25 +78,25 @@ void	expander_var(t_ast_n *node, int j)
 	char	*new;
 
 	i = -1;
-	len = get_new_len(node, j);
-	new = ft_calloc(len + 1, sizeof(char));
+	new = create_new(nd, j, &len);
 	if (!new)
 		return ;
 	k = 0;
-	while (node->args[j][k] && ++i < len)
+	while (nd->args[j][k] && ++i < len)
 	{
-		if (node->args[j][k] != '$')
-			new[i] = node->args[j][k++];
-		else if (node->args[j][k] == '$' && exvalid_next(node->args[j][k + 1]))
+		if (nd->args[j][k] != '$' || in_squote(nd->args[j], &nd->args[j][k]))
+			new[i] = nd->args[j][k++];
+		else if (expand_exit(nd, j, k))
+			cat_exit(nd, &new, i, &k);
+		else if (valid_expand(nd, j, k))
 		{
-			ft_strlcat(new, extract_env(&node->args[j][k], node->msh->env), -1);
+			ft_strlcat(new, extract_env(&nd->args[j][k], nd->msh->env), -1);
 			i = ft_strlen(new) - 1;
-			while (node->args[j][++k] && is_exvalidchar(node->args[j][k]))
+			while (nd->args[j][++k] && is_exvalidchar(nd->args[j][k]))
 				continue ;
 		}
 	}
-	ft_free(&node->args[j]);
-	node->args[j] = new;
+	handle_copy(nd, j, &new);
 }
 
 int	expand_var(t_ast_n *node, int j)

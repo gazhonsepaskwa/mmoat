@@ -12,7 +12,7 @@
 
 #include "../../includes/minishell.h"
 
-static int	get_new_len(t_ast_n *node, int j)
+static int	get_nw_len(t_ast_n *node, int j)
 {
 	int	i;
 	int	len;
@@ -56,7 +56,7 @@ void	expander_tilde(t_ast_n *node, int j)
 	char	*new;
 
 	i = -1;
-	len = get_new_len(node, j);
+	len = get_nw_len(node, j);
 	new = ft_calloc(len + 1, sizeof(char));
 	if (!new)
 		return ;

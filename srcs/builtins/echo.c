@@ -46,27 +46,9 @@ char	*ft_getenv(char *str, char **envp)
 	return (&envp[j][len]);
 }
 
-int	extractenv(char *str, char **envp)
+int	print_exit(char **arg, t_ast_n *node)
 {
-	int		i;
-	char	*var;
-	char	*tmp;
-
-	i = 0;
-	while (str[i] && str[i] != ' ')
-		i++;
-	if (i >= 1)
-		tmp = ft_substr(str, 1, i - 1);
-	var = get_var_value(tmp, envp);
-	free(tmp);
-	if (var)
-		ft_printf("%s", var);
-	return (i);
-}
-
-int	print_exit(char *arg, t_ast_n *node)
-{
-	if (arg && ft_strncmp(arg, "$?", 2) == 0)
+	if (*arg && ft_strncmp(*arg, "$?", 2) == 0)
 	{
 		ft_fprintf(1, "%d", node->msh->ex_code);
 		return (1);
@@ -84,15 +66,8 @@ static void	echo_print(t_ast_n *node, int j, char **envp)
 		i = 0;
 		while (node->args[j][i])
 		{
-			if (print_exit(node->args[j], node))
-				break ;
-			// if (node->args[j][i] == '$')
-			// {
-			// 	if (!node->args[j][i + 1] || node->args[j][i + 1] == ' ')
-			// 		ft_put_c(node->args[j][i++]);
-			// 	else
-			// 		i += extractenv(&node->args[j][i], envp);
-			// }
+			if (print_exit(&node->args[j], node))
+				i += 2;
 			else
 				ft_put_c(node->args[j][i++]);
 		}

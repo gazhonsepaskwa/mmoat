@@ -32,3 +32,12 @@ int	count_args(char **tab)
 		i++;
 	return (i);
 }
+
+void	char_swap(char **s1, char **s2)
+{
+	char	*tmp;
+
+	tmp = *s1;
+	*s1 = *s2;
+	*s2 = tmp;
+}

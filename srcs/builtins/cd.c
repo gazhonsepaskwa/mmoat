@@ -37,7 +37,8 @@ int	builtin_cd(char **arg, t_ast_n *head)
 {
 	char	*path;
 
-	if (count_var(arg) == 1 || (count_var(arg) == 2 && ft_strncmp(arg[1], "~", 1) == 0))
+	if (count_var(arg) == 1 || (count_var(arg) == 2
+			&& ft_strncmp(arg[1], "~", 1) == 0))
 	{
 		path = get_var_value("HOME", head->msh->env);
 		if (!path)

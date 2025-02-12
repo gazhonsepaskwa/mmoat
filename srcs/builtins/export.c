@@ -19,7 +19,7 @@ int	is_export_valid(char *str)
 	if (!ft_isalpha(*str) && str[0] != '_')
 		return (0);
 	equal = ft_strchr(str, '=');
-	if(!equal)
+	if (!equal)
 	{
 		while (*(++str))
 		{
@@ -43,7 +43,7 @@ char	**key_value(char *str)
 {
 	char	**tmp;
 	char	*save;
-	char 	*equal;
+	char	*equal;
 
 	tmp = malloc(sizeof(char *) * (2 + 1));
 	if (!tmp)
@@ -85,7 +85,6 @@ int	print_export(char **envp)
 {
 	int		i;
 	int		j;
-	char	*tmp;
 	int		len;
 
 	i = -1;
@@ -97,12 +96,9 @@ int	print_export(char **envp)
 		j = 0;
 		while (j < len - i - 1)
 		{
-			if (ft_strncmp(envp[j], envp[j + 1], ft_strchr(envp[j], '=') - envp[j]) > 0)
-			{
-				tmp = envp[j];
-				envp[j] = envp[j + 1];
-				envp[j + 1] = tmp;
-			}
+			if (ft_strncmp(envp[j], envp[j + 1],
+					ft_strchr(envp[j], '=') - envp[j]) > 0)
+				char_swap(&envp[j], &(envp[j + 1]));
 			j++;
 		}
 	}
@@ -112,7 +108,7 @@ int	print_export(char **envp)
 
 int	builtin_export(char **arg, t_ast_n *head)
 {
-	int	i;
+	int		i;
 	char	**tmp;
 
 	i = 0;

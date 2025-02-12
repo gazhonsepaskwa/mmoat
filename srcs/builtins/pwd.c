@@ -24,7 +24,7 @@ int	builtin_pwd(char **arg)
 		free(cwd);
 		return (0);
 	}
-	else	
+	else
 	{
 		perror("pwd");
 		return (1);
