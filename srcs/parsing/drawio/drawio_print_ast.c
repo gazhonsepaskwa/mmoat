@@ -24,7 +24,7 @@ char	*get_node_txt(t_ast_n *node)
 	else
 		subsh = ft_strdup("");
 	out = ft_sprintf("%s%s%s%s%s", txt.st, txt.cmd, txt.args, subsh, txt.files);
-	free(txt.cmd);
+	ft_free(&txt.cmd);
 	free(txt.args);
 	free(txt.files);
 	free(subsh);

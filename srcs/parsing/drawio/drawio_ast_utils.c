@@ -31,6 +31,13 @@ const char	*translate_state(t_state state)
 	return (out);
 }
 
+static void	else_case(t_dio_node *txt)
+{
+	txt->cmd = ft_calloc(1, 1);
+	txt->args = ft_calloc(1, 1);
+	txt->files = ft_calloc(1, 1);
+}
+
 t_dio_node	get_cmd_txt(t_ast_n *node)
 {
 	t_dio_node	txt;
@@ -39,9 +46,11 @@ t_dio_node	get_cmd_txt(t_ast_n *node)
 	txt.st = translate_state(node->state);
 	if (node->state == _CMD)
 	{
-		txt.cmd = ft_sprintf("%s%s", NL, node->cmd);
-		if (txt.cmd)
-			txt.cmd = replace_left_red(txt.cmd);
+		if (node->cmd)
+			txt.cmd = ft_sprintf("%s%s", NL, node->cmd);
+		else
+			txt.cmd = ft_strdup(NL);
+		txt.cmd = replace_left_red(txt.cmd);
 		if (node->args && node->args[0])
 			args = ft_tabstr(node->args);
 		else
@@ -51,10 +60,6 @@ t_dio_node	get_cmd_txt(t_ast_n *node)
 		txt.files = ft_sprintf("redir: UNCHECKED\n");
 	}
 	else
-	{
-		txt.cmd = ft_calloc(1, 1);
-		txt.args = ft_calloc(1, 1);
-		txt.files = ft_calloc(1, 1);
-	}
+		else_case(&txt);
 	return (txt);
 }
