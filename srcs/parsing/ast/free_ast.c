@@ -21,7 +21,7 @@ static void	free_redirs(t_ast_n *node)
 
 static void	free_cmd(t_ast_n *node)
 {
-	free(node->cmd);
+	ft_free(&node->cmd);
 	free_redirs(node);
 	free_tab(node->args);
 }
