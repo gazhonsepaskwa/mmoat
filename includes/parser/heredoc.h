@@ -13,7 +13,6 @@
 #ifndef HEREDOC_H
 # define HEREDOC_H
 
-
 typedef struct s_node	t_node;
 typedef struct s_msh	t_msh;
 

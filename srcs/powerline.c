@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
+#include <sys/ioctl.h>
 
 static void	handle_input(char *in, t_msh *msh)
 {
@@ -50,16 +51,17 @@ char	*get_pwd(void)
 
 char	*powerline(t_msh *msh)
 {
-	char	*pwd;
-	char	*input;
-	char	*prompt;
-	char	*separator;
-	struct winsize w;
+	char			*pwd;
+	char			*input;
+	char			*prompt;
+	char			*separator;
+	struct winsize	w;
 
-    ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
+	ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
 	pwd = get_pwd();
 	separator = rep_c('-', w.ws_col);
-	prompt = ft_sprintf("%s%s%s\n%s   MMOAT %s%s %s%s %s%s%s ", SEP, separator, RESET, POW1, POW2, POW3,
+	prompt = ft_sprintf("%s%s%s\n%s   MMOAT %s%s %s%s %s%s%s ",
+			SEP, separator, RESET, POW1, POW2, POW3,
 			POW4, pwd, RESET, POW5, RESET);
 	input = readline(prompt);
 	handle_input(input, msh);

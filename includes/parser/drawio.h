@@ -33,12 +33,13 @@ typedef struct s_elems
 }				t_elems;
 
 // internal
-char		    *replace_ampercent(char *src);
-char		    *replace_left_red(char *src);
+char		*replace_ampercent(char *src);
+char		*replace_left_red(char *src);
 t_dio_node	get_cmd_txt(t_ast_n *node);
-int			    print_ast(t_ast_n *node, t_elems *e, int fd);
+int			print_ast(t_ast_n *node, t_elems *e, int fd);
 
 // external
-void		    gen_dio_linked_list(t_node *head, int fd);
-void        gen_dio_ast(t_ast_n *head, int fd);
+void		gen_dio_linked_list(t_node *head, int fd);
+void		gen_dio_ast(t_ast_n *head, int fd);
+
 #endif

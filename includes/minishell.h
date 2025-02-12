@@ -56,7 +56,7 @@ typedef struct s_msh
 t_msh	*init_msh(char **envp);
 void	free_msh(t_msh *msh);
 void	free_child(t_msh *msh);
-void	init_sig();
+void	init_sig(void);
 void	handle_sigint(int sig);
 void	handle_sigquit(int sig);
 char	*powerline(t_msh *msh);

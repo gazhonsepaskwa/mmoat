@@ -13,6 +13,7 @@
 #include "../includes/minishell.h"
 #include <readline/history.h>
 #include <readline/readline.h>
+#include <termios.h>
 
 static void	add_prevhistory(t_msh *msh)
 {
@@ -49,13 +50,13 @@ int	interactive_mode(t_msh *msh)
 
 int	main(int ac, char **av, char **envp)
 {
-	t_msh	*msh;
-	struct termios term;
+	t_msh			*msh;
+	struct termios	term;
 
 	(void)av;
-    tcgetattr(STDIN_FILENO, &term);
-    term.c_cc[VQUIT] = _POSIX_VDISABLE;
-    tcsetattr(STDIN_FILENO, TCSANOW, &term);
+	tcgetattr(STDIN_FILENO, &term);
+	term.c_cc[VQUIT] = _POSIX_VDISABLE;
+	tcsetattr(STDIN_FILENO, TCSANOW, &term);
 	msh = init_msh(envp);
 	init_sig();
 	add_prevhistory(msh);

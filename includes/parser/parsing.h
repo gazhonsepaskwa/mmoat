@@ -17,10 +17,12 @@ typedef struct s_node	t_node;
 typedef struct s_ast_n	t_ast_n;
 typedef struct s_msh	t_msh;
 
-t_ast_n *parser(char *input, t_msh *msh);
+t_ast_n	*parser(char *input, t_msh *msh);
 
 int		unexpected_token(t_node *node);
 int		is_aop_operator(t_node *node);
 void	interpret_cmd(char **input, t_msh *msh);
+void	end_heredoc(char *buf, t_msh *msh, t_node *lst);
+void	exit_heredoc(char *limiter, t_msh *msh, t_node *lst);
 
 #endif

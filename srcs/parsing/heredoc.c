@@ -72,13 +72,7 @@ void	read_hereinput(char *limiter, t_node *lst, t_msh *msh)
 	ft_fprintf(2, "heredoc> ");
 	r = read(0, &c, 1);
 	if (r == 0)
-	{
-		ft_fprintf(2, "\n");
-		ft_fprintf(1, "%s\n", limiter);
-		free_linked_list(lst);
-		free_msh(msh);
-		exit(EXIT_SUCCESS);
-	}
+		exit_heredoc(limiter, msh, lst);
 	while (r && c != '\n' && c != '\0')
 	{
 		if (c != '\n' && c != '\0')
@@ -87,12 +81,7 @@ void	read_hereinput(char *limiter, t_node *lst, t_msh *msh)
 	}
 	buf[i] = '\0';
 	if (ft_strncmp(buf, limiter, ft_strlen(limiter)) == 0)
-	{
-		ft_fprintf(1, "%s\n", buf);
-		free_msh(msh);
-		free_linked_list(lst);
-		exit(EXIT_SUCCESS);
-	}
+		end_heredoc(buf, msh, lst);
 	buf[i++] = '\n';
 	buf[i] = '\0';
 	ft_fprintf(1, "%s", buf);
@@ -128,7 +117,7 @@ void	parse_heredoc(char *limiter, t_node *lst, t_msh *msh)
 
 void	create_heredoc(t_node *lst, t_msh *msh)
 {
-	t_node *tmp;
+	t_node	*tmp;
 
 	tmp = lst;
 	while (lst)

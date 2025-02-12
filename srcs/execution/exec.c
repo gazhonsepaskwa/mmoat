@@ -14,7 +14,7 @@
 
 int	execute_command(t_ast_n *node)
 {
-	if (!node || (node->state  == _CMD && node->cmd == NULL))
+	if (!node || (node->state == _CMD && node->cmd == NULL))
 		return (0);
 	if (node->state == _CMD)
 		handle_redir(node);
