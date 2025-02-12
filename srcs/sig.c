@@ -30,3 +30,18 @@ void	init_sig(void)
 	(sa[1]).sa_handler = handle_sigquit;
 	sigaction(SIGQUIT, &(sa[1]), NULL);
 }
+
+void	handle_sigint(int sig)
+{
+	(void)sig;
+	write(2, "\n\n", 2);
+	rl_on_new_line();
+	rl_replace_line("", 0);
+	rl_redisplay();
+}
+
+void	handle_sigquit(int sig)
+{
+	(void)sig;
+	// ft_printf("\b\b");
+}

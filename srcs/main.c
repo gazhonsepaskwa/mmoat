@@ -14,24 +14,6 @@
 #include <readline/history.h>
 #include <readline/readline.h>
 
-int			g_sig = 0;
-
-void	handle_sigint(int sig)
-{
-	(void)sig;
-	g_sig = SIGINT;
-	rl_replace_line("", 0);
-	// rl_on_new_line();
-	rl_done = 1;
-	rl_redisplay();
-}
-
-void	handle_sigquit(int sig)
-{
-	(void)sig;
-	// ft_printf("\b\b");
-}
-
 static void	add_prevhistory(t_msh *msh)
 {
 	char	*str;
@@ -52,9 +34,8 @@ int	interactive_mode(t_msh *msh)
 {
 	msh->input = malloc(1);
 	msh->input[0] = 0;
-	while (!msh->input[0] || is_only_space(msh->input) || g_sig == SIGINT)
+	while (!msh->input[0] || is_only_space(msh->input))
 	{
-		g_sig = 0;
 		free(msh->input);
 		msh->input = powerline(msh);
 		if (!msh->input)
@@ -62,15 +43,19 @@ int	interactive_mode(t_msh *msh)
 	}
 	if (!msh->input)
 		return (1);
-	if (g_sig != SIGINT)
-		interpret_cmd(&msh->input, msh);
+	interpret_cmd(&msh->input, msh);
 	return (1);
 }
 
 int	main(int ac, char **av, char **envp)
 {
 	t_msh	*msh;
+	struct termios term;
 
+	(void)av;
+    tcgetattr(STDIN_FILENO, &term);
+    term.c_cc[VQUIT] = _POSIX_VDISABLE;
+    tcsetattr(STDIN_FILENO, TCSANOW, &term);
 	msh = init_msh(envp);
 	init_sig();
 	add_prevhistory(msh);
@@ -83,9 +68,6 @@ int	main(int ac, char **av, char **envp)
 				break ;
 	}
 	else
-	{
-		msh->input = ft_strdup(av[1]);
-		interpret_cmd(&msh->input, msh);
-	}
+		ft_error("minishell : usages : - ./minishell\n");
 	free_msh(msh);
 }

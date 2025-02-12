@@ -13,7 +13,7 @@
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
-# define DEBUG 1
+# define DEBUG 0
 
 # ifndef DIO_PATH
 #  define DIO_PATH "ast.xml"
@@ -40,6 +40,8 @@ typedef struct s_msh
 # include <stdlib.h>
 # include <stdbool.h>
 # include <signal.h>
+# include <termios.h>
+#include <sys/ioctl.h>
 
 # include "../lib/libft/libft.h"
 # include "parser/ast.h"
@@ -65,5 +67,6 @@ char	*powerline(t_msh *msh);
 # define POW3 "\033[1;38;2;54;54;54;48;2;39;39;39m"
 # define POW4 "\033[0;38;2;204;205;209;48;2;39;39;39m"
 # define POW5 "\033[1;38;2;39;39;39m"
+# define SEP "\033[38;2;64;64;64m"
 
 #endif
