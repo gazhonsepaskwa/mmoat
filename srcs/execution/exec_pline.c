@@ -35,6 +35,7 @@ void	exec_pchild(int *pipes, int index, t_ast_n *pcmd, int cmds)
 	ret = 0;
 	if (index < cmds - 1)
 		dup2(pipes[1], STDOUT_FILENO);
+	close(pcmd->msh->hist);
 	close(pipes[0]);
 	close(pipes[1]);
 	handle_redir(pcmd);

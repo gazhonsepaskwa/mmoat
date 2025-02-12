@@ -52,6 +52,8 @@ void	free_msh(t_msh *msh)
 	free_tab(msh->env);
 	if (msh->hist != -1)
 		close(msh->hist);
+	if (msh->here_fd != -1)
+		close(msh->here_fd);
 	free(msh->input);
 	free(msh);
 }
