@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
+#include <string.h>
 
 int	syntax_err_mess(char *token_base, int selected)
 {
@@ -84,6 +85,16 @@ int	unclosed(t_node *head)
 		return (syntax_err_mess("\"\"", 1));
 	if (check_unclosed_quote("'", head) != 0)
 		return (syntax_err_mess("'", 1));
+	return (0);
+}
+
+int is_redir(t_node *cpy)
+{
+	if (cpy->pressision == RED_L
+		|| cpy->pressision == RED_R
+		|| cpy->pressision == HEREDOC
+		|| cpy->pressision == D_RED_R)
+		return (1);
 	return (0);
 }
 

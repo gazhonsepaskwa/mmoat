@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "../../../includes/minishell.h"
+#include <string.h>
 
 static int	last_tok_subsh(t_node *lst)
 {
@@ -27,8 +28,12 @@ static int	last_tok_redir(t_node *lst)
 {
 	while (lst)
 	{
-		if ((lst->next == NULL || lst->next->pressision == D_RED_R
-				|| lst->next->pressision == RED_R) && !ft_strncmp(lst->val, ")",
+		if ((lst->next == NULL 
+			|| lst->next->pressision == D_RED_R
+			|| lst->next->pressision == RED_R
+			|| lst->next->pressision == RED_L
+			|| lst->next->pressision == HEREDOC
+			)&& !ft_strncmp(lst->val, ")",
 				1))
 			return (1);
 		lst = lst->next;
