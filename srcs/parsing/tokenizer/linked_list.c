@@ -53,13 +53,15 @@ int	add_node_back(t_node **head, char *val, t_token token, t_pres pres)
 void	free_linked_list(t_node *head)
 {
 	t_node	*tmp;
+	t_node	*next;
 
-	while (head)
+	tmp = head;
+	while (tmp)
 	{
-		tmp = head;
-		head = head->next;
+		next = tmp->next;
 		free(tmp->val);
 		free(tmp);
+		tmp = next;
 	}
 }
 

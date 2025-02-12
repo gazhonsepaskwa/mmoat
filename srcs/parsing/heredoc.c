@@ -128,12 +128,15 @@ void	parse_heredoc(char *limiter, t_node *lst, t_msh *msh)
 
 void	create_heredoc(t_node *lst, t_msh *msh)
 {
+	t_node *tmp;
+
+	tmp = lst;
 	while (lst)
 	{
 		if (lst->pressision == HEREDOC && lst->next && lst->next->pressision)
 		{
 			lst = lst->next;
-			parse_heredoc(lst->val, lst, msh);
+			parse_heredoc(lst->val, tmp, msh);
 		}
 		lst = lst->next;
 	}
