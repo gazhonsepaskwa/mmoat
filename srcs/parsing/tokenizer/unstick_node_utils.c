@@ -92,7 +92,7 @@ int	is_sticked(char *val)
 	}
 	meta[meta_it] = -1;
 	if ((meta[0] != -1 && unmeta) || !unic(meta) || (meta[0] == '('
-		&& meta[1] == '(') || (meta[0] == ')' && meta[1] == ')'))
+			&& meta[1] == '(') || (meta[0] == ')' && meta[1] == ')'))
 		return (1);
 	return (0);
 }

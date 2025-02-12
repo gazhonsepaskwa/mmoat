@@ -130,6 +130,6 @@ t_node	*tokenize(char *str)
 	del_void_nodes(&head);
 	debug_token_list(head, "tokenizer");
 	if (syntax_error(head))
-		return (NULL);
+		return (free_linked_list(head), NULL);
 	return (head);
 }

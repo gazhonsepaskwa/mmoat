@@ -31,6 +31,16 @@ static void	add_prevhistory(t_msh *msh)
 	}
 }
 
+static void	exit_manual(t_msh *msh)
+{
+	int	ret;
+
+	ret = msh->ex_code;
+	free_msh(msh);
+	ft_fprintf(2, "exit\n");
+	exit(ret);
+}
+
 int	interactive_mode(t_msh *msh)
 {
 	msh->input = malloc(1);
@@ -40,7 +50,7 @@ int	interactive_mode(t_msh *msh)
 		free(msh->input);
 		msh->input = powerline(msh);
 		if (!msh->input)
-			return (0);
+			exit_manual(msh);
 	}
 	if (!msh->input)
 		return (1);
