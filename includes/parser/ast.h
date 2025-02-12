@@ -13,8 +13,8 @@
 #ifndef AST_H
 # define AST_H
 
-/*# include "../../includes/env.h"*/
-# include "../minishell.h"
+typedef struct s_node	t_node;
+typedef struct s_msh	t_msh;
 
 typedef enum e_state
 {

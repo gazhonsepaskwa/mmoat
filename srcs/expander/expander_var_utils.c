@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/exec/expander.h"
+#include "../../includes/minishell.h"
 
 int	expand_exit(t_ast_n *node, int j, int k)
 {

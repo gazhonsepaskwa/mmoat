@@ -13,7 +13,10 @@
 #ifndef DRAWIO_H
 # define DRAWIO_H
 
-# include "../minishell.h"
+# include "../../lib/libft/libft.h"
+
+typedef struct s_ast_n	t_ast_n;
+typedef struct s_node	t_node;
 
 typedef struct s_dio_node
 {

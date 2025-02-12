@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/exec/exec.h"
+#include "../../includes/minishell.h"
 
 void	expander_here(char **str, t_ast_n *node)
 {

@@ -13,9 +13,10 @@
 #ifndef EXPANDER_H
 # define EXPANDER_H
 
-# include "../minishell.h"
 # include <sys/types.h>
 # include <dirent.h>
+
+typedef struct s_ast_n	t_ast_n;
 
 int		in_dquote(char *str, char *ch);
 int		in_squote(char *str, char *ch);

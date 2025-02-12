@@ -13,13 +13,14 @@
 #ifndef EXEC_H
 # define EXEC_H
 
-# include "../minishell.h"
 # include <stdio.h>
 # include <sys/wait.h>
 # include <sys/types.h>
 # include <stdlib.h>
 # include <unistd.h>
 # include <time.h>
+
+typedef struct s_ast_n	t_ast_n;
 
 int		execute_command(t_ast_n *node);
 

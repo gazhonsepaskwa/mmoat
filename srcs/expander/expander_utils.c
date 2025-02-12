@@ -6,11 +6,11 @@
 /*   By: lderidde <lderidde@student.s19.be>        +#+  +:+       +#+         */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/11 15:28:57 by lderidde          #+#    #+#             */
-/*   Updated: 2025/02/11 15:28:57 by lderidde         ###   ########.fr       */
+/*   Updated: 2025/02/12 13:30:27 by lderidde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/exec/expander.h"
+#include "../../includes/minishell.h"
 
 bool	ft_fnmatch(const char *str, const char *pat)
 {

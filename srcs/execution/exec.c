@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/exec/exec.h"
+#include "../../includes/minishell.h"
 
 int	execute_command(t_ast_n *node)
 {

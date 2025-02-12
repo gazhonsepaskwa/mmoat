@@ -6,11 +6,11 @@
 /*   By: lderidde <lderidde@student.s19.be>        +#+  +:+       +#+         */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 09:48:21 by lderidde          #+#    #+#             */
-/*   Updated: 2025/02/12 09:48:21 by lderidde         ###   ########.fr       */
+/*   Updated: 2025/02/12 13:31:06 by lderidde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/exec/exec.h"
+#include "../../includes/minishell.h"
 
 int	is_builtin(char *str)
 {

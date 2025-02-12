@@ -13,7 +13,9 @@
 #ifndef HEREDOC_H
 # define HEREDOC_H
 
-# include "../minishell.h"
+
+typedef struct s_node	t_node;
+typedef struct s_msh	t_msh;
 
 void	read_hereinput(char *limiter, t_node *lst, t_msh *msh);
 void	parse_heredoc(char *limiter, t_node *lst, t_msh *msh);

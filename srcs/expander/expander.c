@@ -6,11 +6,11 @@
 /*   By: lderidde <lderidde@student.s19.be>        +#+  +:+       +#+         */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/07 10:23:02 by lderidde          #+#    #+#             */
-/*   Updated: 2025/02/11 13:10:18 by lderidde         ###   ########.fr       */
+/*   Updated: 2025/02/12 13:30:32 by lderidde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/exec/expander.h"
+#include "../../includes/minishell.h"
 
 void	remove_quote(t_ast_n *node, int j, char c)
 {

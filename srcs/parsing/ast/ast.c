@@ -11,7 +11,6 @@
 /* ************************************************************************** */
 
 #include "../../../includes/minishell.h"
-#include <unistd.h>
 
 t_ast_n	*create_ast_n(t_node *lst, t_ast_n *parent, t_msh *msh, bool subsh)
 {

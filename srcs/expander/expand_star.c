@@ -6,13 +6,11 @@
 /*   By: lderidde <lderidde@student.s19.be>        +#+  +:+       +#+         */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/10 09:09:37 by lderidde          #+#    #+#             */
-/*   Updated: 2025/02/11 15:29:43 by lderidde         ###   ########.fr       */
+/*   Updated: 2025/02/12 13:30:38 by lderidde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/exec/expander.h"
-#include <dirent.h>
-#include <stdbool.h>
+#include "../../includes/minishell.h"
 
 static char	*_strfjoin(char *s1, char *s2)
 {

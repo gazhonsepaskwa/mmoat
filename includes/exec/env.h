@@ -13,10 +13,11 @@
 #ifndef ENV_H
 # define ENV_H
 
-# include "../minishell.h"
 # include <unistd.h>
 # include <stdlib.h>
 # include <stdbool.h>
+
+typedef struct s_msh	t_msh;
 
 //VAR
 int		count_var(char **envp);

@@ -13,7 +13,6 @@
 #ifndef BUILTINS_H
 # define BUILTINS_H
 
-# include "../minishell.h"
 # include <stdio.h>
 # include <sys/types.h>
 # include <signal.h>
@@ -23,9 +22,13 @@
 # include <stdlib.h>
 # include <string.h>
 
+typedef struct s_ast_n	t_ast_n;
+typedef struct s_node	t_node;
+typedef struct s_msh	t_msh;
+
 # define UNSET_ARG "not enough arguments"
 # define EXPRT_INV "not a valid identifier"
-// void 	echo(char *msg, int flag);
+
 int		builtin_echo(t_ast_n *node, char **envp);
 int		builtin_exit(char **arg, bool depth, t_ast_n *node);
 int		builtin_pwd(char **arg);

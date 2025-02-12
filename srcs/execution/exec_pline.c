@@ -6,11 +6,11 @@
 /*   By: lderidde <lderidde@student.s19.be>        +#+  +:+       +#+         */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 09:50:12 by lderidde          #+#    #+#             */
-/*   Updated: 2025/02/12 09:50:12 by lderidde         ###   ########.fr       */
+/*   Updated: 2025/02/12 13:30:51 by lderidde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/exec/exec.h"
+#include "../../includes/minishell.h"
 
 void	exec_pcmd(t_ast_n *pcmd)
 {

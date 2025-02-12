@@ -13,7 +13,9 @@
 #ifndef PARSING_H
 # define PARSING_H
 
-# include "../minishell.h"
+typedef struct s_node	t_node;
+typedef struct s_ast_n	t_ast_n;
+typedef struct s_msh	t_msh;
 
 t_ast_n *parser(char *input, t_msh *msh);
 

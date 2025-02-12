@@ -13,26 +13,6 @@
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
-# define DEBUG 1
-
-# ifndef DIO_PATH
-#  define DIO_PATH "ast.xml"
-# endif
-
-typedef struct s_ast_n t_ast_n;
-typedef struct s_node t_node;
-
-typedef struct s_msh
-{
-	int		ex_code;
-	t_ast_n	*head;
-	int		here_fd;
-	char	*input;
-	int		hist;
-	char	**env;
-}			t_msh;
-
-
 # include <stdio.h>
 # include <readline/readline.h>
 # include <readline/history.h>
@@ -41,8 +21,7 @@ typedef struct s_msh
 # include <stdbool.h>
 # include <signal.h>
 # include <termios.h>
-#include <sys/ioctl.h>
-
+# include <sys/ioctl.h>
 # include "../lib/libft/libft.h"
 # include "parser/ast.h"
 # include "parser/drawio.h"
@@ -53,6 +32,26 @@ typedef struct s_msh
 # include "exec/env.h"
 # include "exec/exec.h"
 # include "exec/expander.h"
+
+# define DEBUG 1
+
+# ifndef DIO_PATH
+#  define DIO_PATH "ast.xml"
+# endif
+
+typedef struct s_ast_n	t_ast_n;
+typedef struct s_node	t_node;
+typedef struct s_msh	t_msh;
+
+typedef struct s_msh
+{
+	int		ex_code;
+	t_ast_n	*head;
+	int		here_fd;
+	char	*input;
+	int		hist;
+	char	**env;
+}			t_msh;
 
 t_msh	*init_msh(char **envp);
 void	free_msh(t_msh *msh);

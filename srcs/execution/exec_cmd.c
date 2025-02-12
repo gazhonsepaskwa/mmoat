@@ -6,11 +6,11 @@
 /*   By: lderidde <lderidde@student.s19.be>        +#+  +:+       +#+         */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 10:00:08 by lderidde          #+#    #+#             */
-/*   Updated: 2025/02/12 10:00:08 by lderidde         ###   ########.fr       */
+/*   Updated: 2025/02/12 13:31:03 by lderidde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/exec/exec.h"
+#include "../../includes/minishell.h"
 
 int	count_cmds(t_ast_n **pline)
 {
