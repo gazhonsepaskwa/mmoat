@@ -32,15 +32,15 @@ int	add_node_back(t_node **head, char *val, t_token token, t_pres pres)
 {
 	t_node	*tmp;
 
-	tmp = *head;
 	if (!val)
 		return (0);
 	if (!head || !(*head))
 	{
-		(*head) = create_node(val, token);
+		*head = create_node(val, token);
 		(*head)->pressision = pres;
 		return (1);
 	}
+	tmp = *head;
 	while (tmp->next != NULL)
 		tmp = tmp->next;
 	tmp->next = create_node(val, token);

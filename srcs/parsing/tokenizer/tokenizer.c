@@ -26,7 +26,7 @@ static t_node	*tokenize_base(char *str)
 	while (tab[i])
 	{
 		if (!add_node_back(&head, tab[i], 0, 0))
-			return (free(tab), NULL);
+			return (free_tab(tab), NULL);
 		i++;
 	}
 	free_tab(tab);
@@ -116,12 +116,16 @@ t_node	*tokenize(char *str)
 	head = tokenize_base(str);
 	if (!head)
 		return (NULL);
+	debug_token_list(head, "tokenizer");
 	if (!trim_nodes(head))
 		return (NULL);
+	debug_token_list(head, "tokenizer");
 	if (!unstick_nodes(head))
 		return (NULL);
+	debug_token_list(head, "tokenizer");
 	stick_quote_node(head, 39);
 	stick_quote_node(head, '"');
+	debug_token_list(head, "tokenizer");
 	set_token(head);
 	del_void_nodes(&head);
 	debug_token_list(head, "tokenizer");

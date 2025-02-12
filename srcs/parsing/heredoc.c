@@ -60,7 +60,7 @@ static int	ifremove_quote(char **str)
 	return (ret);
 }
 
-void	read_hereinput(char *limiter)
+void	read_hereinput(char *limiter, t_node *lst, t_msh *msh)
 {
 	char	buf[100000];
 	char	c;
@@ -75,6 +75,8 @@ void	read_hereinput(char *limiter)
 	{
 		ft_fprintf(2, "\n");
 		ft_fprintf(1, "%s\n", limiter);
+		free_linked_list(lst);
+		free_msh(msh);
 		exit(EXIT_SUCCESS);
 	}
 	while (r && c != '\n' && c != '\0')
@@ -87,6 +89,8 @@ void	read_hereinput(char *limiter)
 	if (ft_strncmp(buf, limiter, ft_strlen(limiter)) == 0)
 	{
 		ft_fprintf(1, "%s\n", buf);
+		free_msh(msh);
+		free_linked_list(lst);
 		exit(EXIT_SUCCESS);
 	}
 	buf[i++] = '\n';
@@ -94,7 +98,7 @@ void	read_hereinput(char *limiter)
 	ft_fprintf(1, "%s", buf);
 }
 
-void	parse_heredoc(char *limiter)
+void	parse_heredoc(char *limiter, t_node *lst, t_msh *msh)
 {
 	int		fd;
 	pid_t	pid;
@@ -107,7 +111,7 @@ void	parse_heredoc(char *limiter)
 		dup2(fd, STDOUT_FILENO);
 		close(fd);
 		while (1)
-			read_hereinput(limiter);
+			read_hereinput(limiter, lst, msh);
 	}
 	else if (pid > 0)
 	{
@@ -122,14 +126,14 @@ void	parse_heredoc(char *limiter)
 	}
 }
 
-void	create_heredoc(t_node *lst)
+void	create_heredoc(t_node *lst, t_msh *msh)
 {
 	while (lst)
 	{
 		if (lst->pressision == HEREDOC && lst->next && lst->next->pressision)
 		{
 			lst = lst->next;
-			parse_heredoc(lst->val);
+			parse_heredoc(lst->val, lst, msh);
 		}
 		lst = lst->next;
 	}

@@ -53,14 +53,17 @@ char	*powerline(t_msh *msh)
 	char	*pwd;
 	char	*input;
 	char	*prompt;
+	char	*separator;
 	struct winsize w;
 
     ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
 	pwd = get_pwd();
-	prompt = ft_sprintf("%s%s%s\n%s   MMOAT %s%s %s%s %s%s%s ", SEP, rep_c('-', w.ws_col), RESET, POW1, POW2, POW3,
+	separator = rep_c('-', w.ws_col);
+	prompt = ft_sprintf("%s%s%s\n%s   MMOAT %s%s %s%s %s%s%s ", SEP, separator, RESET, POW1, POW2, POW3,
 			POW4, pwd, RESET, POW5, RESET);
 	input = readline(prompt);
 	handle_input(input, msh);
+	free(separator);
 	free(prompt);
 	free(pwd);
 	return (input);

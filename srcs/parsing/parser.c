@@ -46,7 +46,7 @@ t_ast_n	*parser(char *input, t_msh *msh)
 	lst = tokenize(input);
 	if (!lst)
 		return (NULL);
-	create_heredoc(lst);
+	create_heredoc(lst, msh);
 	if (DEBUG)
 	{
 		dio = drawio_init(DIO_PATH);

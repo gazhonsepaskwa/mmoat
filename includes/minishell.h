@@ -13,7 +13,7 @@
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
-# define DEBUG 0
+# define DEBUG 1
 
 # ifndef DIO_PATH
 #  define DIO_PATH "ast.xml"

@@ -15,8 +15,8 @@
 
 # include "../minishell.h"
 
-void	read_hereinput(char *limiter);
-void	parse_heredoc(char *limiter);
-void	create_heredoc(t_node *lst);
+void	read_hereinput(char *limiter, t_node *lst, t_msh *msh);
+void	parse_heredoc(char *limiter, t_node *lst, t_msh *msh);
+void	create_heredoc(t_node *lst, t_msh *msh);
 
 #endif
