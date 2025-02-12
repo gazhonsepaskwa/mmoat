@@ -40,7 +40,8 @@ t_dio_node	get_cmd_txt(t_ast_n *node)
 	if (node->state == _CMD)
 	{
 		txt.cmd = ft_sprintf("%s%s", NL, node->cmd);
-		txt.cmd = replace_left_red(txt.cmd);
+		if (txt.cmd)
+			txt.cmd = replace_left_red(txt.cmd);
 		if (node->args && node->args[0])
 			args = ft_tabstr(node->args);
 		else
