@@ -84,7 +84,9 @@ int	exec_scmd(t_ast_n *node)
 	pid_t	pid;
 	int		status;
 
-	if (is_builtin(node->cmd))
+	if (!node->cmd)
+		return (0);
+	else if (is_builtin(node->cmd))
 		return (exec_builtin(node));
 	else
 	{

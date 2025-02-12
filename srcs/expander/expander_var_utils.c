@@ -6,7 +6,7 @@
 /*   By: lderidde <lderidde@student.s19.be>        +#+  +:+       +#+         */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 09:17:28 by lderidde          #+#    #+#             */
-/*   Updated: 2025/02/12 09:17:28 by lderidde         ###   ########.fr       */
+/*   Updated: 2025/02/12 11:01:55 by lderidde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,8 +48,13 @@ void	handle_copy(t_ast_n *node, int j, char **new)
 	node->args[j] = *new;
 }
 
-void	cat_exit(t_ast_n *node, char **new, int i, int *k)
+void	cat_exit(t_ast_n *node, char **new, int *i, int *k)
 {
-	(*new)[i] = node->msh->ex_code + '0';
+	char	*itoa;
+
+	itoa = ft_itoa(node->msh->ex_code);
+	ft_strlcat(*new, itoa, -1);
+	*i = ft_strlen(*new) - 1;
 	*k += 2;
+	free(itoa);
 }

@@ -6,7 +6,7 @@
 /*   By: lderidde <lderidde@student.s19.be>        +#+  +:+       +#+         */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/07 12:58:25 by lderidde          #+#    #+#             */
-/*   Updated: 2025/02/12 09:06:11 by lderidde         ###   ########.fr       */
+/*   Updated: 2025/02/12 11:02:35 by lderidde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,8 +46,9 @@ static char	*extract_env(char *str, char **envp)
 
 int	get_new_len(t_ast_n *node, int j)
 {
-	int	i;
-	int	len;
+	int		i;
+	int		len;
+	char	*itoa;
 
 	i = 0;
 	len = ft_strlen(node->args[j]);
@@ -57,7 +58,9 @@ int	get_new_len(t_ast_n *node, int j)
 			&& node->args[j][i + 1] == '?')
 			&& !in_squote(node->args[j], &node->args[j][i]))
 		{
-			len -= 1;
+			itoa = ft_itoa(node->msh->ex_code);
+			len += ft_strlen(itoa) - 2;
+			free(itoa);
 		}
 		else if (node->args[j][i] == '$' &&
 			!in_squote(node->args[j], &node->args[j][i]))
@@ -87,7 +90,7 @@ void	expander_var(t_ast_n *nd, int j)
 		if (nd->args[j][k] != '$' || in_squote(nd->args[j], &nd->args[j][k]))
 			new[i] = nd->args[j][k++];
 		else if (expand_exit(nd, j, k))
-			cat_exit(nd, &new, i, &k);
+			cat_exit(nd, &new, &i, &k);
 		else if (valid_expand(nd, j, k))
 		{
 			ft_strlcat(new, extract_env(&nd->args[j][k], nd->msh->env), -1);

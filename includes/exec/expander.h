@@ -37,6 +37,6 @@ int		get_new_len(t_ast_n *node, int j);
 int		valid_expand(t_ast_n *node, int j, int k);
 char	*create_new(t_ast_n *node, int j, int *len);
 void	handle_copy(t_ast_n *node, int j, char **new);
-void	cat_exit(t_ast_n *node, char **new, int i, int *k);
+void	cat_exit(t_ast_n *node, char **new, int *i, int *k);
 
 #endif
