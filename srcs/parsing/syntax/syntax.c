@@ -45,7 +45,7 @@ static int	check_unclosed(char *c, t_node *node)
 	{
 		if (!ft_strncmp(&c[0], cpy->val, 1))
 			count++;
-		if (!ft_strncmp(&c[1], cpy->val, 1))
+		if (!ft_strncmp(&c[1], cpy->val, 1) && count != 0)
 			count--;
 		cpy = cpy->next;
 	}
@@ -111,6 +111,10 @@ int	syntax_error(t_node *head)
 			return (syntax_err_mess(cpy->val, 0));
 		if (cpy->next == NULL && is_aop_operator(cpy))
 			return (syntax_err_mess(cpy->val, 3));
+		if (!ft_strncmp(cpy->val, "(", 1) && cpy->next && !ft_strncmp(cpy->next->val, ")", 1))
+			return (syntax_err_mess(cpy->next->val, 0));
+		if (!ft_strncmp(cpy->val, ")", 1) && cpy->next && !ft_strncmp(cpy->next->val, "(", 1))
+			return (syntax_err_mess(cpy->next->val, 0));
 		if (is_aop_operator(cpy) && is_aop_operator(cpy->next))
 			return (syntax_err_mess(cpy->next->val, 0));
 		if (is_aop_operator(cpy) && ft_strlen(cpy->val) > 2)
