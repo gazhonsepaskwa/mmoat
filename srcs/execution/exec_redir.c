@@ -6,13 +6,13 @@
 /*   By: lderidde <lderidde@student.s19.be>        +#+  +:+       +#+         */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 09:42:31 by lderidde          #+#    #+#             */
-/*   Updated: 2025/02/12 13:30:49 by lderidde         ###   ########.fr       */
+/*   Updated: 2025/02/13 15:16:21 by lderidde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-void	handle_file(t_ast_n *node, int check, int i)
+int	handle_file(t_ast_n *node, int check, int i)
 {
 	int	fd;
 
@@ -24,13 +24,14 @@ void	handle_file(t_ast_n *node, int check, int i)
 		fd = open(node->files[i], O_WRONLY | O_CREAT | O_APPEND, 0666);
 	if (fd == -1)
 	{
-		perror("open");
-		exit(1);
+		ft_fprintf(2, "%s: %s\n",node->files[i], "Permission denied");
+		return (1);
 	}
 	if (check == 1)
 		node->_stdin = fd;
 	else if (check == 2 || check == 3)
 		node->_stdout = fd;
+	return (0);
 }
 
 static void	save_stds(t_ast_n *node)
@@ -42,33 +43,29 @@ static void	save_stds(t_ast_n *node)
 	}
 }
 
-void	handle_redir(t_ast_n *node)
+int	handle_redir(t_ast_n *node)
 {
 	int	i;
+	int	check;
 
 	i = -1;
+	check = 0;
 	save_stds(node);
 	while (node->state != _PLINE && node->redir[++i] && node->redir[i] != _NR)
 	{
 		if (node->redir[i] == _RED_L)
-			handle_file(node, 1, i);
+			check = handle_file(node, 1, i);
 		else if (node->redir[i] == _RED_R)
-			handle_file(node, 2, i);
+			check = handle_file(node, 2, i);
 		else if (node->redir[i] == _RED_DR)
-			handle_file(node, 3, i);
+			check = handle_file(node, 3, i);
 		else if (node->redir[i] == _RED_DL)
 			here_doc(node, i);
-		if (node->redir[i] == _RED_L)
-		{
-			dup2(node->_stdin, STDIN_FILENO);
-			close(node->_stdin);
-		}
-		else if (node->redir[i] == _RED_R || node->redir[i] == _RED_DR)
-		{
-			dup2(node->_stdout, STDOUT_FILENO);
-			close(node->_stdout);
-		}
+		if (check == 1)
+			return (1);
+		dup_redir(node, i);
 	}
+	return (0);
 }
 
 void	reset_redir(t_ast_n *node)
