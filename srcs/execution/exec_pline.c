@@ -16,6 +16,13 @@ void	exec_pcmd(t_ast_n *pcmd)
 {
 	int	ret;
 
+	if (pcmd->msh->here_fd != -1)
+		close(pcmd->msh->here_fd);
+	close(pcmd->msh->hist);
+	if (pcmd->save_stdo != -1)
+		close(pcmd->save_stdo);
+	if (pcmd->save_stdi != -1)
+		close(pcmd->save_stdi);
 	if (!pcmd->cmd)
 		exit(0);
 	if (is_builtin(pcmd->cmd))
@@ -35,7 +42,6 @@ void	exec_pchild(int *pipes, int index, t_ast_n *pcmd, int cmds)
 	ret = 0;
 	if (index < cmds - 1)
 		dup2(pipes[1], STDOUT_FILENO);
-	close(pcmd->msh->hist);
 	close(pipes[0]);
 	close(pipes[1]);
 	handle_redir(pcmd);

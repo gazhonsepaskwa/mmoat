@@ -26,8 +26,8 @@ t_ast_n	*create_ast_n(t_node *lst, t_ast_n *parent, t_msh *msh, bool subsh)
 	node->parent = parent;
 	node->_stdout = 1;
 	node->_stdin = 0;
-	node->save_stdo = 1;
-	node->save_stdi = 0;
+	node->save_stdo = -1;
+	node->save_stdi = -1;
 	node->sh = subsh;
 	if (node->state == _AND || node->state == _OR)
 		create_and_or(node, lst, token, msh);

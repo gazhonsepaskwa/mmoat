@@ -15,6 +15,8 @@
 #include <readline/readline.h>
 #include <termios.h>
 
+int	g_sig = 0;
+
 static void	add_prevhistory(t_msh *msh)
 {
 	char	*str;
@@ -31,11 +33,27 @@ static void	add_prevhistory(t_msh *msh)
 	}
 }
 
+void	handle_sigint(int sig)
+{
+	(void)sig;
+	write(2, "\n\n", 2);
+	rl_on_new_line();
+	rl_replace_line("", 0);
+	rl_redisplay();
+	g_sig = sig;
+}
+
 static void	exit_manual(t_msh *msh)
 {
 	int	ret;
 
-	ret = msh->ex_code;
+	if (g_sig == SIGINT)
+	{
+		ret = 130;
+		g_sig = 0;
+	}
+	else
+		ret = msh->ex_code;
 	free_msh(msh);
 	ft_fprintf(2, "exit\n");
 	exit(ret);
@@ -54,6 +72,11 @@ int	interactive_mode(t_msh *msh)
 	}
 	if (!msh->input)
 		return (1);
+	if (g_sig == SIGINT)
+	{
+		msh->ex_code = 130;
+		g_sig = 0;
+	}
 	interpret_cmd(&msh->input, msh);
 	return (1);
 }

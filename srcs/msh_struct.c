@@ -37,6 +37,7 @@ t_msh	*init_msh(char **envp)
 	close(fd);
 	msh->hist = open(".mmoat_history", O_RDWR | O_CREAT | O_APPEND, 0666);
 	msh->ex_code = 0;
+	msh->here_fd = -1;
 	msh->input = NULL;
 	if (!msh)
 		return (NULL);

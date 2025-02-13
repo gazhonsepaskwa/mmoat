@@ -65,6 +65,10 @@ int	exec(t_ast_n *node)
 	char	*path;
 
 	expand_node(node);
+	if (node->msh->here_fd != -1)
+		close(node->msh->here_fd);
+	if (node->msh->hist != -1)
+		close(node->msh->hist);
 	path = find_path(node->cmd, node->msh->env);
 	if (!path)
 		return_error(node->cmd, "command not found", 127, node);

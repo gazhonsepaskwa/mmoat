@@ -38,6 +38,10 @@ static void	free_pline(t_ast_n *node)
 
 void	free_ast(t_ast_n *node)
 {
+	if (node->save_stdi != -1)
+		close(node->save_stdi);
+	if (node->save_stdo != -1)
+		close(node->save_stdo);
 	if (node->state == _AND || node->state == _OR)
 	{
 		free_ast(node->left);
