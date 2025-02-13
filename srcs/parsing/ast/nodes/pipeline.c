@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../../includes/minishell.h"
+#include "../../../../includes/minishell.h"
 
 void	create_pline(t_ast_n *self, t_node *lst, t_node *token, t_msh *msh)
 {

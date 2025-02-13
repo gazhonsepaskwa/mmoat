@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/minishell.h"
+#include "../../../includes/minishell.h"
 #include <string.h>
 
 int	syntax_err_mess(char *token_base, int selected)
