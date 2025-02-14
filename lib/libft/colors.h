@@ -13,7 +13,7 @@
 #ifndef COLORS_H
 # define COLORS_H
 
-# define RESET "\033[0m"
+# define RESET "\001\033[0m\002"
 
 # define BLACK   "\033[0;30m"
 # define RED     "\033[0;31m"
