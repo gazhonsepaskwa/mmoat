@@ -71,7 +71,12 @@ int	exec(t_ast_n *node)
 		close(node->msh->hist);
 	path = find_path(node->cmd, node->msh->env);
 	if (!path)
-		return_error(node->cmd, "command not found", 127, node);
+	{
+		if (!access(node->cmd, F_OK) && access(node->cmd, X_OK))
+			return_error(node->cmd, "Permission denied", 126, node);
+		else
+			return_error(node->cmd, "command not found", 127, node);
+	}
 	if (access(path, X_OK) != 0)
 		return_error(path, "Permission denied", 126, node);
 	if (execve(path, node->args, node->msh->env) == -1)

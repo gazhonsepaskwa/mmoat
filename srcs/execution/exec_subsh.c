@@ -38,18 +38,23 @@ int	exec_shcmd(t_ast_n *node)
 	}
 }
 
+static int	execute_shand(t_ast_n *node)
+{
+	node->msh->ex_code = execute_shcommand(node->left);
+	if (node->msh->ex_code == 0)
+		node->msh->ex_code = execute_shcommand(node->right);
+	return (node->msh->ex_code);
+}
+
 int	execute_shcommand(t_ast_n *node)
 {
 	if (node->state == _CMD)
-		handle_redir(node);
+		if (handle_redir(node) == 1)
+			return (1);
 	if (node->state == _CMD)
 		node->msh->ex_code = exec_shcmd(node);
 	else if (node->state == _AND)
-	{
-		node->msh->ex_code = execute_shcommand(node->left);
-		if (node->msh->ex_code == 0)
-			node->msh->ex_code = execute_shcommand(node->right);
-	}
+		execute_shand(node);
 	else if (node->state == _OR)
 	{
 		node->msh->ex_code = execute_shcommand(node->left);
@@ -65,6 +70,20 @@ int	execute_shcommand(t_ast_n *node)
 	return (node->msh->ex_code);
 }
 
+static int	in_subsh(t_ast_n *node)
+{
+	int	ret;
+
+	if (handle_redir(node->parent) == 1)
+	{
+		free_child(node->msh);
+		return (1);
+	}
+	ret = execute_shcommand(node);
+	free_child(node->msh);
+	return (ret);
+}
+
 int	exec_subsh(t_ast_n *node)
 {
 	int		status;
@@ -74,10 +93,8 @@ int	exec_subsh(t_ast_n *node)
 	pid = fork();
 	if (pid == 0)
 	{
-		handle_redir(node->parent);
-		ret = execute_shcommand(node);
-		free_child(node->msh);
-		exit(ret);
+		ret = in_subsh(node);
+		exit (ret);
 	}
 	else if (pid > 0)
 	{

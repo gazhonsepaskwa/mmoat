@@ -25,10 +25,11 @@ typedef struct s_ast_n	t_ast_n;
 int		execute_command(t_ast_n *node);
 
 //EXEC_REDIR
-void	handle_file(t_ast_n *node, int check, int i);
-void	handle_redir(t_ast_n *node);
+int		handle_file(t_ast_n *node, int check, int i);
+int		handle_redir(t_ast_n *node);
 void	reset_redir(t_ast_n *node);
 int		err_fork_pline(int *pipes);
+void	dup_redir(t_ast_n *node, int i);
 
 //EXEC_BUILTIN
 int		is_builtin(char *str);
