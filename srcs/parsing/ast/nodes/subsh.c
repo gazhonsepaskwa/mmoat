@@ -37,7 +37,7 @@ t_node	*remove_parentheses(t_node *lst)
 		free(str);
 		it = it->next;
 	}
-	// ft_free(&str);
+	ft_free(&str);
 	return (out);
 }
 
