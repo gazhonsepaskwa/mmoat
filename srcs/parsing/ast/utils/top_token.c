@@ -6,7 +6,7 @@
 /*   By: nalebrun <nalebrun@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/31 17:14:26 by nalebrun          #+#    #+#             */
-/*   Updated: 2025/02/07 17:56:02 by nalebrun         ###   ########.fr       */
+/*   Updated: 2025/02/14 10:59:00 by nalebrun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,12 +28,11 @@ static int	last_tok_redir(t_node *lst)
 {
 	while (lst)
 	{
-		if ((lst->next == NULL
-				|| lst->next->pressision == D_RED_R
+		if ((lst->next == NULL || lst->next->pressision == D_RED_R
 				|| lst->next->pressision == RED_R
 				|| lst->next->pressision == RED_L
-				|| lst->next->pressision == HEREDOC)
-			&& !ft_strncmp(lst->val, ")", 1))
+				|| lst->next->pressision == HEREDOC) && !ft_strncmp(lst->val,
+				")", 1))
 			return (1);
 		lst = lst->next;
 	}
@@ -44,12 +43,16 @@ static void	skip_parentheses(t_node **lst)
 {
 	if (!ft_strncmp((*lst)->val, "(", 1))
 	{
-		while ((*lst)->next && ft_strncmp((*lst)->next->val, ")", 1))
+		(*lst) = (*lst)->next;
+		while (*lst && ft_strncmp((*lst)->val, ")", 1))
 		{
 			if (!ft_strncmp((*lst)->val, "(", 1))
-				skip_parentheses(&(*lst)->next);
-			*lst = (*lst)->next;
+				skip_parentheses(lst);
+			else
+				(*lst) = (*lst)->next;
 		}
+		if (*lst)
+			(*lst) = (*lst)->next;
 	}
 }
 
@@ -58,9 +61,10 @@ static t_node	*find_token(char *tok, t_node *lst)
 	while (lst)
 	{
 		skip_parentheses(&lst);
-		if (!ft_strncmp(lst->val, tok, ft_strlen(tok)))
+		if (lst && !ft_strncmp(lst->val, tok, ft_strlen(tok)))
 			return (lst);
-		lst = lst->next;
+		if (lst)
+			lst = lst->next;
 	}
 	return (NULL);
 }

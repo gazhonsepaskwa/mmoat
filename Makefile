@@ -29,10 +29,10 @@ $(LIBFT): $(LIBFT_SRCS)
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.c
 	@mkdir -p $(dir $@)
-	@$(CC) $(WFLAGS) -MMD -MP -I$(INCDIR) -D DIO_PATH="\"$(HOME)/ast.xml\"" -c $< -o $@ $(LINK)
+	@$(CC) $(WFLAGS) -gdwarf-4 -MMD -MP -I$(INCDIR) -D DIO_PATH="\"$(HOME)/ast.xml\"" -c $< -o $@ $(LINK)
 
 $(NAME): $(LIBFT) $(OBJS)
-	@$(CC) $(WFLAGS) $(OBJS) $(LIBFT) -D DIO_PATH="\"$(HOME)/ast.xml\"" -o $(NAME) $(LINK)
+	@$(CC) $(WFLAGS) -gdwarf-4 $(OBJS) $(LIBFT) -D DIO_PATH="\"$(HOME)/ast.xml\"" -o $(NAME) $(LINK)
 	@echo "$(CYAN)Build completed: $(NAME)$(RESET)"
 
 clean:

@@ -20,6 +20,7 @@ t_node	*remove_parentheses(t_node *lst)
 	char	*str;
 
 	out = NULL;
+	str = NULL;
 	it = lst;
 	it = it->next;
 	deepness = 1;
@@ -36,7 +37,7 @@ t_node	*remove_parentheses(t_node *lst)
 		free(str);
 		it = it->next;
 	}
-	free(str);
+	// ft_free(&str);
 	return (out);
 }
 
