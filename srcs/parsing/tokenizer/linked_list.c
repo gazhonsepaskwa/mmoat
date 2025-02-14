@@ -59,7 +59,7 @@ void	free_linked_list(t_node *head)
 	while (tmp)
 	{
 		next = tmp->next;
-		free(tmp->val);
+		ft_free(&tmp->val);
 		free(tmp);
 		tmp = next;
 	}

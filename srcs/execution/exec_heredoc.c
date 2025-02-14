@@ -92,13 +92,13 @@ int	ifhere_remove_quote(t_ast_n *node, int j)
 void	read_input(t_ast_n *node, int j)
 {
 	char	*str;
-	int		len;
+	// int		len;
 	int		check;
 
 	check = ifhere_remove_quote(node, j);
-	len = ft_strlen(node->files[j]);
+	// len = ft_strlen(node->files[j]);
 	str = get_next_line(node->msh->here_fd, 0);
-	while (str && ft_strncmp(str, node->files[j], len) != 0)
+	while (str && ft_strncmp(str, node->files[j], ft_strlen(str) - 1) != 0)
 	{
 		if (!check)
 			expander_here(&str, node);

@@ -28,7 +28,7 @@ int		check_unclosed(char *c, t_node *node);
 int		check_unclosed_quote(char *c, t_node *node);
 
 void	interpret_cmd(char **input, t_msh *msh);
-void	end_heredoc(char *buf, t_msh *msh, t_node *lst);
+void	end_heredoc(char *buf, t_msh *msh, t_node *lst, char *limiter);
 void	exit_heredoc(char *limiter, t_msh *msh, t_node *lst);
 
 #endif

@@ -12,49 +12,51 @@
 
 #include "../../../includes/minishell.h"
 
-static void	remove_quote(char **str, char c)
+static void	remove_quote(char **new, char *limiter, char c)
 {
-	char	*new;
+	// char	*new;
 	int		i;
 	int		k;
 	int		len;
 
 	i = 0;
 	k = 0;
-	len = ft_strlen(*str);
-	new = ft_calloc(len - 1, sizeof(char));
+	len = ft_strlen(limiter);
+	*(new) = ft_calloc(len - 1, sizeof(char));
 	while (i < len - 2)
 	{
-		if ((&((*str)[k]) == ft_strchr(*str, c))
-			|| (&((*str)[k]) == ft_strrchr(*str, c)))
+		if ((&(limiter[k]) == ft_strchr(limiter, c))
+			|| (&(limiter[k]) == ft_strrchr(limiter, c)))
 		{
 			k++;
 		}
 		else
-			new[i++] = (*str)[k++];
+			(*new)[i++] = limiter[k++];
 	}
-	ft_free(str);
-	*str = new;
+	// ft_free(str);
+	// *str = new;
 }
 
-static int	ifremove_quote(char **str)
+static int	ifremove_quote(char **new, char *limiter)
 {
 	char	c;
 	int		ret;
 
 	ret = 0;
-	if (!ft_strchr(*str, '\'') && !ft_strchr(*str, '\"'))
+	if (!ft_strchr(limiter, '\'') && !ft_strchr(limiter, '\"'))
 		c = 0;
-	else if (!ft_strchr(*str, '\"'))
+	else if (!ft_strchr(limiter, '\"'))
 		c = '\'';
-	else if (!ft_strchr(*str, '\''))
+	else if (!ft_strchr(limiter, '\''))
 		c = '\"';
-	else if (ft_strchr(*str, '\'') < ft_strchr(*str, '\"'))
+	else if (ft_strchr(limiter, '\'') < ft_strchr(limiter, '\"'))
 		c = '\'';
 	else
 		c = '\"';
-	if (c && (ft_strchr(*str, c) != ft_strrchr(*str, c)))
-		remove_quote(str, c);
+	if (c && (ft_strchr(limiter, c) != ft_strrchr(limiter, c)))
+		remove_quote(new, limiter, c);
+	else
+		*new = ft_strdup(limiter);
 	if (c)
 		ret = 1;
 	return (ret);
@@ -80,8 +82,8 @@ void	read_hereinput(char *limiter, t_node *lst, t_msh *msh)
 		r = read(0, &c, 1);
 	}
 	buf[i] = '\0';
-	if (ft_strncmp(buf, limiter, ft_strlen(limiter)) == 0)
-		end_heredoc(buf, msh, lst);
+	if (ft_strncmp(buf, limiter, -1) == 0)
+		end_heredoc(buf, msh, lst, limiter);
 	buf[i++] = '\n';
 	buf[i] = '\0';
 	ft_fprintf(1, "%s", buf);
@@ -91,16 +93,17 @@ void	parse_heredoc(char *limiter, t_node *lst, t_msh *msh)
 {
 	int		fd;
 	pid_t	pid;
+	char	*new;
 
 	fd = open(".heredoc", O_WRONLY | O_CREAT | O_APPEND, 0666);
 	pid = fork();
 	if (pid == 0)
 	{
-		ifremove_quote(&limiter);
+		ifremove_quote(&new, limiter);
 		dup2(fd, STDOUT_FILENO);
 		close(fd);
 		while (1)
-			read_hereinput(limiter, lst, msh);
+			read_hereinput(new, lst, msh);
 	}
 	else if (pid > 0)
 	{
