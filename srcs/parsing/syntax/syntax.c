@@ -107,6 +107,10 @@ int	syntax_error(t_node *head)
 		return (syntax_err_mess(cpy->val, 0));
 	while (cpy)
 	{
+		if (is_redir(cpy) && !cpy->next)
+			return (syntax_err_mess(cpy->val, 3));
+		if (is_redir(cpy) && cpy->next && cpy->next->next && !ft_strncmp(cpy->next->next->val, "(", 1))
+			return (syntax_err_mess(cpy->next->next->val, 0));
 		if (unexpected_token(cpy))
 			return (syntax_err_mess(cpy->val, 0));
 		if (cpy->next == NULL && is_aop_operator(cpy))
@@ -114,6 +118,8 @@ int	syntax_error(t_node *head)
 		if (!ft_strncmp(cpy->val, "(", 1) && cpy->next && !ft_strncmp(cpy->next->val, ")", 1))
 			return (syntax_err_mess(cpy->next->val, 0));
 		if (!ft_strncmp(cpy->val, ")", 1) && cpy->next && !ft_strncmp(cpy->next->val, "(", 1))
+			return (syntax_err_mess(cpy->next->val, 0));
+		if (is_aop_operator(cpy) && !ft_strncmp(cpy->next->val, ")", 1))
 			return (syntax_err_mess(cpy->next->val, 0));
 		if (is_aop_operator(cpy) && is_aop_operator(cpy->next))
 			return (syntax_err_mess(cpy->next->val, 0));

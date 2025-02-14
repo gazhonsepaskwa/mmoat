@@ -28,7 +28,7 @@ static int	last_tok_redir(t_node *lst)
 {
 	while (lst)
 	{
-		if ((lst->next == NULL 
+		if ((lst->next == NULL
 			|| lst->next->pressision == D_RED_R
 			|| lst->next->pressision == RED_R
 			|| lst->next->pressision == RED_L

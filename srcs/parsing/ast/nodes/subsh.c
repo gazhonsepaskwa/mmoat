@@ -23,7 +23,7 @@ t_node	*remove_parentheses(t_node *lst)
 	it = lst;
 	it = it->next;
 	deepness = 1;
-	while (1)
+	while (it)
 	{
 		str = ft_strdup(it->val);
 		if (it->pressision == SUBSH_S)
