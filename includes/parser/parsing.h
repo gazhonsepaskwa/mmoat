@@ -21,6 +21,12 @@ t_ast_n	*parser(char *input, t_msh *msh);
 
 int		unexpected_token(t_node *node);
 int		is_aop_operator(t_node *node);
+int		is_redir(t_node *cpy);
+int		is_basic_word(t_node *cpy);
+int		syntax_err_mess(char *token_base, int selected);
+int		check_unclosed(char *c, t_node *node);
+int		check_unclosed_quote(char *c, t_node *node);
+
 void	interpret_cmd(char **input, t_msh *msh);
 void	end_heredoc(char *buf, t_msh *msh, t_node *lst);
 void	exit_heredoc(char *limiter, t_msh *msh, t_node *lst);

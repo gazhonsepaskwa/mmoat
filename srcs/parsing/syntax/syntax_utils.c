@@ -31,3 +31,23 @@ int	unexpected_token(t_node *node)
 		return (1);
 	return (0);
 }
+
+int	is_redir(t_node *cpy)
+{
+	if (cpy->pressision == RED_L
+		|| cpy->pressision == RED_R
+		|| cpy->pressision == HEREDOC
+		|| cpy->pressision == D_RED_R)
+		return (1);
+	return (0);
+}
+
+int	is_basic_word(t_node *cpy)
+{
+	if (is_aop_operator(cpy)
+		|| is_redir(cpy)
+		|| !ft_strncmp(cpy->val, ")", 1)
+		|| !ft_strncmp(cpy->val, "(", 1))
+		return (0);
+	return (1);
+}

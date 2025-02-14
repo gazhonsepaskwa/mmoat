@@ -31,17 +31,18 @@ static void	add_nodell(t_nodell **nodell, t_node *node)
 	tmp->next->next = NULL;
 }
 
-static void update_subsh_l(int *shlvl, t_node *lst)
+static void	update_subsh_l(int *shlvl, t_node *lst)
 {
-  if (!lst)
-    return;
-  if (!ft_strncmp(")", lst->val, 1))
-    *shlvl = 0;
-  if (!ft_strncmp("(", lst->val, 1))
-    *shlvl = 1;
+	if (!lst)
+		return ;
+	if (!ft_strncmp(")", lst->val, 1))
+		*shlvl = 0;
+	if (!ft_strncmp("(", lst->val, 1))
+		*shlvl = 1;
 }
 
-static t_node	*get_node(t_node **lst, t_node *expected, int limiter, int *shlvl)
+static t_node	*get_node(t_node **lst, t_node *expected,
+						int limiter, int *shlvl)
 {
 	t_node	*node;
 
@@ -51,9 +52,11 @@ static t_node	*get_node(t_node **lst, t_node *expected, int limiter, int *shlvl)
 		add_node_back(&node, (*lst)->val, (*lst)->token, (*lst)->pressision);
 		(*lst) = (*lst)->next;
 	}
-	while (limiter == -1 && (*lst) && ( *shlvl == 1 || ft_strncmp((*lst)->val, expected->val, ft_strlen((*lst)->val))))
+	while (limiter == -1 && (*lst)
+		&& (*shlvl == 1
+			|| ft_strncmp((*lst)->val, expected->val, ft_strlen((*lst)->val))))
 	{
-    update_subsh_l(shlvl, *lst);
+		update_subsh_l(shlvl, *lst);
 		add_node_back(&node, (*lst)->val, (*lst)->token, (*lst)->pressision);
 		(*lst) = (*lst)->next;
 	}
@@ -66,14 +69,14 @@ t_nodell	*cutll(t_node *lst, t_node *expected, size_t limiter)
 	t_node		*node;
 	size_t		i;
 	t_nodell	*tmp;
-  int       shlvl;
+	int			shlvl;
 
 	i = 0;
 	out = NULL;
-  shlvl = 0;
+	shlvl = 0;
 	while (i <= limiter)
 	{
-    update_subsh_l(&shlvl, lst);
+		update_subsh_l(&shlvl, lst);
 		node = get_node(&lst, expected, limiter, &shlvl);
 		if (!node)
 			break ;
@@ -82,7 +85,7 @@ t_nodell	*cutll(t_node *lst, t_node *expected, size_t limiter)
 		while (tmp)
 			tmp = tmp->next;
 		if (!lst)
-      break;
+			break ;
 		lst = lst->next;
 		i++;
 	}

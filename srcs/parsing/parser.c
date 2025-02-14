@@ -36,6 +36,15 @@ void	truncate_comment(char *str)
 	}
 }
 
+static void	debug_dio_ast(t_ast_n *ast, int dio)
+{
+	if (DEBUG)
+	{
+		gen_dio_ast(ast, dio);
+		drawio_end_file(dio);
+	}
+}
+
 t_ast_n	*parser(char *input, t_msh *msh)
 {
 	t_node	*lst;
@@ -45,7 +54,10 @@ t_ast_n	*parser(char *input, t_msh *msh)
 	truncate_comment(input);
 	lst = tokenize(input);
 	if (!lst)
+	{
+		msh->ex_code = 2;
 		return (NULL);
+	}
 	create_heredoc(lst, msh);
 	if (DEBUG)
 	{
@@ -53,13 +65,9 @@ t_ast_n	*parser(char *input, t_msh *msh)
 		gen_dio_linked_list(lst, dio);
 	}
 	ast = get_ast(msh, lst);
+	debug_dio_ast(ast, dio);
 	if (!ast)
 		return (NULL);
-	if (DEBUG)
-	{
-		gen_dio_ast(ast, dio);
-		drawio_end_file(dio);
-	}
 	free_linked_list(lst);
 	return (ast);
 }
