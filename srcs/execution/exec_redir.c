@@ -29,7 +29,7 @@ int	handle_file(t_ast_n *node, int check, int i)
 		fd = open(node->files[i], O_WRONLY | O_CREAT | O_APPEND, 0666);
 	if (fd == -1)
 	{
-		ft_fprintf(2, "%s: %s\n",node->files[i], "Permission denied");
+		ft_fprintf(2, "%s: %s\n", node->files[i], "Permission denied");
 		return (1);
 	}
 	if (check == 1)
