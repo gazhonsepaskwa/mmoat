@@ -58,7 +58,7 @@ void	expander_star(t_ast_n *node, int j, char *pat)
 	entry = readdir(dir);
 	while (entry != NULL)
 	{
-		if (ft_strncmp(entry->d_name, ".", 1) == 0)
+		if (ft_strncmp(entry->d_name, ".", 1) == 0 && *pat != '.')
 			entry = readdir(dir);
 		else if (ft_fnmatch(entry->d_name, pat) == true)
 		{
