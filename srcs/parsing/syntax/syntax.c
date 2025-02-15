@@ -21,7 +21,11 @@ static int	parenthesis_error(t_node *cpy)
 	if (!ft_strncmp(cpy->val, ")", 1) && cpy->next
 		&& !ft_strncmp(cpy->next->val, "(", 1))
 		return (syntax_err_mess(cpy->next->val, 0));
-	if (is_aop_operator(cpy) && !ft_strncmp(cpy->next->val, ")", 1))
+	if (is_aop_operator(cpy) && cpy->next
+		&& !ft_strncmp(cpy->next->val, ")", 1))
+		return (syntax_err_mess(cpy->next->val, 0));
+	if (cpy->next && !ft_strncmp(cpy->next->val, "(", 1)
+		&& !is_aop_operator(cpy))
 		return (syntax_err_mess(cpy->next->val, 0));
 	return (0);
 }

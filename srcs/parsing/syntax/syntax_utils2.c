@@ -42,9 +42,9 @@ int	check_unclosed(char *c, t_node *node)
 	count = 0;
 	while (cpy)
 	{
-		if (!ft_strncmp(&c[0], cpy->val, 1))
+		if (!ft_strncmp(&c[0], cpy->val, 1) && count >= 0)
 			count++;
-		if (!ft_strncmp(&c[1], cpy->val, 1) && count != 0)
+		if (!ft_strncmp(&c[1], cpy->val, 1))
 			count--;
 		cpy = cpy->next;
 	}
