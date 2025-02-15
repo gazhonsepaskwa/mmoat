@@ -60,6 +60,6 @@ void	create_subsh(t_ast_n *self, t_node *lst, t_msh *msh)
 		while (self->redir[++i])
 			ft_debug("subsh_redir : [%d]%s\n", self->redir[i], self->files[i]);
 		ft_debug("==== SUBSH DONE\n\n");
-		free_linked_list(cutted);
 	}
+	free_linked_list(cutted);
 }
