@@ -51,6 +51,7 @@ t_ast_n	*parser(char *input, t_msh *msh)
 	t_ast_n	*ast;
 	int		dio;
 
+	dio = 0;
 	truncate_comment(input);
 	lst = tokenize(input);
 	if (!lst)
