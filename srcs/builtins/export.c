@@ -15,28 +15,26 @@
 int	is_export_valid(char *str)
 {
 	char	*equal;
+	char	*key_end;
 
 	if (!ft_isalpha(*str) && str[0] != '_')
 		return (0);
 	equal = ft_strchr(str, '=');
-	if (!equal)
+	if (equal)
 	{
-		while (*(++str))
-		{
-			if (!ft_isalnum(*str) && *str != '_')
-				return (0);
-		}
-		return (1);
+		if (equal != str && *(equal - 1) == '+')
+			key_end = equal - 1;
+		else
+			key_end = equal;
 	}
 	else
+		key_end = str + ft_strlen(str);
+	while ((++str) < key_end)
 	{
-		while (++str < equal)
-		{
-			if (!ft_isalnum(*str) && *str != '_')
-				return (0);
-		}
-		return (1);
+		if (!ft_isalnum(*str) && *str != '_')
+		   return (0);
 	}
+	return (1);
 }
 
 char	**key_value(char *str)
@@ -44,12 +42,17 @@ char	**key_value(char *str)
 	char	**tmp;
 	char	*save;
 	char	*equal;
+	char	*key_end;
 
 	tmp = malloc(sizeof(char *) * (2 + 1));
 	if (!tmp)
 		return (NULL);
 	equal = ft_strchr(str, '=');
-	tmp[0] = ft_substr(str, 0, equal - str);
+	if (*(equal - 1) == '+')
+		key_end = equal - 1;
+	else
+		key_end = equal;
+	tmp[0] = ft_substr(str, 0, key_end - str);
 	if (equal - str == 0)
 		tmp[1] = ft_strdup("");
 	else
@@ -109,7 +112,6 @@ int	print_export(char **envp)
 int	builtin_export(char **arg, t_ast_n *head)
 {
 	int		i;
-	char	**tmp;
 
 	i = 0;
 	if (count_args(arg) == 1)
@@ -117,18 +119,7 @@ int	builtin_export(char **arg, t_ast_n *head)
 	while (++i < count_args(arg))
 	{
 		if (is_export_valid(arg[i]))
-		{
-			if (ft_strchr(arg[i], '=') != NULL)
-			{
-				tmp = key_value(arg[i]);
-				if (!tmp)
-					return (1);
-				set_var_env(tmp[0], tmp[1], head->msh);
-				free_tab(tmp);
-			}
-			else
-				set_var_env(arg[i], NULL, head->msh);
-		}
+			set_new_export(arg[i], head);
 		else
 			return (err_msg_cmd("export", arg[i], EXPRT_INV, 1));
 	}

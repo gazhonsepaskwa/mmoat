@@ -29,5 +29,6 @@ bool	is_valid_key(char *key, t_msh *msh);
 int		remove_env_var(char *key, t_msh *msh);
 void	set_var_env(char *key, char *value, t_msh *msh);
 char	**init_env(char **envp);
+void	append_var(char *key, char *add, t_msh *msh);
 
 #endif

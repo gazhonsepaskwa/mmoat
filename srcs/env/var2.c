@@ -64,6 +64,33 @@ int	remove_env_var(char *key, t_msh *msh)
 	return (0);
 }
 
+void	append_var(char *key, char *add, t_msh *msh)
+{
+	int		i;
+	char	*tmp;
+
+	tmp = NULL;
+	i = get_var_index(key, msh);
+	if (i != -1)
+	{
+		tmp = ft_strjoin(msh->env[i], add);
+		ft_free(&(msh->env[i]));
+		msh->env[i] = ft_strdup(tmp);
+	}
+	else
+	{
+		i = count_var(msh->env);
+		msh->env = copy_env_var(msh->env, i + 1);
+		if (!msh->env)
+			return ;
+		if (add)
+			tmp = ft_strjoin("=", add);
+		msh->env[i] = ft_strjoin(key, tmp);
+	}
+	ft_free(&tmp);
+	return ;
+}
+
 void	set_var_env(char *key, char *value, t_msh *msh)
 {
 	int		i;
