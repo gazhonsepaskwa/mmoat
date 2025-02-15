@@ -13,32 +13,6 @@
 #include "../../../../includes/minishell.h"
 #include <string.h>
 
-static int	last_tok_subsh(t_node *lst)
-{
-	while (lst)
-	{
-		if ((lst->next == NULL) && !ft_strncmp(lst->val, ")", 1))
-			return (1);
-		lst = lst->next;
-	}
-	return (0);
-}
-
-static int	last_tok_redir(t_node *lst)
-{
-	while (lst)
-	{
-		if ((lst->next == NULL || lst->next->pressision == D_RED_R
-				|| lst->next->pressision == RED_R
-				|| lst->next->pressision == RED_L
-				|| lst->next->pressision == HEREDOC) && !ft_strncmp(lst->val,
-				")", 1))
-			return (1);
-		lst = lst->next;
-	}
-	return (0);
-}
-
 static void	skip_parentheses(t_node **lst)
 {
 	if (!ft_strncmp((*lst)->val, "(", 1))
@@ -69,15 +43,31 @@ static t_node	*find_token(char *tok, t_node *lst)
 	return (NULL);
 }
 
+static t_node	*rfind_token(char *tok, t_node *lst)
+{
+	t_node	*lst_it;
+
+	lst_it = NULL;
+	while (lst)
+	{
+		skip_parentheses(&lst);
+		if (lst && !ft_strncmp(lst->val, tok, ft_strlen(tok)))
+			lst_it = lst;
+		if (lst)
+			lst = lst->next;
+	}
+	return (lst_it);
+}
+
 t_node	*get_top_token(t_node *lst, t_state *state)
 {
 	*state = _SUBSH;
-	if (find_token("&&", lst))
+	if (rfind_token("&&", lst) > rfind_token("||", lst))
 	{
 		*state = _AND;
 		return (find_token("&&", lst));
 	}
-	else if (find_token("||", lst))
+	else if (rfind_token("||", lst) > rfind_token("&&", lst))
 	{
 		*state = _OR;
 		return (find_token("||", lst));

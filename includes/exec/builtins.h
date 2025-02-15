@@ -39,7 +39,7 @@ int		builtin_export(char **arg, t_ast_n *head);
 
 //UTILS
 int		count_char(char *str);
-int 	is_append(char *str);
+int		is_append(char *str);
 char	**key_value(char *str);
 void	set_new_export(char *str, t_ast_n *node);
 int		count_args(char **tab);

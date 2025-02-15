@@ -75,7 +75,7 @@ int	syntax_error(t_node *head)
 		return (syntax_err_mess(cpy->val, 0));
 	while (cpy)
 	{
-		if (redir_error(cpy)) 
+		if (redir_error(cpy))
 			return (1);
 		if (parenthesis_error(cpy))
 			return (1);

@@ -12,12 +12,12 @@
 
 #include "../../includes/minishell.h"
 
-int is_append(char *str)
+int	is_append(char *str)
 {
 	if (*(ft_strchr(str, '=') - 1) == '+')
-		  return (1);
+		return (1);
 	else
-		  return (0);
+		return (0);
 }
 
 void	set_new_export(char *str, t_ast_n *node)
@@ -37,5 +37,4 @@ void	set_new_export(char *str, t_ast_n *node)
 	}
 	else
 		set_var_env(str, NULL, node->msh);
-
 }

@@ -32,7 +32,7 @@ int	is_export_valid(char *str)
 	while ((++str) < key_end)
 	{
 		if (!ft_isalnum(*str) && *str != '_')
-		   return (0);
+			return (0);
 	}
 	return (1);
 }

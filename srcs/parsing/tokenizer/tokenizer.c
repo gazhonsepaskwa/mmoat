@@ -116,31 +116,17 @@ t_node	*tokenize(char *str)
 	head = tokenize_base(str);
 	if (!head)
 		return (NULL);
-	// debug_token_list(head, "tokenizer base");
-	
 	if (!trim_nodes(head))
 		return (NULL);
-	// debug_token_list(head, "trim");
-	
 	if (!unstick_nodes(head))
 		return (NULL);
-	// debug_token_list(head, "unstick");
-
 	stick_quote_node(head, 39);
 	stick_quote_node(head, '"');
-	// debug_token_list(head, "stick_quote_node");
-	
 	set_token(head);
-	// debug_token_list(head, "set token");
-
 	if (!trim_nodes(head))
 		return (NULL);
-	// debug_token_list(head, "trim2");
-	
 	del_void_nodes(&head);
-	// debug_token_list(head, "del_void_nodes");
 	debug_token_list(head, "tokenizer");
-
 	if (syntax_error(head))
 		return (free_linked_list(head), NULL);
 	return (head);
