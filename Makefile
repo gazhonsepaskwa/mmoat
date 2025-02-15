@@ -1,4 +1,4 @@
-CC = gcc
+CC = cc
 WFLAGS = -Wall -Werror -Wextra -g -g3 -ggdb
 LINK = -lreadline
 
@@ -29,7 +29,7 @@ $(LIBFT): $(LIBFT_SRCS)
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.c
 	@mkdir -p $(dir $@)
-	@$(CC) $(WFLAGS) -gdwarf-4 -MMD -MP -I$(INCDIR) -D DIO_PATH="\"$(HOME)/ast.xml\"" -c $< -o $@ $(LINK)
+	@$(CC) $(WFLAGS) -gdwarf-4 -MMD -MP -I$(INCDIR) -D DIO_PATH="\"$(HOME)/ast.xml\"" -c $< -o $@
 
 $(NAME): $(LIBFT) $(OBJS)
 	@$(CC) $(WFLAGS) -gdwarf-4 $(OBJS) $(LIBFT) -D DIO_PATH="\"$(HOME)/ast.xml\"" -o $(NAME) $(LINK)

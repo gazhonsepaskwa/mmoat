@@ -80,6 +80,7 @@ bool	is_valid_key(char *key, t_msh *msh)
 	char	*tmp;
 	int		i;
 
+	i = 0;
 	tmp = ft_strjoin(key, "=");
 	if (!tmp)
 		return (false);

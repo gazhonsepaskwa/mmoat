@@ -35,6 +35,7 @@ static char	*extract_env(char *str, char **envp)
 	char	*tmp;
 
 	i = 1;
+	tmp = NULL;
 	while (str[i] && is_exvalidchar(str[i]))
 		i++;
 	if (i > 1)

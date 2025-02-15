@@ -16,6 +16,7 @@ int	handle_file(t_ast_n *node, int check, int i)
 {
 	int	fd;
 
+	fd = 0;
 	if (check == 1 && access(node->files[i], F_OK))
 	{
 		ft_fprintf(2, "%s: %s\n", node->files[i], "No such file or directory");

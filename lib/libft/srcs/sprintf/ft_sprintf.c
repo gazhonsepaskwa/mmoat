@@ -23,6 +23,7 @@ static char	*add_arg(char c, char *str, va_list args)
 {
 	char	*out;
 
+	out = NULL;
 	if (c == 'c')
 		out = ft_strfjoinc(str, va_arg(args, int));
 	else if (c == 's')

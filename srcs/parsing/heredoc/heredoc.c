@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nalebrun <nalebrun@student.s19.be>         +#+  +:+       +#+        */
+/*   By: lderidde <lderidde@student.s19.be>        +#+  +:+       +#+         */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/11 09:01:14 by lderidde          #+#    #+#             */
-/*   Updated: 2025/02/11 16:31:50 by nalebrun         ###   ########.fr       */
+/*   Updated: 2025/02/15 09:28:28 by lderidde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 
 static void	remove_quote(char **new, char *limiter, char c)
 {
-	// char	*new;
 	int		i;
 	int		k;
 	int		len;
@@ -33,8 +32,6 @@ static void	remove_quote(char **new, char *limiter, char c)
 		else
 			(*new)[i++] = limiter[k++];
 	}
-	// ft_free(str);
-	// *str = new;
 }
 
 static int	ifremove_quote(char **new, char *limiter)

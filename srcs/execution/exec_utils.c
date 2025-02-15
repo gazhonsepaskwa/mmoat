@@ -6,7 +6,7 @@
 /*   By: lderidde <lderidde@student.s19.be>        +#+  +:+       +#+         */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 09:57:39 by lderidde          #+#    #+#             */
-/*   Updated: 2025/02/12 13:30:44 by lderidde         ###   ########.fr       */
+/*   Updated: 2025/02/15 09:22:23 by lderidde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,7 @@ char	*execextract_env(char *str, char **envp)
 	char	*tmp;
 
 	i = 1;
+	tmp = NULL;
 	while (str[i] && execis_validchar(str[i]))
 		i++;
 	if (i > 1)
