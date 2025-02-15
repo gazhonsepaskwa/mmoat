@@ -5,6 +5,7 @@ ast.xml
 .TEST_objs
 .mmoat_history
 .heredoc
+run_vg.sh
 
 file
 file2

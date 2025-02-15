@@ -25,7 +25,7 @@ static int	parenthesis_error(t_node *cpy)
 		&& !ft_strncmp(cpy->next->val, ")", 1))
 		return (syntax_err_mess(cpy->next->val, 0));
 	if (cpy->next && !ft_strncmp(cpy->next->val, "(", 1)
-		&& !is_aop_operator(cpy))
+		&& !is_aop_operator(cpy) && ft_strncmp(cpy->next->val, "(", 1))
 		return (syntax_err_mess(cpy->next->val, 0));
 	return (0);
 }
@@ -71,11 +71,15 @@ int	syntax_error(t_node *head)
 	t_node	*cpy;
 
 	cpy = head;
-	if (is_aop_operator(cpy) && cpy->next == NULL)
+	if (is_aop_operator(cpy))
 		return (syntax_err_mess(cpy->val, 0));
 	while (cpy)
 	{
-		if (redir_error(cpy) || parenthesis_error(cpy) || aop_error(cpy))
+		if (redir_error(cpy)) 
+			return (1);
+		if (parenthesis_error(cpy))
+			return (1);
+		if (aop_error(cpy))
 			return (1);
 		if (unexpected_token(cpy))
 			return (syntax_err_mess(cpy->val, 0));

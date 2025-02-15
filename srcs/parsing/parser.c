@@ -61,10 +61,8 @@ t_ast_n	*parser(char *input, t_msh *msh)
 	}
 	create_heredoc(lst, msh);
 	if (DEBUG)
-	{
 		dio = drawio_init(DIO_PATH);
-		gen_dio_linked_list(lst, dio);
-	}
+	// gen_dio_linked_list(lst, dio);
 	ast = get_ast(msh, lst);
 	debug_dio_ast(ast, dio);
 	if (!ast)

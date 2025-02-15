@@ -72,8 +72,6 @@ static t_node	*find_token(char *tok, t_node *lst)
 t_node	*get_top_token(t_node *lst, t_state *state)
 {
 	*state = _SUBSH;
-	if (!ft_strncmp(lst->val, "(", 1) && last_tok_subsh(lst))
-		return (lst);
 	if (find_token("&&", lst))
 	{
 		*state = _AND;
@@ -90,6 +88,8 @@ t_node	*get_top_token(t_node *lst, t_state *state)
 		return (find_token("|", lst));
 	}
 	else if (!ft_strncmp(lst->val, "(", 1) && last_tok_redir(lst))
+		return (lst);
+	else if (!ft_strncmp(lst->val, "(", 1) && last_tok_subsh(lst))
 		return (lst);
 	else
 	{
