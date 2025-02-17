@@ -6,87 +6,59 @@
 /*   By: lderidde <lderidde@student.s19.be>        +#+  +:+       +#+         */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/07 12:56:32 by lderidde          #+#    #+#             */
-/*   Updated: 2025/02/08 13:15:52 by lderidde         ###   ########.fr       */
+/*   Updated: 2025/02/17 09:30:24 by lderidde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
+#include <stdbool.h>
 
-static int	get_nw_len(t_ast_n *node, int j)
+void	expander_tilde(t_ast_n *node, int j, int i, char *str)
 {
-	int	i;
-	int	len;
-
-	i = -1;
-	len = ft_strlen(node->args[j]);
-	while (node->args[j][++i])
-	{
-		if (node->args[j][i] == '~')
-		{
-			len += ft_strlen(get_var_value("HOME", node->msh->env)) - 1;
-		}
-	}
-	return (len);
-}
-
-size_t	ft_astrlcat(char *dst, const char *src, size_t dstsize)
-{
-	size_t	dst_len;
-	size_t	src_len;
-	size_t	i;
-
-	if (!dst || !src)
-		return (0);
-	dst_len = ft_strlen(dst);
-	src_len = ft_strlen(src);
-	if (dstsize <= dst_len)
-		return (dstsize + src_len);
-	i = -1;
-	while (src[++i] && (dst_len + i) < (dstsize - 1))
-		dst[dst_len + i] = src[i];
-	dst[dst_len + i] = '\0';
-	return (dst_len + src_len);
-}
-
-void	expander_tilde(t_ast_n *node, int j)
-{
-	int		i;
-	int		len;
-	int		save;
 	char	*new;
+	char	*ret;
+	char	*var;
+	int		k;
+	int		l;
 
-	i = -1;
-	len = get_nw_len(node, j);
-	new = ft_calloc(len + 1, sizeof(char));
+	k = i;
+	var = get_var_value("HOME", node->msh->env);
+	new = ft_calloc(ft_strlen(str) + ft_strlen(var), 1);
 	if (!new)
 		return ;
-	save = len;
-	len = 0;
-	while (++i < save)
-	{
-		if (node->args[j][len] != '~')
-			new[i] = node->args[j][len++];
-		else
-		{
-			ft_astrlcat(new, get_var_value("HOME", node->msh->env), -1);
-			i = ft_strlen(new) - 1;
-			len++;
-		}
-	}
+	ret = new;
+	l = -1;
+	while (++l < i)
+		*new++ = node->args[j][l];
+	ft_strlcat(new, var, -1);
+	ft_strlcat(new, &node->args[j][++i], -1);
 	ft_free(&node->args[j]);
-	node->args[j] = new;
+	node->args[j] = ret;
 }
 
 int	expand_tilde(t_ast_n *node, int j)
 {
-	int	i;
+	int		i;
+	bool	in_squote;
+	bool	in_dquote;
+	int		ret;
 
 	i = 0;
+	ret = 0;
+	in_squote = false;
+	in_dquote = false;
 	while (node->args[j][i])
 	{
-		if (node->args[j][i] == '~')
-			return (expander_tilde(node, j), 1);
+		if (node->args[j][i] == '"' && !in_squote)
+			in_dquote = !in_dquote;
+		else if (node->args[j][i] == '\'' && !in_dquote)
+			in_squote = !in_squote;
+		else if (node->args[j][i] == '~' && !in_squote)
+		{
+			ret = 1;
+			expander_tilde(node, j, i, node->args[j]);
+		}
 		i++;
 	}
-	return (0);
+	return (ret);
 }
