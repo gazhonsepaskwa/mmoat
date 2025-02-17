@@ -86,6 +86,7 @@ void	ft_error(char *e);
 int		ft_printf(const char *fstr, ...);
 int		ft_fprintf(int fd, const char *str, ...);
 char	*ft_sprintf(const char *str, ...);
+char	*ft_strfjoin(char *s1, char *s2);
 int		ft_debug(const char *fstr, ...);
 char	*rep_c(char c, int count);
 

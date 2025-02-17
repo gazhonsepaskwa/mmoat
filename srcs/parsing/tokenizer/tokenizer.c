@@ -11,76 +11,92 @@
 /* ************************************************************************** */
 
 #include "../../../includes/minishell.h"
+//
+// char *get_til_nxt_quote(char **str, char quote)
+// {
+// 	char	*base;
+// 	char	*tmp;
+// 	char	*out;
+// 	int		len;
+//
+// 	base = *str;
+// 	len = 1;
+// 	tmp = NULL;
+// 	if (**str)
+// 		(*str)++;
+// 	while ((**str) && **str != quote)
+// 	{
+// 		len++;
+// 		(*str)++;
+// 	}
+// 	out = ft_substr(base, 0, len + 1);
+// 	if (**str)
+// 		(*str)++;
+// 	if (**str && *(*str) && (*(*str) == '"' || *(*str) == '\'')) 
+// 	{
+// 		tmp = get_til_nxt_quote(str, **str);
+// 	}
+// 	out = ft_strfjoin(out, tmp);
+// 	ft_free(&tmp);
+// 	return (out);
+// }
+//
+
+bool is_space(char c)
+{
+	if ((c >= 9 && c <= 13) || c == 32)
+		return (true);
+	else
+	 return (false);
+}
+
+int	skip_quote(char *str)
+{
+	int i;
+
+	if (!str[1])
+		return 0;
+	i = 1;
+	while(str[i] && (str[i] != '\'' || str[i] != '"'))
+		i++;
+	return (i);
+}
+
+int	goto_nxt_space(char *str)
+{
+	int		i;
+
+	i = 0;
+	while (is_space(str[i]))
+		i++;
+	while (str[i] && !is_space(str[i]))
+	{
+		if (str[i] == '\'' || str[i] == '"')
+			i += skip_quote(&(str[i]));
+		i++;
+	}
+	return (i);
+}
 
 static t_node	*tokenize_base(char *str)
 {
+	t_node	*lst;
+	char	*tmp;
 	int		i;
-	t_node	*head;
-	char	**tab;
+	int		len;
 
-	tab = ft_split_keep(str, " \t\n");
-	if (!tab)
-		return (NULL);
-	head = NULL;
+	lst = NULL;
+	tmp = NULL;
 	i = 0;
-	while (tab[i])
+	while (str[i])
 	{
-		if (!add_node_back(&head, tab[i], 0, 0))
-			return (free_tab(tab), NULL);
-		i++;
+		len = goto_nxt_space(&(str[i]));
+		tmp = ft_substr(&str[i], 0, len);
+		add_node_back(&lst, tmp, 0, 0);
+		ft_free(&tmp);
+		i += len;
 	}
-	free_tab(tab);
-	return (head);
-}
-
-static int	unstick_nodes(t_node *head)
-{
-	t_node	*it;
-	char	*first_str;
-	char	*second_str;
-	int		copied;
-
-	it = head;
-	while (it != NULL)
-	{
-		if (is_sticked(it->val))
-		{
-			if (is_meta(it->val[0]))
-				first_str = copy_meta(it->val, &copied);
-			else
-				first_str = copy_unmeta(it->val, &copied);
-			second_str = ft_substr(it->val, copied, ft_strlen(it->val)
-					- copied);
-			ft_free(&it->val);
-			it->val = ft_strdup(first_str);
-			create_node_after(it, second_str);
-			ft_free(&first_str);
-			ft_free(&second_str);
-		}
-		it = it->next;
-	}
-	return (1);
-}
-
-static int	stick_quote_node(t_node *head, char q)
-{
-	t_node	*it;
-
-	it = head;
-	while (it != NULL)
-	{
-		if (ft_strchr(it->val, q) && ft_strchr(it->val,
-				q) == ft_strrchr(it->val, q))
-		{
-			while (it->next && !ft_strchr(it->next->val, q))
-				if (!merge_with_next_node(it))
-					return (0);
-			if (it->next && !merge_with_next_node(it))
-				return (0);
-		}
-		it = it->next;
-	}
-	return (1);
+	return (lst);
 }
 
 static void	del_void_nodes(t_node **head)
@@ -116,18 +132,15 @@ t_node	*tokenize(char *str)
 	head = tokenize_base(str);
 	if (!head)
 		return (NULL);
+	debug_token_list(head, "base");
 	if (!trim_nodes(head))
 		return (NULL);
-	if (!unstick_nodes(head))
-		return (NULL);
-	stick_quote_node(head, 39);
-	stick_quote_node(head, '"');
-	set_token(head);
-	if (!trim_nodes(head))
-		return (NULL);
+	debug_token_list(head, "trim");
 	del_void_nodes(&head);
-	debug_token_list(head, "tokenizer");
-	if (syntax_error(head))
-		return (free_linked_list(head), NULL);
+	debug_token_list(head, "del void");
+	set_token(head);
+	debug_token_list(head, "set token");
+	// if (syntax_error(head))
+		// return (free_linked_list(head), NULL);
 	return (head);
 }
