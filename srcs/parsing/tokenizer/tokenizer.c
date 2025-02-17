@@ -57,7 +57,7 @@ int	skip_quote(char *str)
 	if (!str[1])
 		return 0;
 	i = 1;
-	while(str[i] && (str[i] != '\'' || str[i] != '"'))
+	while(str[i] && str[i] != '\'' && str[i] != '"')
 		i++;
 	return (i);
 }
