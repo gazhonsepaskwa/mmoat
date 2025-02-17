@@ -11,30 +11,58 @@
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
+#include <stdbool.h>
 
-void	remove_quote(t_ast_n *node, int j, char c)
+// void	remove_quote(t_ast_n *node, int j, char c)
+// {
+// 	char	*new;
+// 	int		i;
+// 	int		k;
+// 	int		len;
+//
+// 	i = 0;
+// 	k = 0;
+// 	len = ft_strlen(node->args[j]);
+// 	new = ft_calloc(len - 1, sizeof(char));
+// 	while (i < len - 2)
+// 	{
+// 		if ((&(node->args[j][k]) == ft_strchr(node->args[j], c)) ||
+// 			(&(node->args[j][k]) == ft_strrchr(node->args[j], c)))
+// 		{
+// 			k++;
+// 		}
+// 		else
+// 			new[i++] = node->args[j][k++];
+// 	}
+// 	ft_free(&node->args[j]);
+// 	node->args[j] = new;
+// }
+//
+void	remove_quote(t_ast_n *node, int j, char *str)
 {
+	bool	in_squote;
+	bool	in_dquote;
 	char	*new;
-	int		i;
-	int		k;
-	int		len;
+	char	*ret;
 
-	i = 0;
-	k = 0;
-	len = ft_strlen(node->args[j]);
-	new = ft_calloc(len - 1, sizeof(char));
-	while (i < len - 2)
+	new = ft_calloc(ft_strlen(str) + 1, sizeof(char));
+	if (!new)
+		return ;
+	ret = new;
+	in_squote = false;
+	in_dquote = false;
+	while (*str)
 	{
-		if ((&(node->args[j][k]) == ft_strchr(node->args[j], c)) ||
-			(&(node->args[j][k]) == ft_strrchr(node->args[j], c)))
-		{
-			k++;
-		}
+		if (*str == '"' && !in_squote)
+			in_dquote = !in_dquote;
+		else if (*str == '\'' && !in_dquote)
+			in_squote = !in_squote;
 		else
-			new[i++] = node->args[j][k++];
+			*new++ = *str;
+		str++;
 	}
 	ft_free(&node->args[j]);
-	node->args[j] = new;
+	node->args[j] = ret;
 }
 
 int	ifremove_quote(t_ast_n *node, int j)
@@ -54,7 +82,7 @@ int	ifremove_quote(t_ast_n *node, int j)
 	else
 		c = '\"';
 	if (c && (ft_strchr(node->args[j], c) != ft_strrchr(node->args[j], c)))
-		remove_quote(node, j, c);
+		remove_quote(node, j, node->args[j]);
 	if (c)
 		ret = 1;
 	return (ret);
