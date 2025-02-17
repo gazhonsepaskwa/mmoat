@@ -13,7 +13,9 @@
 #include "../includes/minishell.h"
 #include <readline/history.h>
 #include <readline/readline.h>
+#include <stdlib.h>
 #include <termios.h>
+#include <time.h>
 
 int	g_sig = 0;
 
@@ -36,10 +38,21 @@ static void	add_prevhistory(t_msh *msh)
 void	handle_sigint(int sig)
 {
 	(void)sig;
-	write(2, "\n\n", 2);
-	rl_on_new_line();
-	rl_replace_line("", 0);
-	rl_redisplay();
+	int	status;
+	pid_t	pid;
+
+	pid = waitpid(-1, &status, 0);
+	if (pid > 0 && (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT))
+	{
+		write(2, "\n", 2);
+	}
+	else
+	{
+		write(2, "\n\n", 2);
+		rl_on_new_line();
+		rl_replace_line("", 0);
+		rl_redisplay();
+	}
 	g_sig = sig;
 }
 

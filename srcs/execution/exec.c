@@ -43,5 +43,7 @@ int	execute_command(t_ast_n *node)
 		node->msh->ex_code = exec_subsh(node->left);
 	if (node->state == _CMD)
 		reset_redir(node);
+	if (node->state == _CMD)
+		set_var_env("_", node->args[count_args(node->args) - 1], node->msh);
 	return (node->msh->ex_code);
 }

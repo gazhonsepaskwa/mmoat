@@ -47,6 +47,32 @@ static char	*extract_env(char *str, char **envp)
 	return (var);
 }
 
+int	expand_exit(t_ast_n *node, int j, int i)
+{
+	int		k;
+	char	*new;
+	char	*ret;
+	int		len;
+
+	k = -1;
+	if (node->args[j][i + 1] && node->args[j][i + 1] == '?')
+	{
+		len = ft_strlen(ft_itoa(node->msh->ex_code));
+		new = ft_calloc(ft_strlen(node->args[j]) + len + 1, 1);
+		if (!new)
+			return (0);
+		ret = new;
+		while (++k < i)
+			*new++ = node->args[j][k];
+		ft_strlcat(new, ft_itoa(node->msh->ex_code), -1);
+		ft_strlcat(new, &node->args[j][i + 2], -1);
+		ft_free(&node->args[j]);
+		node->args[j] = ret;
+		return (1);
+	}
+	return (0);
+}
+
 void	expander_var(t_ast_n *nd, int j, int i)
 {
 	char	*new;
@@ -56,6 +82,8 @@ void	expander_var(t_ast_n *nd, int j, int i)
 	int		l;
 
 	k = i;
+	if (expand_exit(nd, j , i))
+		return ;
 	new = ft_calloc(ft_strlen(nd->args[j]) + get_var_len(nd, j, &k), 1);
 	if (!new)
 		return ;
