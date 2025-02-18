@@ -68,27 +68,35 @@ int	unic(int *meta)
 	return (1);
 }
 
+void update_quote(char *quote, char cmp)
+{
+	if (*quote == 0 && (cmp == '"' || cmp == '\''))
+		*quote = cmp;
+	else if (*quote == cmp)
+		*quote = 0;
+	return ;
+}
+
 int	is_sticked(char *val)
 {
-	int	i;
-	int	meta[100];
-	int	meta_it;
-	int	unmeta;
+	int		i;
+	int		meta[1000];
+	int		meta_it;
+	int		unmeta;
+	char	quote;
 
-	i = 0;
+	i = -1;
 	meta_it = 0;
 	meta[0] = -1;
 	unmeta = 0;
-	while (val[i])
+	quote = 0;
+	while (val[++i])
 	{
-		if (is_meta(val[i]))
-		{
-			meta[meta_it] = val[i];
-			meta_it++;
-		}
+		update_quote(&quote, val[i]);
+		if (is_meta(val[i]) && !quote)
+			meta[meta_it++] = val[i];
 		if (!is_meta(val[i]))
 			unmeta = 1;
-		i++;
 	}
 	meta[meta_it] = -1;
 	if ((meta[0] != -1 && unmeta) || !unic(meta) || (meta[0] == '('

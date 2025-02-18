@@ -66,5 +66,7 @@ char	*copy_meta(char *val, int *copied);
 char	*copy_unmeta(char *val, int *copied);
 void	debug_token_list(t_node *lst, char *msg);
 void	set_token(t_node *head);
+int		goto_nxt_space(char *str);
+void 	update_quote(char *quote, char cmp);
 
 #endif

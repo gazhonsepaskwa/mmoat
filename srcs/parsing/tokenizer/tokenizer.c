@@ -11,72 +11,6 @@
 /* ************************************************************************** */
 
 #include "../../../includes/minishell.h"
-//
-// char *get_til_nxt_quote(char **str, char quote)
-// {
-// 	char	*base;
-// 	char	*tmp;
-// 	char	*out;
-// 	int		len;
-//
-// 	base = *str;
-// 	len = 1;
-// 	tmp = NULL;
-// 	if (**str)
-// 		(*str)++;
-// 	while ((**str) && **str != quote)
-// 	{
-// 		len++;
-// 		(*str)++;
-// 	}
-// 	out = ft_substr(base, 0, len + 1);
-// 	if (**str)
-// 		(*str)++;
-// 	if (**str && *(*str) && (*(*str) == '"' || *(*str) == '\'')) 
-// 	{
-// 		tmp = get_til_nxt_quote(str, **str);
-// 	}
-// 	out = ft_strfjoin(out, tmp);
-// 	ft_free(&tmp);
-// 	return (out);
-// }
-//
-
-bool is_space(char c)
-{
-	if ((c >= 9 && c <= 13) || c == 32)
-		return (true);
-	else
-	 return (false);
-}
-
-int	skip_quote(char *str)
-{
-	int i;
-
-	if (!str[1])
-		return 0;
-	i = 1;
-	while(str[i] && str[i] != '\'' && str[i] != '"')
-		i++;
-	return (i);
-}
-
-int	goto_nxt_space(char *str)
-{
-	int		i;
-
-	i = 0;
-	while (is_space(str[i]))
-		i++;
-	while (str[i] && !is_space(str[i]))
-	{
-		if (str[i] == '\'' || str[i] == '"')
-			i += skip_quote(&(str[i]));
-		i++;
-	}
-	return (i);
-}
 
 static t_node	*tokenize_base(char *str)
 {
@@ -97,6 +31,77 @@ static t_node	*tokenize_base(char *str)
 		i += len;
 	}
 	return (lst);
+}
+
+void unstick_main(t_node *it)
+{
+	char	*first_str;
+	char	*second_str;
+	int		copied;
+
+	if (is_meta(it->val[0]))
+		first_str = copy_meta(it->val, &copied);
+	else
+		first_str = copy_unmeta(it->val, &copied);
+	second_str = ft_substr(it->val, copied, ft_strlen(it->val)
+			- copied);
+	ft_free(&it->val);
+	it->val = ft_strdup(first_str);
+	create_node_after(it, second_str);
+	ft_free(&first_str);
+	ft_free(&second_str);
+}
+
+bool	unstick_quote(int count, t_node *it)
+{
+	char	*first_str;
+	char	*second_str;
+
+	if (count == 0)
+		return (false);
+	first_str = ft_substr(it->val, 0, count + 1);
+	second_str = ft_substr(it->val, count + 1, ft_strlen(it->val));
+	ft_free(&it->val);
+	it->val = ft_strdup(first_str);
+	create_node_after(it, second_str);
+	ft_free(&first_str);
+	ft_free(&second_str);
+	return (true);
+}
+
+int	quote_sticked(char *str)
+{
+	int 	i;
+	char	quote;
+
+	i = 1;
+	quote = 0;
+	update_quote(&quote, str[0]);
+	while (str[i])
+	{
+		if (quote && str[i] == quote)
+			if (str[i + 1] && is_meta(str[i + 1]))
+				return(i);
+		update_quote(&quote, str[i]);
+		i++;
+	}
+	return (0);
+}
+
+static int	unstick_nodes(t_node *head)
+{
+	t_node	*it;
+
+	it = head;
+	while (it != NULL)
+	{
+		if (unstick_quote(quote_sticked(it->val), it))
+			break ;
+		if (is_sticked(it->val))
+			unstick_main(it);
+		it = it->next;
+	}
+	return (1);
 }
 
 static void	del_void_nodes(t_node **head)
@@ -138,9 +143,13 @@ t_node	*tokenize(char *str)
 	debug_token_list(head, "trim");
 	del_void_nodes(&head);
 	debug_token_list(head, "del void");
+	unstick_nodes(head);
+	debug_token_list(head, "unstick");
+	del_void_nodes(&head);
+	debug_token_list(head, "del void");
 	set_token(head);
 	debug_token_list(head, "set token");
-	// if (syntax_error(head))
-		// return (free_linked_list(head), NULL);
+	if (syntax_error(head))
+		return (free_linked_list(head), NULL);
 	return (head);
 }

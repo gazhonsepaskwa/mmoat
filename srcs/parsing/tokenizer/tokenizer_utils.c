@@ -37,3 +37,39 @@ int	trim_nodes(t_node *head)
 	}
 	return (1);
 }
+
+static bool is_space(char c)
+{
+	if ((c >= 9 && c <= 13) || c == 32)
+		return (true);
+	else
+	 return (false);
+}
+
+static int	skip_quote(char *str)
+{
+	int i;
+
+	if (!str[1])
+		return 0;
+	i = 1;
+	while(str[i] && str[i] != '\'' && str[i] != '"')
+		i++;
+	return (i);
+}
+
+int	goto_nxt_space(char *str)
+{
+	int		i;
+
+	i = 0;
+	while (is_space(str[i]))
+		i++;
+	while (str[i] && !is_space(str[i]))
+	{
+		if (str[i] == '\'' || str[i] == '"')
+			i += skip_quote(&(str[i]));
+		i++;
+	}
+	return (i);
+}
