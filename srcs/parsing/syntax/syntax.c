@@ -59,9 +59,9 @@ int	unclosed(t_node *head)
 {
 	if (check_unclosed("()", head) != 0)
 		return (syntax_err_mess("()", check_unclosed("()", head)));
-	if (check_unclosed_quote("\"", head) != 0)
+	if (check_unclosed_quote("\"", head))
 		return (syntax_err_mess("\"\"", 1));
-	if (check_unclosed_quote("'", head) != 0)
+	if (check_unclosed_quote("'", head))
 		return (syntax_err_mess("'", 1));
 	return (0);
 }

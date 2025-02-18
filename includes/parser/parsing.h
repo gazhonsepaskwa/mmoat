@@ -27,7 +27,7 @@ int		is_redir(t_node *cpy);
 int		is_basic_word(t_node *cpy);
 int		syntax_err_mess(char *token_base, int selected);
 int		check_unclosed(char *c, t_node *node);
-int		check_unclosed_quote(char *c, t_node *node);
+bool	check_unclosed_quote(char *c, t_node *node);
 
 int		last_tok_redir(t_node *lst);
 int		last_tok_subsh(t_node *lst);

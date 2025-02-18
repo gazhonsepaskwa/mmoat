@@ -55,23 +55,30 @@ int	check_unclosed(char *c, t_node *node)
 	return (0);
 }
 
-int	check_unclosed_quote(char *c, t_node *node)
+bool	check_unclosed_quote(char *c, t_node *node)
 {
 	t_node	*cpy;
-	int		count;
-	int		len;
+	int		i;
+	bool	closed;
+	bool	in_other_quote;
 
+	closed = true;
+	in_other_quote = false;
 	cpy = node;
-	count = 0;
 	while (cpy)
 	{
-		len = ft_strlen(cpy->val);
-		if (len > 0 && cpy->val[0] == c[0])
+		i = 0;
+		while(cpy->val[i])
 		{
-			if (len == 1 || cpy->val[len - 1] != c[0])
-				count++;
+			if ((cpy->val[i] == '"' || cpy->val[i] == '\'') && cpy->val[i] != c[0] && closed)
+				in_other_quote = !in_other_quote;
+			if (cpy->val[i] == c[0] && !in_other_quote)
+				closed = !closed;
+			i++;
 		}
 		cpy = cpy->next;
 	}
-	return (count % 2);
+	if (!closed)
+		return (true);
+	return (false);
 }
