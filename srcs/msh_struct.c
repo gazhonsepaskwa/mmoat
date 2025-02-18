@@ -56,7 +56,7 @@ void	free_msh(t_msh *msh)
 		close(msh->hist);
 	if (msh->here_fd != -1)
 		close(msh->here_fd);
-	free(msh->input);
+	ft_free(&msh->input);
 	ft_free(&msh->prev_input);
 	free(msh);
 }

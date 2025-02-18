@@ -11,7 +11,9 @@
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
+#include <fcntl.h>
 #include <stdlib.h>
+#include <sys/stat.h>
 
 int	count_cmds(t_ast_n **pline)
 {
@@ -27,13 +29,14 @@ int	count_cmds(t_ast_n **pline)
 
 char	*find_path(char *cmd, char **env)
 {
-	char	*tmp;
-	char	*path;
-	char	**paths;
-	int		i;
+	char		*tmp;
+	char		*path;
+	char		**paths;
+	int			i;
+	struct stat	st;
 
-	if (access(cmd, F_OK) == 0 && access(cmd, X_OK) == 0)
-		return (cmd);
+	if (stat(cmd, &st) && S_ISREG(st.st_mode) && access(cmd, X_OK) == 0)
+		return (ft_strdup(cmd));
 	i = 0;
 	while (env[i] && ft_strnstr(env[i], "PATH=", 5) == NULL)
 		i++;
@@ -50,8 +53,7 @@ char	*find_path(char *cmd, char **env)
 			return (free_tab(paths), path);
 		free(path);
 	}
-	free_tab(paths);
-	return (NULL);
+	return (free_tab(paths), NULL);
 }
 
 void	return_error(char *arg, char *msg, int code, t_ast_n *node)
