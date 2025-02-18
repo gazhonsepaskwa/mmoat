@@ -96,7 +96,7 @@ void	read_input(t_ast_n *node, int j)
 
 	check = ifhere_remove_quote(node, j);
 	str = get_next_line(node->msh->here_fd, 0);
-	while (str && ft_strncmp(str, node->files[j], ft_strlen(str) - 1) != 0)
+	while (str && ft_strncmp(str, node->files[j], -1) != 0)
 	{
 		if (!check)
 			expander_here(&str, node);

@@ -28,6 +28,8 @@ static void	add_prevhistory(t_msh *msh)
 	while (str)
 	{
 		tmp = ft_substr(str, 0, ft_strlen(str) - 1);
+		ft_free(&msh->prev_input);
+		msh->prev_input = ft_strdup(tmp);
 		add_history(tmp);
 		free(tmp);
 		free(str);
@@ -67,6 +69,7 @@ static void	exit_manual(t_msh *msh)
 	}
 	else
 		ret = msh->ex_code;
+	ft_free(&msh->prev_input);
 	free_msh(msh);
 	ft_fprintf(2, "exit\n");
 	exit(ret);

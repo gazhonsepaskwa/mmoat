@@ -82,6 +82,7 @@ int	exec(t_ast_n *node)
 	if (execve(path, node->args, node->msh->env) == -1)
 	{
 		free_child(node->msh);
+		ft_free(&path);
 		perror("execve");
 		exit(1);
 	}

@@ -6,7 +6,7 @@
 /*   By: lderidde <lderidde@student.s19.be>        +#+  +:+       +#+         */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 11:25:25 by lderidde          #+#    #+#             */
-/*   Updated: 2025/02/11 14:20:44 by lderidde         ###   ########.fr       */
+/*   Updated: 2025/02/18 09:08:46 by lderidde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,7 @@ typedef struct s_msh
 	t_ast_n	*head;
 	int		here_fd;
 	char	*input;
+	char	*prev_input;
 	int		hist;
 	char	**env;
 }			t_msh;

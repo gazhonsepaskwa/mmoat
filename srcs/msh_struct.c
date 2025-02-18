@@ -39,6 +39,7 @@ t_msh	*init_msh(char **envp)
 	msh->ex_code = 0;
 	msh->here_fd = -1;
 	msh->input = NULL;
+	msh->prev_input = NULL;
 	if (!msh)
 		return (NULL);
 	if (!envp[0])
@@ -56,5 +57,6 @@ void	free_msh(t_msh *msh)
 	if (msh->here_fd != -1)
 		close(msh->here_fd);
 	free(msh->input);
+	ft_free(&msh->prev_input);
 	free(msh);
 }
