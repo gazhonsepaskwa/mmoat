@@ -60,9 +60,9 @@ int	goto_nxt_space(char *str)
 		i++;
 	while (str[i] && (!is_space(str[i]) || (in_dquote || in_squote)))
 	{
-		if (str[i] == '\'')
+		if (str[i] == '\'' && !in_dquote)
 			in_squote = !in_squote;
-		else if (str[i] == '\"')
+		else if (str[i] == '\"' && !in_squote)
 			in_dquote = !in_dquote;
 		i++;
 	}
