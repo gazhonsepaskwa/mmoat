@@ -25,9 +25,7 @@ int	is_aop_operator(t_node *node)
 int	unexpected_token(t_node *node)
 {
 	if ((!ft_strncmp(node->val, "&", 1) && ft_strncmp(node->val, "&&", 2))
-		|| !ft_strncmp(node->val, ";", 1) || !ft_strncmp(node->val, "[", 1)
-		|| !ft_strncmp(node->val, "]", 1) || !ft_strncmp(node->val, "{", 1)
-		|| !ft_strncmp(node->val, "}", 1))
+		|| !ft_strncmp(node->val, ";", 1))
 		return (1);
 	return (0);
 }
