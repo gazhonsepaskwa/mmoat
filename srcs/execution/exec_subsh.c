@@ -17,6 +17,7 @@ int	exec_shcmd(t_ast_n *node)
 	pid_t	pid;
 	int		status;
 
+	status = 0;
 	if (is_builtin(node->cmd))
 		return (exec_builtin(node));
 	else
@@ -92,6 +93,7 @@ int	exec_subsh(t_ast_n *node)
 	pid_t	pid;
 	int		ret;
 
+	status = 0;
 	pid = fork();
 	if (pid == 0)
 	{

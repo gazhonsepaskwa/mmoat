@@ -44,6 +44,7 @@ void	exec_pchild(int *pipes, int index, t_ast_n *pcmd, int cmds)
 		dup2(pipes[1], STDOUT_FILENO);
 	close(pipes[0]);
 	close(pipes[1]);
+	pcmd->sh = true;
 	if (handle_redir(pcmd))
 	{
 		free_child(pcmd->msh);

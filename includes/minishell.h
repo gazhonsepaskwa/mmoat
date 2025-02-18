@@ -6,7 +6,7 @@
 /*   By: lderidde <lderidde@student.s19.be>        +#+  +:+       +#+         */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 11:25:25 by lderidde          #+#    #+#             */
-/*   Updated: 2025/02/18 09:08:46 by lderidde         ###   ########.fr       */
+/*   Updated: 2025/02/18 13:06:08 by lderidde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@
 # include "exec/exec.h"
 # include "exec/expander.h"
 
-# define DEBUG 1
+# define DEBUG 0
 
 # ifndef DIO_PATH
 #  define DIO_PATH "ast.xml"

@@ -93,10 +93,12 @@ void	read_input(t_ast_n *node, int j)
 {
 	char	*str;
 	int		check;
+	char	*tmp;
 
 	check = ifhere_remove_quote(node, j);
 	str = get_next_line(node->msh->here_fd, 0);
-	while (str && ft_strncmp(str, node->files[j], -1) != 0)
+	tmp = ft_strjoin(node->files[j], "\n");
+	while (str && ft_strncmp(str, tmp, -1) != 0)
 	{
 		if (!check)
 			expander_here(&str, node);
@@ -107,6 +109,7 @@ void	read_input(t_ast_n *node, int j)
 	if (!str)
 		get_next_line(node->msh->here_fd, 1);
 	ft_free(&str);
+	ft_free(&tmp);
 }
 
 void	here_doc(t_ast_n *node, int i)

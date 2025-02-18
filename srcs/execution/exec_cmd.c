@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
+#include <stdlib.h>
 
 int	count_cmds(t_ast_n **pline)
 {
@@ -94,6 +95,7 @@ int	exec_scmd(t_ast_n *node)
 	pid_t	pid;
 	int		status;
 
+	status = 0;
 	if (!node->cmd)
 		return (0);
 	else if (is_builtin(node->cmd))
