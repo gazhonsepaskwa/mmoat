@@ -36,9 +36,9 @@ static void	update_subsh_l(int *shlvl, t_node *lst)
 	if (!lst)
 		return ;
 	if (!ft_strncmp(")", lst->val, 1))
-		*shlvl = 0;
+		*shlvl -= 1;
 	if (!ft_strncmp("(", lst->val, 1))
-		*shlvl = 1;
+		*shlvl += 1;
 }
 
 static t_node	*get_node(t_node **lst, t_node *expected,
@@ -53,7 +53,7 @@ static t_node	*get_node(t_node **lst, t_node *expected,
 		(*lst) = (*lst)->next;
 	}
 	while (limiter == -1 && (*lst)
-		&& (*shlvl == 1
+		&& (*shlvl >= 2
 			|| ft_strncmp((*lst)->val, expected->val, ft_strlen((*lst)->val))))
 	{
 		update_subsh_l(shlvl, *lst);

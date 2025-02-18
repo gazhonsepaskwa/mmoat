@@ -34,7 +34,7 @@ t_node	*remove_parentheses(t_node *lst)
 		if (deepness == 0)
 			break ;
 		add_node_back(&out, str, it->token, it->pressision);
-		free(str);
+		ft_free(&str);
 		it = it->next;
 	}
 	ft_free(&str);
