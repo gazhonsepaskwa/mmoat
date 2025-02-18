@@ -53,6 +53,42 @@ void	set_token(t_node *head)
 	}
 }
 
+bool	unstick_quote(int count, t_node *it)
+{
+	char	*first_str;
+	char	*second_str;
+
+	if (count == 0)
+		return (false);
+	first_str = ft_substr(it->val, 0, count + 1);
+	second_str = ft_substr(it->val, count + 1, ft_strlen(it->val));
+	ft_free(&it->val);
+	it->val = ft_strdup(first_str);
+	create_node_after(it, second_str);
+	ft_free(&first_str);
+	ft_free(&second_str);
+	return (true);
+}
+
+int	quote_sticked(char *str)
+{
+	int		i;
+	char	quote;
+
+	i = 1;
+	quote = 0;
+	update_quote(&quote, str[0]);
+	while (str[i])
+	{
+		if (quote && str[i] == quote)
+			if (str[i + 1] && is_meta(str[i + 1]))
+				return (i);
+		update_quote(&quote, str[i]);
+		i++;
+	}
+	return (0);
+}
+
 int	find_quote_node(t_node *head, char q)
 {
 	t_node	*it;

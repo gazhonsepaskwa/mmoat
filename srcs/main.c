@@ -39,8 +39,7 @@ static void	add_prevhistory(t_msh *msh)
 
 void	handle_sigint(int sig)
 {
-	(void)sig;
-	int	status;
+	int		status;
 	pid_t	pid;
 
 	pid = waitpid(-1, &status, 0);

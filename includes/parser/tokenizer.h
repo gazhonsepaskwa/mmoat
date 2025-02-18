@@ -67,6 +67,8 @@ char	*copy_unmeta(char *val, int *copied);
 void	debug_token_list(t_node *lst, char *msg);
 void	set_token(t_node *head);
 int		goto_nxt_space(char *str);
-void 	update_quote(char *quote, char cmp);
+void	update_quote(char *quote, char cmp);
+int		quote_sticked(char *str);
+bool	unstick_quote(int count, t_node *it);
 
 #endif

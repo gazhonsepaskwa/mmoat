@@ -85,7 +85,7 @@ void	expander_var(t_ast_n *nd, int j, int i)
 	int		l;
 
 	k = i;
-	if (expand_exit(nd, j , i))
+	if (expand_exit(nd, j, i))
 		return ;
 	new = ft_calloc(ft_strlen(nd->args[j]) + get_var_len(nd, j, &k), 1);
 	if (!new)

@@ -68,9 +68,10 @@ bool	check_unclosed_quote(char *c, t_node *node)
 	while (cpy)
 	{
 		i = 0;
-		while(cpy->val[i])
+		while (cpy->val[i])
 		{
-			if ((cpy->val[i] == '"' || cpy->val[i] == '\'') && cpy->val[i] != c[0] && closed)
+			if ((cpy->val[i] == '"' || cpy->val[i] == '\'')
+				&& cpy->val[i] != c[0] && closed)
 				in_other_quote = !in_other_quote;
 			if (cpy->val[i] == c[0] && !in_other_quote)
 				closed = !closed;

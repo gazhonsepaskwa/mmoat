@@ -39,12 +39,12 @@ int	trim_nodes(t_node *head)
 	return (1);
 }
 
-static bool is_space(char c)
+static bool	is_space(char c)
 {
 	if ((c >= 9 && c <= 13) || c == 32)
 		return (true);
 	else
-	 return (false);
+		return (false);
 }
 
 int	goto_nxt_space(char *str)

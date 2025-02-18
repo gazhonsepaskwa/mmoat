@@ -68,7 +68,7 @@ int	unic(int *meta)
 	return (1);
 }
 
-void update_quote(char *quote, char cmp)
+void	update_quote(char *quote, char cmp)
 {
 	if (*quote == 0 && (cmp == '"' || cmp == '\''))
 		*quote = cmp;

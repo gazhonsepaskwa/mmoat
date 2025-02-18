@@ -17,8 +17,8 @@ static void	handle_input(char *in, t_msh *msh)
 {
 	if (ft_strlen(in) > 0 && !is_only_space(in))
 	{
-		if (ft_strlen(in) != ft_strlen(msh->prev_input) ||
-			ft_strncmp(in, msh->prev_input, -1) != 0)
+		if (ft_strlen(in) != ft_strlen(msh->prev_input)
+			|| ft_strncmp(in, msh->prev_input, -1) != 0)
 		{
 			add_history(in);
 			ft_fprintf(msh->hist, "%s\n", in);
