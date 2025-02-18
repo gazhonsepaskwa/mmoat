@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "../../../includes/minishell.h"
+#include <stdbool.h>
 
 int	is_meta(char c)
 {
@@ -46,29 +47,23 @@ static bool is_space(char c)
 	 return (false);
 }
 
-static int	skip_quote(char *str)
-{
-	int i;
-
-	if (!str[1])
-		return 0;
-	i = 1;
-	while(str[i] && str[i] != '\'' && str[i] != '"')
-		i++;
-	return (i);
-}
-
 int	goto_nxt_space(char *str)
 {
 	int		i;
+	bool	in_squote;
+	bool	in_dquote;
 
+	in_squote = false;
+	in_dquote = false;
 	i = 0;
 	while (is_space(str[i]))
 		i++;
-	while (str[i] && !is_space(str[i]))
+	while (str[i] && (!is_space(str[i]) || (in_dquote || in_squote)))
 	{
-		if (str[i] == '\'' || str[i] == '"')
-			i += skip_quote(&(str[i]));
+		if (str[i] == '\'')
+			in_squote = !in_squote;
+		else if (str[i] == '\"')
+			in_dquote = !in_dquote;
 		i++;
 	}
 	return (i);
