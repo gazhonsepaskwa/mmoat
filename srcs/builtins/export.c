@@ -48,7 +48,7 @@ char	**key_value(char *str)
 	if (!tmp)
 		return (NULL);
 	equal = ft_strchr(str, '=');
-	if (*(equal - 1) == '+')
+	if (equal && *(equal - 1) == '+')
 		key_end = equal - 1;
 	else
 		key_end = equal;
@@ -84,14 +84,16 @@ void	print_arr(char **envp)
 	}
 }
 
-int	print_export(char **envp)
+int	print_export(char **env)
 {
 	int		i;
 	int		j;
 	int		len;
+	char	**envp;
 
 	i = -1;
 	len = 0;
+	envp = init_env(env);
 	while (envp[len])
 		len++;
 	while (++i < len - 1)
@@ -106,6 +108,7 @@ int	print_export(char **envp)
 		}
 	}
 	print_arr(envp);
+	free_tab(envp);
 	return (0);
 }
 

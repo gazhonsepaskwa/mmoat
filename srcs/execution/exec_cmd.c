@@ -33,9 +33,8 @@ char	*find_path(char *cmd, char **env)
 	char		*path;
 	char		**paths;
 	int			i;
-	struct stat	st;
 
-	if (stat(cmd, &st) && S_ISREG(st.st_mode) && access(cmd, X_OK) == 0)
+	if (access(cmd, F_OK) == 0 && !is_dir(cmd) && access(cmd, X_OK) == 0)
 		return (ft_strdup(cmd));
 	i = 0;
 	while (env[i] && ft_strnstr(env[i], "PATH=", 5) == NULL)
@@ -49,7 +48,7 @@ char	*find_path(char *cmd, char **env)
 		tmp = ft_strjoin(paths[i], "/");
 		path = ft_strjoin(tmp, cmd);
 		free(tmp);
-		if (access(path, F_OK) == 0)
+		if (access(path, F_OK) == 0 && !is_dir(path))
 			return (free_tab(paths), path);
 		free(path);
 	}

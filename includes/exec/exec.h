@@ -66,5 +66,6 @@ char	*find_path(char *cmd, char **env);
 void	return_error(char *arg, char *msg, int code, t_ast_n *node);
 int		exec(t_ast_n *node);
 int		exec_scmd(t_ast_n *node);
+int		is_dir(char *str);
 
 #endif
