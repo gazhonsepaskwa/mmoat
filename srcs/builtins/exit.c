@@ -21,7 +21,7 @@ int	ft_isnumeric(char *str)
 		return (1);
 	while (str[i])
 	{
-		if (ft_isdigit(str[i]))
+		if (ft_isdigit(str[i]) || str[i] == '+' || str[i] == '-')
 			i++;
 		else
 			return (0);

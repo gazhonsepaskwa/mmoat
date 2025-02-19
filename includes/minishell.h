@@ -33,7 +33,7 @@
 # include "exec/exec.h"
 # include "exec/expander.h"
 
-# define DEBUG 0
+# define DEBUG 1
 
 # ifndef DIO_PATH
 #  define DIO_PATH "ast.xml"

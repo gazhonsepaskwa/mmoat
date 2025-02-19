@@ -44,6 +44,10 @@ static int	redir_error(t_node *cpy)
 	if (is_redir(cpy) && cpy->next && cpy->next->next
 		&& !ft_strncmp(cpy->next->next->val, "(", 1))
 		return (syntax_err_mess(cpy->next->next->val, 0));
+	if (is_redir(cpy) && cpy->pressision == D_RED_R && ft_strlen(cpy->val) > 2)
+		return (syntax_err_mess(cpy->val, 0));
+	if (is_redir(cpy) && cpy->pressision == HEREDOC && ft_strlen(cpy->val) > 2)
+		return (syntax_err_mess(cpy->val, 0));
 	return (0);
 }
 
