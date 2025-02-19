@@ -27,7 +27,10 @@ int	exec_cd(char *path, t_ast_n *head)
 
 	src = getcwd(NULL, 0);
 	if (chdir(path) == -1)
+	{
+		ft_free(&src);
 		return (err_msg_cmd("cd", path, strerror(errno), EXIT_FAILURE));
+	}
 	dest = getcwd(NULL, 0);
 	pwd_update(head, src, dest);
 	return (0);

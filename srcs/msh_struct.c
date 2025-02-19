@@ -27,6 +27,23 @@ static char	**ft_setnewenv(void)
 	return (envp);
 }
 
+void	set_shellenv(t_msh *msh)
+{
+	char	*src;
+	char	*tmp;
+	int		sh;
+
+	src = getcwd(NULL, 0);
+	tmp = ft_strjoin(src, "/minishell");
+	set_var_env("SHELL", tmp, msh);
+	ft_free(&src);
+	ft_free(&tmp);
+	sh = ft_atoi(get_var_value("SHLVL", msh->env));
+	tmp = ft_itoa(sh + 1);
+	set_var_env("SHLVL", tmp, msh);
+	ft_free(&tmp);
+}
+
 t_msh	*init_msh(char **envp)
 {
 	t_msh	*msh;
@@ -46,6 +63,7 @@ t_msh	*init_msh(char **envp)
 		msh->env = ft_setnewenv();
 	else
 		msh->env = init_env(envp);
+	set_shellenv(msh);
 	return (msh);
 }
 

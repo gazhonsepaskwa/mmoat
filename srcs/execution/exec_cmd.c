@@ -6,7 +6,7 @@
 /*   By: lderidde <lderidde@student.s19.be>        +#+  +:+       +#+         */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 10:00:08 by lderidde          #+#    #+#             */
-/*   Updated: 2025/02/12 13:31:03 by lderidde         ###   ########.fr       */
+/*   Updated: 2025/02/19 10:07:55 by lderidde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,8 +84,8 @@ int	exec(t_ast_n *node)
 	if (execve(path, node->args, node->msh->env) == -1)
 	{
 		free_child(node->msh);
+		ft_fprintf(2, "minishell: failed to execute %s\n", path);
 		ft_free(&path);
-		perror("execve");
 		exit(1);
 	}
 	return (0);

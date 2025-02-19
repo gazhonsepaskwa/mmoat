@@ -46,16 +46,6 @@ char	*ft_getenv(char *str, char **envp)
 	return (&envp[j][len]);
 }
 
-int	print_exit(char **arg, t_ast_n *node)
-{
-	if (*arg && ft_strncmp(*arg, "$?", 2) == 0)
-	{
-		ft_fprintf(1, "%d", node->msh->ex_code);
-		return (1);
-	}
-	return (0);
-}
-
 static void	echo_print(t_ast_n *node, int j, char **envp)
 {
 	int	i;
@@ -66,10 +56,7 @@ static void	echo_print(t_ast_n *node, int j, char **envp)
 		i = 0;
 		while (node->args[j][i])
 		{
-			if (print_exit(&node->args[j], node))
-				i += 2;
-			else
-				ft_put_c(node->args[j][i++]);
+			ft_put_c(node->args[j][i++]);
 		}
 		j++;
 		if (node->args[j])
