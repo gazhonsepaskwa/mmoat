@@ -1,4 +1,4 @@
-# MMOAT
+# MMOAT (42 MINISHELL with bonus and more)
 ### (Maybe Minishell of all time)
 
 The goal of the project is basicly to create a simple shell.
